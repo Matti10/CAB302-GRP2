@@ -8,9 +8,17 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     public static final int WIDTH = 500;
     public static final int HEIGHT = 500; // set these to have a consistent size between screens
 
-    private JPanel pnlOne; //Background panel
+    private JPanel pnlOne; //main panel
     private JPanel MazeDisplayPanel;
     private JPanel ButtonShelf; // panel to store buttons
+    private JPanel pnlNorth;
+    private JPanel pnlEast;
+    private JPanel pnlSouth;
+    private JPanel pnlWest;
+    private JPanel pnlCenter;
+
+
+
 
     private JPanel createPanel (Color c) {
         var panel = new JPanel();
@@ -29,12 +37,21 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
         GridLayout buttonLayout = new GridLayout(3,1); // layout for ButtonShelf
 
-        GridLayout pageLayout = new GridLayout(3, 2); // layout for page
+        BorderLayout pageLayout = new BorderLayout(); // layout for page
 
         buttonLayout.setVgap(40);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        //#############################
+        pnlNorth = createPanel(Color.pink);
+        pnlEast = createPanel(Color.pink);
+        pnlSouth = createPanel(Color.pink);
+        pnlWest = createPanel(Color.pink);
+        pnlCenter = createPanel(Color.pink);
+
+
+        //#############################
         pnlOne  = createPanel(Color.darkGray); //background Panel
 
         ButtonShelf = createPanel(Color.GRAY);
