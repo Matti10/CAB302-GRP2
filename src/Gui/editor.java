@@ -1,12 +1,13 @@
-/*
+package Gui;/*
  *
 */
 
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
-public class editor extends JFrame {
+public class editor extends JFrame{
 
     public editor() {
         super("MAZE EDITOR");
@@ -178,9 +179,6 @@ public class editor extends JFrame {
      * @param args
      * creates args (???)
      */
-    public static void main(String[] args) {
-        setDefaultLookAndFeelDecorated(true);
-        new editor();
-    }
+
 
 }
