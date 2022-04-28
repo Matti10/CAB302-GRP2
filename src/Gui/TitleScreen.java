@@ -34,7 +34,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     JButton RandomMazeButton = new JButton("Random Maze");
     JButton LoadButton = new JButton("Load Maze");
 
-    private void createMainScreen(){
+    public TitleScreen(){
 
         GridLayout buttonLayout = new GridLayout(3,1); // layout for ButtonShelf
         buttonLayout.setVgap(20);
@@ -105,7 +105,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         else if (event.getSource() == LoadButton)
         {
             setVisible(false);
-            new MazeLoadOptions();
+            new LoadScreen();
         }
 
 
@@ -115,7 +115,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     @Override
     public void run() {
 
-        createMainScreen();
+
         setDefaultLookAndFeelDecorated(true);
     }
 
