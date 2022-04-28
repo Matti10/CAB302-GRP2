@@ -4,21 +4,20 @@ import java.util.Random;
 
 public class Maze {
 
-    //todo - wallType eNum
-
     static Cell[][] mazeArray; //2d array of cell objects
 
     // maze constructor - something like:
     public Maze() {
-//        size = 100;
 
-    }
 
     //fill maze object with random maze
     // todo - make random maze solveable
-    static void randomMaze()
+    static void randomWalls()
     {
         Random rand = new Random();
+        //set top boundary walls to be random
+//        for ()
+        // set left boundary walls to be random
 
 
         // iterate over all maze cells and assign them with a random wall type
@@ -96,7 +95,7 @@ public class Maze {
 //                (currentCell.bottomWall && belowCell.leftWall) ||
 //                (currentCell.bottomWall && belowCell.rightWall) ||
                 (currentCell.bottomWall && leftCell.rightWall) ||
-                (currentCell.bottomWall && leftCell.bottomWall) ||
+                (currentCell.bottomWall && leftCell.bottomWall) //||
 //                (currentCell.bottomWall && rightCell.bottomWall) ||
 //                (currentCell.bottomWall && rightCell.leftWall)
         )
@@ -129,20 +128,27 @@ public class Maze {
     {
         String output = "";
         // iterate over all maze cells and assign them with a random wall type
-        for (int col = 0; col < mazeArray.length; col++)
+        for (int row = 0; row < mazeArray.length; row++)
         {
-            for (int row = 0; row < mazeArray[col].length; row++)
+            for (int col = 0; col < mazeArray[row].length; col++)
             {
-                if (cell.leftWall)
+                if (mazeArray[col][row].leftWall)
                 {
-                    output += (string)(char)195; //add a vertical wall
+                    output += (char) 195; //add a vertical wall
                 }
-                if (cell.topWall)
+                if (mazeArray[col][row].topWall)
                 {
-                    output += (string)(char)196; // add a horizontal wall
+                    output += (char) 196; // add a horizontal wall
+                }
+                else
+                {
+                    output += " ";
                 }
             }
+            output += "\n";
         }
+
+        return output;
     }
 
 }
