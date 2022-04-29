@@ -12,6 +12,8 @@ public class LoadScreen extends JFrame implements ActionListener, Runnable {
     private static final int HEIGHT = 500;
 
 
+    JButton backButton = new JButton("back");
+    JButton loadButton = new JButton("Load");
 
 
     public LoadScreen(){
@@ -27,8 +29,6 @@ public class LoadScreen extends JFrame implements ActionListener, Runnable {
         JPanel buttonShelf = guIutilities.createPanel(Color.darkGray);
         JPanel eastShelf = guIutilities.createPanel(Color.darkGray );
 
-        JButton backButton = new JButton("back");
-        JButton loadButton = new JButton("Load");
 
 
 
@@ -49,17 +49,29 @@ public class LoadScreen extends JFrame implements ActionListener, Runnable {
         backpage.add(eastShelf,BorderLayout.EAST);
 
 
-
+        backButton.addActionListener(this);
+        loadButton.addActionListener(this);
 
         this.pack();
         eastShelf.setSize(WIDTH / 2, HEIGHT );
         buttonShelf.setSize(WIDTH / 2, HEIGHT );
         this.setSize(WIDTH,HEIGHT);
         this.setVisible(true);
+
+
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
+        if(event.getSource() == backButton)
+        {
+            setVisible(false);
+            new TitleScreen();
+        }
+        if (event.getSource() == loadButton)
+        {
+
+        }
 
     }
 
