@@ -26,7 +26,7 @@ public class LoadScreen extends JFrame implements ActionListener, Runnable {
 
         JPanel backpage = guIutilities.createPanel(Color.darkGray);
         JPanel buttonShelf = guIutilities.createPanel(Color.darkGray);
-        JPanel eastShelf = guIutilities.createPanel(Color.pink );
+        JPanel eastShelf = guIutilities.createPanel(Color.darkGray );
 
         JButton backButton = new JButton("back");
         JButton loadButton = new JButton("Load");
