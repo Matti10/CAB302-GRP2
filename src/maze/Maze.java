@@ -4,7 +4,6 @@ import java.util.Random;
 
 public class Maze {
 
-
     coordinate startPosition;
     coordinate endPosition;
     int height;
@@ -14,7 +13,7 @@ public class Maze {
 
 
     // maze constructor
-    public Maze(int length, int height, boolean isSealed, coordinate startPosition, coordinate endPositon) {
+    public Maze(int length, int height, boolean isSealed, coordinate startPosition, coordinate endPosition) {
 
         if (length < 0 || height < 0)
         {
@@ -27,7 +26,7 @@ public class Maze {
         this.isSealed = isSealed;
         this.mazeArray = new Cell[length][height];
         this.startPosition = startPosition;
-        this.endPosition = endPositon;
+        this.endPosition = endPosition;
 
         //initialise each cell in mazeArray
         for (int i = 0; i < length; i++) {
@@ -94,9 +93,7 @@ public class Maze {
     //checks the walls of a cell against its surrounding cells using a set of rules
     static boolean wallCheck(Cell currentCell, Cell aboveCell, Cell leftCell) {
         //ensure each wall touches at least one adjacent wall
-
-        //we should only need to test the bottom right corner of each cell, as the top left corner of a cell is the same as the bottom right of another cell.
-
+        //only need to test the bottom right corner of each cell, as the top left corner of a cell is the same as the bottom right of another cell.
         //if the right wall is on, check it connects with another applicable wall
         if (
                 (currentCell.rightWall && aboveCell.bottomWall) ||
@@ -123,31 +120,18 @@ public class Maze {
         }
 
 
-        //if the left wall is on, check it connects with another applicable wall
-//        if (
-//            (currentCell.leftWall && leftCell.topWall) ||
-//            (currentCell.leftWall && leftCell.bottomWall) ||
-//            (currentCell.leftWall && aboveCell.leftWall) ||
-//            (currentCell.leftWall && aboveCell.bottomWall) ||
-//            (currentCell.leftWall && belowCell.topWall) ||
-//            (currentCell.leftWall &&  belowCell.topWall)
-//        )
-//        {
-//            return  true;
-//        }
-
     }
 
     String ToString() {
-        String output = new char[length][height];
+        String output = "new char[length][height]";
         // iterate over all maze cells and assign them with a random wall type
         for (int row = 0; row < mazeArray.length; row++) {
             for (int col = 0; col < mazeArray[row].length; col++) {
                 if (mazeArray[col][row].leftWall) {
-                    output += (String)(char)195; //add a vertical wall
+                    output += (char)195; //add a vertical wall
                 }
                 if (mazeArray[col][row].topWall) {
-                    output += (String)(char) 196; // add a horizontal wall
+                    output += (char) 196; // add a horizontal wall
                 } else {
                     output += " ";
                 }
@@ -159,11 +143,11 @@ public class Maze {
     }
 
     Cell[] getFirstSolution() {
-        throw new Exception("getFirstSolution() is Not Implemented");
+        throw new UnsupportedOperationException("getFirstSolution() is Not Implemented");
     }
 
     Cell[] getBestSolution() {
-        throw new Exception("getBestSolution() is Not Implemented");
+        throw new UnsupportedOperationException("getBestSolution() is Not Implemented");
     }
 
     void edit(coordinate[] cellPositions,Cell newWalls) {
@@ -175,12 +159,12 @@ public class Maze {
 
     boolean export(String path)
     {
-        throw new Exception("export is Not Implemented");
+        throw new UnsupportedOperationException("export is Not Implemented");
     }
 
     Maze importMaze(String path) //this could return void/bool (and require a blank maze to be created in the func body)
     {
-        throw new Exception("export is Not Implemented");
+        throw new UnsupportedOperationException("export is Not Implemented");
     }
 
 }
