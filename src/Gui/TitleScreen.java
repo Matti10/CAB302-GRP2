@@ -96,7 +96,8 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         if(event.getSource() == NewMazeButton)
         {
             setVisible(false);
-            new editor();
+            //new editor();
+            new LoadOptionsScreen();
         }
         else if (event.getSource() == RandomMazeButton)
         {
@@ -115,8 +116,6 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     @Override
     public void run() {
 
-
-        setDefaultLookAndFeelDecorated(true);
     }
 
 

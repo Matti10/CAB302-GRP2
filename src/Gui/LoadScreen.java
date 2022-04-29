@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 
 public class LoadScreen extends JFrame implements ActionListener, Runnable {
     private GUIutilities guIutilities = new GUIutilities();
-
     private static final int WIDTH = 500;
     private static final int HEIGHT = 500;
 
