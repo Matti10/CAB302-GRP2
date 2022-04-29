@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class editor extends JFrame{
 
@@ -15,7 +16,7 @@ public class editor extends JFrame{
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         JPanel window = new JPanel(new BorderLayout());
 
-        //TASKBAR
+        //TASKBAR - more of a line above editor for spacing reasons now - Jhy 29/04/22
         JPanel taskbar = new JPanel();
         taskbar.setBorder(new LineBorder(Color.black));
         taskbar.setPreferredSize(new Dimension(0,40));
@@ -23,12 +24,33 @@ public class editor extends JFrame{
         taskbar.setMinimumSize(new Dimension(0,40));
         window.add(taskbar, BorderLayout.NORTH);
 
-        JButton file = new JButton("File");
-        JButton edit = new JButton("Edit");
-        JButton save = new JButton("Save");
-        taskbar.add(file);
-        taskbar.add(edit);
-        taskbar.add(save);
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        JMenu editMenu = new JMenu("Edit");
+        JMenu helpMenu = new JMenu("Help");
+        JMenu insertMenu = new JMenu("Insert");
+        JMenu optionsMenu = new JMenu("Insert");
+
+        // Sub menu of fileMenu
+        JMenu saveMenu = new JMenu("Save");
+        JMenu saveAsMenu = new JMenu("Save As");
+        JMenu saveExitMenu = new JMenu("Save & Exit");
+
+        fileMenu.add(saveMenu);
+        fileMenu.add(saveAsMenu);
+        fileMenu.add(saveExitMenu);
+        //*************************
+
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        menuBar.add(insertMenu);
+        menuBar.add(optionsMenu);
+        menuBar.add(helpMenu);
+
+
+        this.setJMenuBar(menuBar);
+
 
 /* ******************************************************************************* */
 

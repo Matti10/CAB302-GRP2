@@ -18,6 +18,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     private JPanel pnlWest;
     private JPanel pnlCenter;
 
+
     BorderLayout pageLayout = new BorderLayout(); // layout for back pages
 
 
@@ -61,7 +62,6 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         pnlOne.add(pnlSouth,BorderLayout.SOUTH);
         pnlOne.add(pnlWest,BorderLayout.WEST);
         pnlOne.add(pnlCenter,BorderLayout.CENTER);
-
 
 
         ButtonShelf = createPanel(Color.GRAY);
