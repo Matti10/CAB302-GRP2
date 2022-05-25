@@ -1,6 +1,6 @@
 package maze;
 
-public class Cell  extends  Maze
+public class Cell  //extends  Maze
 {
     boolean topWall;
     boolean bottomWall;
@@ -11,7 +11,7 @@ public class Cell  extends  Maze
 
     public Cell(boolean topWall, boolean bottomWall, boolean leftWall, boolean rightWall)
     {
-        super(1,1,false, new coordinate(0,0),new coordinate(0,0)); //not sure about this...
+        //super(1,1,false/*, new coordinate(0,0),new coordinate(0,0)*/); //not sure about this...
         this.topWall = topWall;
         this.bottomWall = bottomWall;
         this.leftWall = leftWall;
@@ -22,7 +22,7 @@ public class Cell  extends  Maze
 
     public Cell(boolean topWall, boolean bottomWall, boolean leftWall, boolean rightWall, boolean isStart, boolean isEnd)
     {
-        super(1,1,false, new coordinate(0,0),new coordinate(0,0)); //not sure about this...
+        //super(1,1,false/*, new coordinate(0,0),new coordinate(0,0)*/); //not sure about this...
         this.topWall = topWall;
         this.bottomWall = bottomWall;
         this.leftWall = leftWall;

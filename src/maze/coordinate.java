@@ -1,12 +1,12 @@
 package maze;
 
-public class coordinate extends  Maze {
+public class coordinate extends Maze {
     public int row;
     public int col;
 
     public coordinate (int row ,int col)
     {
-        super(1,1,false, new coordinate(0,0),new coordinate(0,0)); //not sure about this...
+        super(1,1,false/*, new coordinate(0,0),new coordinate(0,0)*/); //not sure about this...
 
         if (row < 0 || col < 0)
         {
