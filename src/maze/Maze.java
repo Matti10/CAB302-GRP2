@@ -13,7 +13,7 @@ public class Maze {
 
 
     // maze constructor
-    public Maze(int length, int height, boolean isSealed, coordinate startPosition, coordinate endPosition) {
+    public Maze(int length, int height, boolean isSealed /*, coordinate startPosition, coordinate endPosition*/) {
 
         if (length < 0 || height < 0)
         {
@@ -25,8 +25,8 @@ public class Maze {
         this.height = height;
         this.isSealed = isSealed;
         this.mazeArray = new Cell[length][height];
-        this.startPosition = startPosition;
-        this.endPosition = endPosition;
+//        this.startPosition = startPosition;
+//        this.endPosition = endPosition;
 
         //initialise each cell in mazeArray
         for (int i = 0; i < length; i++) {
@@ -40,7 +40,7 @@ public class Maze {
 
     //fill maze object with random maze
     // todo - make random maze solveable
-    void randomMaze() {
+    public void randomMaze() {
         Random rand = new Random();
 
         // iterate over all maze cells and assign them with a random wall type
@@ -67,9 +67,9 @@ public class Maze {
                 }
 
 
-                do {
-                    currentCell = randomWalls(currentCell);
-                } while (wallCheck(currentCell, mazeArray[col][row - 1], mazeArray[col - 1][row]));
+//                do {
+                currentCell = randomWalls(currentCell);
+//                } while (wallCheck(currentCell, mazeArray[col][row - 1], mazeArray[col - 1][row]));
             }
         }
     }
@@ -122,8 +122,8 @@ public class Maze {
 
     }
 
-    String ToString() {
-        String output = "new char[length][height]";
+    public String ToString() {
+        String output = "";
         // iterate over all maze cells and assign them with a random wall type
         for (int row = 0; row < mazeArray.length; row++) {
             for (int col = 0; col < mazeArray[row].length; col++) {
