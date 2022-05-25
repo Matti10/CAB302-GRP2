@@ -40,6 +40,11 @@ public class Cell  //extends  Maze
         this.rightWall = rightWall;
     }
 
+    public boolean[] toWallList(){
+        boolean[] list = {bottomWall,leftWall,rightWall};
+        return list;
+    }
+
 //    public Class getCell()
 //    {
 //        return ;

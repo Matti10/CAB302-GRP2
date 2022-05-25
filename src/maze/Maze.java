@@ -1,6 +1,6 @@
 package maze;
 
-import java.util.Random;
+import java.util.*;
 
 public class Maze {
 
@@ -15,8 +15,7 @@ public class Maze {
     // maze constructor
     public Maze(int length, int height, boolean isSealed /*, coordinate startPosition, coordinate endPosition*/) {
 
-        if (length < 0 || height < 0)
-        {
+        if (length < 0 || height < 0) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
         }
 
@@ -44,13 +43,14 @@ public class Maze {
         Random rand = new Random();
 
         // iterate over all maze cells and assign them with a random wall type
-        for (int col = 1; col < length; col++) {
-            for (int row = 1; row <height; row++) {
+        for (int col = 0; col < length; col++) {
+            for (int row = 0; row < height; row++) {
                 Cell currentCell = mazeArray[col][row];
 
                 if (col == 0) {
                     //if the cell is in the first column, randomly assign the wall
-                    currentCell.leftWall = rand.nextBoolean();
+//                    currentCell.leftWall = rand.nextBoolean();
+                    currentCell.leftWall = true;
                 } else {
                     // if it's not the first column set left wall to be the leftCells right wall (as they're the same wall)
                     Cell lefCell = mazeArray[col - 1][row];
@@ -59,7 +59,8 @@ public class Maze {
 
                 if (row == 0) {
                     //if the cell is in the first row, randomly set its top wall
-                    currentCell.topWall = rand.nextBoolean();
+//                    currentCell.topWall = rand.nextBoolean();
+                    currentCell.topWall = true;
                 } else {
                     //if it's not the first row set top wall to be the aboveCells bottom wall (as they're the same wall)
                     Cell aboveCell = mazeArray[col][row - 1];
@@ -81,12 +82,11 @@ public class Maze {
         currentCell.rightWall = rand.nextBoolean();
         currentCell.bottomWall = rand.nextBoolean();
 
-        return  currentCell;
+        return currentCell;
     }
 
     //return cell of given coordinate
-    Cell getCell (coordinate coord)
-    {
+    Cell getCell(coordinate coord) {
         return mazeArray[coord.row][coord.col];
     }
 
@@ -97,7 +97,7 @@ public class Maze {
         //if the right wall is on, check it connects with another applicable wall
         if (
                 (currentCell.rightWall && aboveCell.bottomWall) ||
-                (currentCell.rightWall && aboveCell.rightWall) //||
+                        (currentCell.rightWall && aboveCell.rightWall) //||
 //            (currentCell.rightWall && rightCell.topWall) ||
 //            (currentCell.rightWall && rightCell.bottomWall) ||
 //            (currentCell.rightWall && belowCell.topWall) ||
@@ -110,7 +110,7 @@ public class Maze {
 //                (currentCell.bottomWall && belowCell.leftWall) ||
 //                (currentCell.bottomWall && belowCell.rightWall) ||
                 (currentCell.bottomWall && leftCell.rightWall) ||
-                (currentCell.bottomWall && leftCell.bottomWall) //||
+                        (currentCell.bottomWall && leftCell.bottomWall) //||
 //                (currentCell.bottomWall && rightCell.bottomWall) ||
 //                (currentCell.bottomWall && rightCell.leftWall)
         ) {
@@ -128,10 +128,10 @@ public class Maze {
         for (int row = 0; row < mazeArray.length; row++) {
             for (int col = 0; col < mazeArray[row].length; col++) {
                 if (mazeArray[col][row].leftWall) {
-                    output += (char)195; //add a vertical wall
+                    output += '|'; //add a vertical wall
                 }
                 if (mazeArray[col][row].topWall) {
-                    output += (char) 196; // add a horizontal wall
+                    output += '_'; // add a horizontal wall
                 } else {
                     output += " ";
                 }
@@ -142,23 +142,45 @@ public class Maze {
         return output;
     }
 
-    Cell[] getFirstSolution() {
-        throw new UnsupportedOperationException("getFirstSolution() is Not Implemented");
+    public static List<coordinate> getFirstSolution(Maze maze) {
+        class helper {
+            public static List<coordinate> solveMaze(Maze maze,coordinate pos, List<coordinate> moves) {
+                moves.add(pos);
+                
+                if (pos == maze.endPosition) {
+                    return moves;
+                } else {
+                    Cell cell = maze.getCell(pos);
+                    if (!cell.leftWall) {  //if there's no left wall, move left
+                        return solveMaze(maze, new coordinate(pos.row, pos.col + 1), moves);
+                    } else if (!cell.rightWall) {
+                        return solveMaze(maze, new coordinate(pos.row, pos.col - 1), moves);
+                    } else if (!cell.bottomWall) {
+                        return solveMaze(maze, new coordinate(pos.row + 1, pos.col), moves);
+                    } else if (!cell.topWall) {
+                        return solveMaze(maze, new coordinate(pos.row - 1, pos.col), moves);
+                    }
+                }
+
+                return moves;
+            }
+        }
+
+
+        return helper.solveMaze(maze, maze.startPosition,new ArrayList<coordinate>());
     }
 
     Cell[] getBestSolution() {
         throw new UnsupportedOperationException("getBestSolution() is Not Implemented");
     }
 
-    void edit(coordinate[] cellPositions,Cell newWalls) {
-        for (coordinate pos : cellPositions)
-        {
+    public void edit(coordinate[] cellPositions, Cell newWalls) {
+        for (coordinate pos : cellPositions) {
             mazeArray[pos.row][pos.col] = newWalls;
         }
     }
 
-    boolean export(String path)
-    {
+    boolean export(String path) {
         throw new UnsupportedOperationException("export is Not Implemented");
     }
 
