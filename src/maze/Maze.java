@@ -146,7 +146,7 @@ public class Maze {
         class helper {
             public static List<coordinate> solveMaze(Maze maze,coordinate pos, List<coordinate> moves) {
                 moves.add(pos);
-                
+
                 if (pos == maze.endPosition) {
                     return moves;
                 } else {
