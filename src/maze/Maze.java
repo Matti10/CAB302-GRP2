@@ -32,6 +32,23 @@ public class Maze {
     static Cell[][] mazeArray; //2d array of cell objects
     boolean isSealed;
 
+    public Maze(){
+        //initialise maze properties
+        this.length = 3;
+        this.height = 3;
+        this.isSealed = true;
+        this.mazeArray = new Cell[length][height];
+        this.startPosition = new coordinate(1,0);
+        this.endPosition = new coordinate(2,1);
+
+        //initialise each cell in mazeArray
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < height; j++) {
+                //fill mazeArray with blank cells
+                this.mazeArray[i][j] = new Cell(false, false, false, false);
+            }
+        }
+    }
 
     // maze constructor
     public Maze(int length, int height, boolean isSealed /*, coordinate startPosition, coordinate endPosition*/) {
@@ -45,8 +62,8 @@ public class Maze {
         this.height = height;
         this.isSealed = isSealed;
         this.mazeArray = new Cell[length][height];
-//        this.startPosition = startPosition;
-//        this.endPosition = endPosition;
+          this.startPosition = startPosition;
+        this.endPosition = endPosition;
 
         //initialise each cell in mazeArray
         for (int i = 0; i < length; i++) {
