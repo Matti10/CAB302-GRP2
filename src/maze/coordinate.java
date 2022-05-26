@@ -1,6 +1,6 @@
 package maze;
 
-public class coordinate extends Maze {
+public class coordinate {
     public int row;
     public int col;
 
@@ -9,16 +9,12 @@ public class coordinate extends Maze {
     {
 //        super(3,3,false/*, new coordinate(0,0),new coordinate(0,0)*/); //not sure about this...
 
-        if (row < 0 || col < 0)
-        {
-            throw new IllegalArgumentException("Coordinates must be greater than zero");
-        }
-        if (row > length || col > height)
-        {
-            throw new IllegalArgumentException("Coordinates must be within than game size");
-        }
 
         this.row = row;
         this.col = col;
+    }
+
+    public String toString(){
+        return  "col: " + col + " row: "  + row +"\n";
     }
 }
