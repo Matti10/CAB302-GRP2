@@ -1,6 +1,6 @@
 package maze;
 
-public class Cell  //extends  Maze
+public class Cell
 {
     boolean topWall;
     boolean bottomWall;
