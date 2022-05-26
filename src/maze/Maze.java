@@ -4,24 +4,25 @@ import java.util.*;
 
 public class Maze {
 
-    public static void main(String[] args)
-    {
-        Maze testMaze = new Maze(3,3,true/*,new coordinate(0,0), new coordinate(9,9)*/);
+    public static void main(String[] args) {
 
-//        testMaze.randomMaze();
+
+        Maze testMaze = initMaze(3, 3, true, 1, 0, 2, 1);
+
         coordinate[] allWalls = new coordinate[6];
-        allWalls[0] = new coordinate(0,0);
-        allWalls[1] = new coordinate(0,1);
-        allWalls[2] = new coordinate(0,2);
-        allWalls[3] = new coordinate(1,2);
-        allWalls[4] = new coordinate(2,0);
-        allWalls[5] = new coordinate(2,2);
+        allWalls[0] = new coordinate(0, 0);
+        allWalls[1] = new coordinate(0, 1);
+        allWalls[2] = new coordinate(0, 2);
+        allWalls[3] = new coordinate(1, 2);
+        allWalls[4] = new coordinate(2, 0);
+        allWalls[5] = new coordinate(2, 2);
 
-
-        testMaze.edit(allWalls,new Cell(true,true,true,true));
+        testMaze.edit(allWalls, new Cell(true, true, true, true));
 
         System.out.print(testMaze.ToString());
-        System.out.print(Maze.getFirstSolution(testMaze));
+        for (coordinate coord : getFirstSolution(testMaze)){
+            System.out.print(coord.toString());
+        }
 
     }
 
@@ -29,29 +30,19 @@ public class Maze {
     coordinate endPosition;
     int height;
     int length;
-    static Cell[][] mazeArray; //2d array of cell objects
+    Cell[][] mazeArray; //2d array of cell objects
     boolean isSealed;
 
-    public Maze(){
+    public Maze() {
         //initialise maze properties
-        this.length = 3;
-        this.height = 3;
+        this.length = 0;
+        this.height = 0;
         this.isSealed = true;
         this.mazeArray = new Cell[length][height];
-        this.startPosition = new coordinate(1,0);
-        this.endPosition = new coordinate(2,1);
-
-        //initialise each cell in mazeArray
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < height; j++) {
-                //fill mazeArray with blank cells
-                this.mazeArray[i][j] = new Cell(false, false, false, false);
-            }
-        }
     }
 
     // maze constructor
-    public Maze(int length, int height, boolean isSealed /*, coordinate startPosition, coordinate endPosition*/) {
+    public Maze(int length, int height, boolean isSealed) {
 
         if (length < 0 || height < 0) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
@@ -62,17 +53,33 @@ public class Maze {
         this.height = height;
         this.isSealed = isSealed;
         this.mazeArray = new Cell[length][height];
-          this.startPosition = startPosition;
-        this.endPosition = endPosition;
+    }
 
+    public void setStartEndPos(coordinate startPosition, coordinate endPosition) {
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+    }
+
+    public void initMazeArray() {
         //initialise each cell in mazeArray
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < height; j++) {
                 //fill mazeArray with blank cells
-                this.mazeArray[i][j] = new Cell(false, false, false, false);
+                mazeArray[i][j] = new Cell(false, false, false, false);
             }
         }
+    }
 
+    public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY) {
+        //create maze object
+        Maze maze = new Maze(3, 3, true);
+
+        //set start and  end pos
+        maze.setStartEndPos(maze.newCoord(startPositionX, startPositionY), maze.newCoord(endPositionX, endPositionY));
+
+        maze.initMazeArray();
+
+        return maze;
     }
 
     //fill maze object with random maze
@@ -126,6 +133,17 @@ public class Maze {
     //return cell of given coordinate
     Cell getCell(coordinate coord) {
         return mazeArray[coord.row][coord.col];
+    }
+
+    coordinate newCoord(int col, int row) {
+        if (row < 0 || col < 0) {
+            throw new IllegalArgumentException("Coordinates must be greater than zero");
+        }
+        if (row > length || col > height) {
+            throw new IllegalArgumentException("Coordinates must be within than game size");
+        }
+
+        return new coordinate(col, row);
     }
 
     //checks the walls of a cell against its surrounding cells using a set of rules
@@ -182,7 +200,7 @@ public class Maze {
 
     public static List<coordinate> getFirstSolution(Maze maze) {
         class helper {
-            public static List<coordinate> solveMaze(Maze maze,coordinate pos, List<coordinate> moves) {
+            public static List<coordinate> solveMaze(Maze maze, coordinate pos, List<coordinate> moves) {
                 moves.add(pos);
 
                 if (pos == maze.endPosition) {
@@ -205,7 +223,7 @@ public class Maze {
         }
 
 
-        return helper.solveMaze(maze, maze.startPosition,new ArrayList<coordinate>());
+        return helper.solveMaze(maze, maze.startPosition, new ArrayList<coordinate>());
     }
 
     Cell[] getBestSolution() {

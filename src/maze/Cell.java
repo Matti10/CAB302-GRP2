@@ -9,9 +9,17 @@ public class Cell
     boolean isStart;
     boolean isEnd;
 
+    public Cell()
+    {
+        this.topWall = false;
+        this.bottomWall = false;
+        this.leftWall = false;
+        this.rightWall = false;
+        this.isStart = false;
+        this.isEnd = false;
+    }
     public Cell(boolean topWall, boolean bottomWall, boolean leftWall, boolean rightWall)
     {
-        //super(1,1,false/*, new coordinate(0,0),new coordinate(0,0)*/); //not sure about this...
         this.topWall = topWall;
         this.bottomWall = bottomWall;
         this.leftWall = leftWall;
@@ -22,7 +30,6 @@ public class Cell
 
     public Cell(boolean topWall, boolean bottomWall, boolean leftWall, boolean rightWall, boolean isStart, boolean isEnd)
     {
-        //super(1,1,false/*, new coordinate(0,0),new coordinate(0,0)*/); //not sure about this...
         this.topWall = topWall;
         this.bottomWall = bottomWall;
         this.leftWall = leftWall;
