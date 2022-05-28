@@ -70,6 +70,30 @@ public class Maze {
         }
     }
 
+    public void editGameArray(coordinate pos, Cell newCell){
+        //set new cell
+        mazeArray[pos.col][pos.row] = newCell;
+
+        //match surrounding cell walls
+        try
+        {
+            mazeArray[pos.col - 1][pos.row].rightWall = newCell.leftWall;
+        }
+        catch (Exception e) {
+            //if there is no cell to the left, do nothing
+            System.out.print("poo");
+        }
+        try
+        {
+            mazeArray[pos.col][pos.row - 1].bottomWall = newCell.topWall;
+        }
+        catch (Exception e) {
+            //if there is no cell above, do nothing
+            System.out.print("poo");
+        }
+
+    }
+
     public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY) {
         //create maze object
         Maze maze = new Maze(3, 3, true);
@@ -143,7 +167,7 @@ public class Maze {
             throw new IllegalArgumentException("Coordinates must be within than game size");
         }
 
-        return new coordinate(col, row);
+        return new coordinate(row, col);
     }
 
     //checks the walls of a cell against its surrounding cells using a set of rules
@@ -179,7 +203,7 @@ public class Maze {
     }
 
     public String ToString() {
-        String output = "";
+        String output = "\n";
         // iterate over all maze cells and assign them with a random wall type
         for (int row = 0; row < mazeArray.length; row++) {
             for (int col = 0; col < mazeArray[row].length; col++) {
@@ -208,7 +232,8 @@ public class Maze {
                 } else {
                     Cell cell = maze.getCell(pos);
                     if (!cell.leftWall) {  //if there's no left wall, move left
-                        return solveMaze(maze, new coordinate(pos.row, pos.col + 1), moves);
+                        List<coordinate> someMove = solveMaze(maze, new coordinate(pos.row, pos.col + 1), moves);
+
                     } else if (!cell.rightWall) {
                         return solveMaze(maze, new coordinate(pos.row, pos.col - 1), moves);
                     } else if (!cell.bottomWall) {
@@ -232,7 +257,7 @@ public class Maze {
 
     public void edit(coordinate[] cellPositions, Cell newWalls) {
         for (coordinate pos : cellPositions) {
-            mazeArray[pos.row][pos.col] = newWalls;
+            editGameArray(pos,newWalls);
         }
     }
 
