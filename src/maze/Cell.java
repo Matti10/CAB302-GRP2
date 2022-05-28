@@ -52,9 +52,9 @@ public class Cell
         return list;
     }
 
-//    public Class getCell()
-//    {
-//        return ;
-//    }
+    public Cell getCell()
+    {
+        return this;
+    }
 
 }
