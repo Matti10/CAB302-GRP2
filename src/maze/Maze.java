@@ -2,6 +2,8 @@ package maze;
 
 import java.util.*;
 
+import org.javatuples.Pair;
+
 public class Maze {
 
     public static void main(String[] args) {
@@ -20,7 +22,7 @@ public class Maze {
         testMaze.edit(allWalls, new Cell(true, true, true, true));
 
         System.out.print(testMaze.ToString());
-        for (coordinate coord : getFirstSolution(testMaze)){
+        for (coordinate coord : testMaze.getFirstSolution()) {
             System.out.print(coord.toString());
         }
 
@@ -70,26 +72,32 @@ public class Maze {
         }
     }
 
-    public void editGameArray(coordinate pos, Cell newCell){
+    public void editGameArray(coordinate pos, Cell newCell) {
         //set new cell
         mazeArray[pos.col][pos.row] = newCell;
 
-        //match surrounding cell walls
-        try
-        {
+        // todo - tidy this
+
+        try {
             mazeArray[pos.col - 1][pos.row].rightWall = newCell.leftWall;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //if there is no cell to the left, do nothing
-            System.out.print("poo");
         }
-        try
-        {
+        try {
+            //if there is a cell to the right, match its left wall with the current cells right wall
+            mazeArray[pos.col + 1][pos.row].leftWall = newCell.rightWall;
+        } catch (Exception e) {
+            //if there is no cell to the right, do nothing
+        }
+        try {
+            mazeArray[pos.col][pos.row + 1].topWall = newCell.bottomWall;
+        } catch (Exception e) {
+            //if there is no cell below, do nothing
+        }
+        try {
             mazeArray[pos.col][pos.row - 1].bottomWall = newCell.topWall;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //if there is no cell above, do nothing
-            System.out.print("poo");
         }
 
     }
@@ -156,7 +164,7 @@ public class Maze {
 
     //return cell of given coordinate
     Cell getCell(coordinate coord) {
-        return mazeArray[coord.row][coord.col];
+        return mazeArray[coord.col][coord.row];
     }
 
     coordinate newCoord(int col, int row) {
@@ -167,7 +175,7 @@ public class Maze {
             throw new IllegalArgumentException("Coordinates must be within than game size");
         }
 
-        return new coordinate(row, col);
+        return new coordinate(col, row);
     }
 
     //checks the walls of a cell against its surrounding cells using a set of rules
@@ -222,33 +230,48 @@ public class Maze {
         return output;
     }
 
-    public static List<coordinate> getFirstSolution(Maze maze) {
-        class helper {
-            public static List<coordinate> solveMaze(Maze maze, coordinate pos, List<coordinate> moves) {
+    public List<coordinate> getFirstSolution() {
+        class Helper {
+
+            boolean isSolved = false;
+
+            public List<coordinate> solveMaze( coordinate pos, List<coordinate> moves, Character previousPos) {
                 moves.add(pos);
 
-                if (pos == maze.endPosition) {
+                if (pos.row == endPosition.row && pos.col == endPosition.col) {
+                    isSolved = true;
                     return moves;
                 } else {
-                    Cell cell = maze.getCell(pos);
-                    if (!cell.leftWall) {  //if there's no left wall, move left
-                        List<coordinate> someMove = solveMaze(maze, new coordinate(pos.row, pos.col + 1), moves);
-
-                    } else if (!cell.rightWall) {
-                        return solveMaze(maze, new coordinate(pos.row, pos.col - 1), moves);
-                    } else if (!cell.bottomWall) {
-                        return solveMaze(maze, new coordinate(pos.row + 1, pos.col), moves);
-                    } else if (!cell.topWall) {
-                        return solveMaze(maze, new coordinate(pos.row - 1, pos.col), moves);
+                    Cell cell = getCell(pos);
+                    if (!cell.leftWall && previousPos != 'L') {  //if there's no left wall, move left
+                        return solveMaze(new coordinate(pos.col - 1, pos.row), moves, 'R');
                     }
+                    if (!cell.rightWall && previousPos != 'R') {
+                        return solveMaze(new coordinate(pos.col + 1, pos.row), moves, 'L');
+                    }
+                    if (!cell.bottomWall && previousPos != 'B') {
+                        return solveMaze(new coordinate(pos.col, pos.row + 1), moves, 'T');
+                    }
+                    if (!cell.topWall && previousPos != 'T') {
+                        return solveMaze(new coordinate(pos.col, pos.row - 1), moves, 'B');
+                    }
+
+                    //if all nodes are explored and maze isn't solved, bubble back up tree
+                    if (!isSolved)
+                    {
+                        moves.remove(pos);
+                        return moves;
+                    }
+
                 }
 
                 return moves;
             }
         }
 
+        Helper helper = new Helper();
 
-        return helper.solveMaze(maze, maze.startPosition, new ArrayList<coordinate>());
+        return helper.solveMaze(startPosition, new ArrayList<coordinate>(), 'Z');
     }
 
     Cell[] getBestSolution() {
@@ -257,7 +280,7 @@ public class Maze {
 
     public void edit(coordinate[] cellPositions, Cell newWalls) {
         for (coordinate pos : cellPositions) {
-            editGameArray(pos,newWalls);
+            editGameArray(pos, newWalls);
         }
     }
 
