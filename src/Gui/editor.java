@@ -7,8 +7,12 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class editor extends JFrame{
+    private GUIutilities guIutilities = new GUIutilities();
 
     public editor() {
         super("MAZE EDITOR");
@@ -55,21 +59,39 @@ public class editor extends JFrame{
 /* ******************************************************************************* */
 
         //MAZE
-        JPanel mazePane = new JPanel(new BorderLayout());
+        FlowLayout layout = new FlowLayout();
+        layout.setVgap(0);
+        layout.setHgap(0);
+        JPanel mazePane = new JPanel(layout);
         window.add(mazePane, BorderLayout.CENTER);
 
         //MAZE -> MAZE DISPLAY
-        JPanel mazeDisplay = new JPanel(new GridLayout(5,5));
-        mazeDisplay.setBorder(new EmptyBorder(20,20,20,20));
+
+
+        setPreferredSize(new Dimension(450, 110));
+        GridLayout mazeLayout = new GridLayout();
+        mazeLayout.setColumns(100);
+        mazeLayout.setRows(100);
+
+        JPanel mazeDisplay = new JPanel(mazeLayout);
+        mazeDisplay.setSize(100,100);
         mazePane.add(mazeDisplay, BorderLayout.CENTER);
 
-        JButton[] mazeButtons;
-        mazeButtons = new JButton[25];
-        for (int i=0;i<25;i++) {
-            mazeButtons[i] = new JButton(String.valueOf(i));
-            mazeButtons[i].setBackground(Color.white);
-            mazeDisplay.add(mazeButtons[i]);
+
+        boolean [] innerArray  = {true,true,true,true};
+        boolean [][] testArray  = {};
+        List<boolean[]> myList = new ArrayList<boolean[]>();
+
+        for(int i = 0; i < 10000; i++)
+        {
+            myList.add(i,innerArray);
         }
+
+
+        for(boolean [] cell : myList ){
+            mazeDisplay.add(guIutilities.CreateCell(cell));//pass array to here
+        }
+
 
         //MAZE -> INFO
         JPanel mazeInfo = new JPanel(new BorderLayout());

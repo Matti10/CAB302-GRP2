@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Image Folder" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/src/maze" />
+      <excludeFolder url="file://$MODULE_DIR$/src/db" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
