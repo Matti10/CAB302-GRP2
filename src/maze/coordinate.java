@@ -1,24 +1,20 @@
 package maze;
 
-public class coordinate extends  Maze {
+public class coordinate {
     public int row;
     public int col;
 
-    public coordinate (int row ,int col)
-    {
-        super(1,1,false, new coordinate(0,0),new coordinate(0,0)); //not sure about this...
 
-        if (row < 0 || col < 0)
-        {
-            throw new IllegalArgumentException("Coordinates must be greater than zero");
-        }
-        if (row > length || col > height)
-        {
-            throw new IllegalArgumentException("Coordinates must be within than game size");
-        }
+    public coordinate (int col,int row)
+    {
+//        super(3,3,false/*, new coordinate(0,0),new coordinate(0,0)*/); //not sure about this...
+
 
         this.row = row;
         this.col = col;
     }
 
+    public String toString(){
+        return  "col: " + col + " row: "  + row +"\n";
+    }
 }
