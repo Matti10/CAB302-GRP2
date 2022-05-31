@@ -22,36 +22,17 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-/**
- * Initiates user interface for the MazeList application. All listeners for
- * the application are included as inner classes of this class.
- *
- * @author Malcolm Corney
- * @version $Id: Exp $
- *
- */
 public class MazeDBUI extends JFrame {
-
     private static final long serialVersionUID = -5050538890770582361L;
-
     private JList mazeNameList;
-
     private JTextField mazeName;
-
     private JTextField author;
-
     private JTextField dateTimeCreated;
-
     private JTextField dateTimeEdited;
-
     private JTextField mazeDimensions;
-
     private JTextField mazeData;
-
     private JButton newButton;
-
     private JButton saveButton;
-
     private JButton deleteButton;
 
     MazeListData data;

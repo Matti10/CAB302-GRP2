@@ -8,10 +8,6 @@ import java.sql.Statement;
 import java.util.Set;
 import java.util.TreeSet;
 
-
-/**
- * Class for retrieving data from the XML file holding the address list.
- */
 public class JDBCMazeListDataSource implements MazeListDataSource {
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS mazes ("
@@ -25,25 +21,16 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
                     + "mazeDataOverflow VARCHAR(2002));"; //make sure this works, should go up to 2001. total 10,000 for both (100x100)
 
     private static final String INSERT_MAZE = "INSERT INTO mazes (mazeName, author, dateCreated, dateEdited, mazeDimensions, mazeData, mazeDataOverflow) VALUES (?, ?, ?, ?, ?, ?, ?);";
-
     private static final String GET_MAZE_NAMES = "SELECT mazeName FROM mazes";
-
     private static final String GET_MAZE = "SELECT * FROM mazes WHERE mazeName=?";
-
     private static final String DELETE_MAZE = "DELETE FROM mazes WHERE mazeName=?";
-
     private static final String COUNT_ROWS = "SELECT COUNT(*) FROM mazes";
 
     private Connection connection;
-
     private PreparedStatement addMaze;
-
     private PreparedStatement getMazeList;
-
     private PreparedStatement getMaze;
-
     private PreparedStatement deleteMaze;
-
     private PreparedStatement rowCount;
 
     public JDBCMazeListDataSource() {
@@ -51,21 +38,16 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         try {
             Statement st = connection.createStatement();
             st.execute(CREATE_TABLE);
-            /* BEGIN MISSING CODE */
             addMaze = connection.prepareStatement(INSERT_MAZE);
             getMazeList = connection.prepareStatement(GET_MAZE_NAMES);
             getMaze = connection.prepareStatement(GET_MAZE);
             deleteMaze = connection.prepareStatement(DELETE_MAZE);
             rowCount = connection.prepareStatement(COUNT_ROWS);
-            /* END MISSING CODE */
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    /**
-     * @see MazeListDataSource#addMaze(MazeDBObj)
-     */
     public void addMaze(MazeDBObj m) {
         try {
             addMaze.setString(1, m.getMazeName());
@@ -81,33 +63,24 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         }
     }
 
-    /**
-     * @see MazeListDataSource#mazeNameSet()
-     */
     public Set<String> mazeNameSet() {
         Set<String> mazeNames = new TreeSet<String>();
         ResultSet rs = null;
 
-        /* BEGIN MISSING CODE */
         try {
             rs = getMazeList.executeQuery();
-            while (rs.next()) {
-                mazeNames.add(rs.getString("mazeName"));
-            }
+            while (rs.next()) mazeNames.add(rs.getString("mazeName"));
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        /* END MISSING CODE */
 
         return mazeNames;
     }
-    /**
-     * @see MazeListDataSource#getMazeName(String)
-     */
+
     public MazeDBObj getMazeName(String mazeName) {
         MazeDBObj m = new MazeDBObj();
         ResultSet rs = null;
-        /* BEGIN MISSING CODE */
+
         try {
             getMaze.setString(1, mazeName);
             rs = getMaze.executeQuery();
@@ -122,13 +95,9 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        /* END MISSING CODE */
         return m;
     }
 
-    /**
-     * @see MazeListDataSource#getSize()
-     */
     public int getSize() {
         ResultSet rs = null;
         int rows = 0;
@@ -144,30 +113,20 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         return rows;
     }
 
-    /**
-     * @see MazeListDataSource#deleteMaze(String)
-     */
     public void deleteMaze(String mazeName) {
-        /* BEGIN MISSING CODE */
         try {
             deleteMaze.setString(1, mazeName);
             deleteMaze.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        /* END MISSING CODE */
     }
 
-    /**
-     * @see MazeListDataSource#close()
-     */
     public void close() {
-        /* BEGIN MISSING CODE */
         try {
             connection.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        /* END MISSING CODE */
     }
 }

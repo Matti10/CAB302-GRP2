@@ -4,22 +4,16 @@ import java.io.Serializable;
 
 public class MazeDBObj implements Comparable<MazeDBObj>, Serializable {
     private static final long serialVersionUID = -7092701502990374424L;
-
     private String mazeName;
-
     private String author;
-
     private String dateTimeCreated;
-
     private String dateTimeEdited;
-
     private String mazeDimensions;
-
     private String mazeData;
-
     private String mazeDataOverflow;
 
-    public MazeDBObj() {}
+    public MazeDBObj() {
+    }
 
     public MazeDBObj(String mazeName, String author, String dateTimeCreated, String dateTimeEdited, String mazeDimensions, String mazeData, String mazeDataOverflow) {
         this.mazeName = mazeName;
@@ -91,7 +85,5 @@ public class MazeDBObj implements Comparable<MazeDBObj>, Serializable {
         return this.mazeName.compareTo(other.mazeName);
     }
 
-    public String toString() {
-        return mazeName + " " + author + ", " + dateTimeCreated + " " + dateTimeEdited + " " + mazeData;
-    }
+    public String toString() { return mazeName + " " + author + ", " + dateTimeCreated + " " + dateTimeEdited + " " + mazeData; }
 }
