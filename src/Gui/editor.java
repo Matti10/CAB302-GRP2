@@ -1,18 +1,12 @@
-package Gui;/*
+package GUI;/*
  *
 */
 
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class editor extends JFrame{
-    private GUIutilities guIutilities = new GUIutilities();
+public class editor extends JFrame {
 
     public editor() {
         super("MAZE EDITOR");
@@ -20,7 +14,7 @@ public class editor extends JFrame{
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         JPanel window = new JPanel(new BorderLayout());
 
-        //TASKBAR - more of a line above editor for spacing reasons now - Jhy 29/04/22
+        //TASKBAR
         JPanel taskbar = new JPanel();
         taskbar.setBorder(new LineBorder(Color.black));
         taskbar.setPreferredSize(new Dimension(0,40));
@@ -28,70 +22,31 @@ public class editor extends JFrame{
         taskbar.setMinimumSize(new Dimension(0,40));
         window.add(taskbar, BorderLayout.NORTH);
 
-        JMenuBar menuBar = new JMenuBar();
-
-        JMenu fileMenu = new JMenu("File");
-        JMenu editMenu = new JMenu("Edit");
-        JMenu helpMenu = new JMenu("Help");
-        JMenu insertMenu = new JMenu("Insert");
-        JMenu optionsMenu = new JMenu("Insert");
-
-        // Sub menu of fileMenu
-        JMenu saveMenu = new JMenu("Save");
-        JMenu saveAsMenu = new JMenu("Save As");
-        JMenu saveExitMenu = new JMenu("Save & Exit");
-
-        fileMenu.add(saveMenu);
-        fileMenu.add(saveAsMenu);
-        fileMenu.add(saveExitMenu);
-        //*************************
-
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-        menuBar.add(insertMenu);
-        menuBar.add(optionsMenu);
-        menuBar.add(helpMenu);
-
-
-        this.setJMenuBar(menuBar);
-
+        JButton file = new JButton("File");
+        JButton edit = new JButton("Edit");
+        JButton save = new JButton("Save");
+        taskbar.add(file);
+        taskbar.add(edit);
+        taskbar.add(save);
 
 /* ******************************************************************************* */
 
         //MAZE
-        FlowLayout layout = new FlowLayout();
-        layout.setVgap(0);
-        layout.setHgap(0);
-        JPanel mazePane = new JPanel(layout);
+        JPanel mazePane = new JPanel(new BorderLayout());
         window.add(mazePane, BorderLayout.CENTER);
 
         //MAZE -> MAZE DISPLAY
-
-
-        setPreferredSize(new Dimension(450, 110));
-        GridLayout mazeLayout = new GridLayout();
-        mazeLayout.setColumns(100);
-        mazeLayout.setRows(100);
-
-        JPanel mazeDisplay = new JPanel(mazeLayout);
-        mazeDisplay.setSize(100,100);
+        JPanel mazeDisplay = new JPanel(new GridLayout(5,5));
+        mazeDisplay.setBorder(new EmptyBorder(20,20,20,20));
         mazePane.add(mazeDisplay, BorderLayout.CENTER);
 
-
-        boolean [] innerArray  = {true,true,true,true};
-        boolean [][] testArray  = {};
-        List<boolean[]> myList = new ArrayList<boolean[]>();
-
-        for(int i = 0; i < 10000; i++)
-        {
-            myList.add(i,innerArray);
+        JButton[] mazeButtons;
+        mazeButtons = new JButton[25];
+        for (int i=0;i<25;i++) {
+            mazeButtons[i] = new JButton(String.valueOf(i));
+            mazeButtons[i].setBackground(Color.white);
+            mazeDisplay.add(mazeButtons[i]);
         }
-
-
-        for(boolean [] cell : myList ){
-            mazeDisplay.add(guIutilities.CreateCell(cell));//pass array to here
-        }
-
 
         //MAZE -> INFO
         JPanel mazeInfo = new JPanel(new BorderLayout());
@@ -223,6 +178,9 @@ public class editor extends JFrame{
      * @param args
      * creates args (???)
      */
-
+    public static void main(String[] args) {
+        setDefaultLookAndFeelDecorated(true);
+        new editor();
+    }
 
 }
