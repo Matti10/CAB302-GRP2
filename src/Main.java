@@ -21,7 +21,7 @@ public class Main {
 
         System.out.print(testMaze.ToString());
         //System.out.print(Maze.getFirstSolution(testMaze));
-        new TitleScreen("test title screen");
+
     }
 //    public static void main(String args[]){
 //        TitleScreen gui = new TitleScreen("Main Screen");
