@@ -1,4 +1,4 @@
-package Gui;
+package GUI;
 
 
 import javax.swing.*;
@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoadScreen extends JFrame implements ActionListener, Runnable {
-    private GUIutilities guIutilities = new GUIutilities();
+    private GUI_utilities GUIutilities = new GUI_utilities();
     private static final int WIDTH = 500;
     private static final int HEIGHT = 500;
 
@@ -22,12 +22,12 @@ public class LoadScreen extends JFrame implements ActionListener, Runnable {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel display = new JLabel("Maze Name | Maze Author | Date");
         // Creation of Elements
-        JPanel scrollableContainer = guIutilities.createPanel(Color.white);
+        JPanel scrollableContainer = GUIutilities.createPanel(Color.white);
         JScrollPane scrollPane = new JScrollPane(scrollableContainer);
 
-        JPanel backpage = guIutilities.createPanel(Color.darkGray);
-        JPanel buttonShelf = guIutilities.createPanel(Color.darkGray);
-        JPanel eastShelf = guIutilities.createPanel(Color.darkGray );
+        JPanel backpage = GUIutilities.createPanel(Color.darkGray);
+        JPanel buttonShelf = GUIutilities.createPanel(Color.darkGray);
+        JPanel eastShelf = GUIutilities.createPanel(Color.darkGray );
 
 
 
@@ -66,7 +66,7 @@ public class LoadScreen extends JFrame implements ActionListener, Runnable {
         if(event.getSource() == backButton)
         {
             setVisible(false);
-            new TitleScreen();
+            new TitleScreen("test");
         }
         if (event.getSource() == loadButton)
         {

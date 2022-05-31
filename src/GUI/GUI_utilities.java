@@ -1,9 +1,9 @@
-package Gui;
+package GUI;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class GUIutilities {
+public class GUI_utilities {
 
     public JPanel createPanel (Color c) {
         var panel = new JPanel();

@@ -1,7 +1,5 @@
-package Gui;
+package GUI;
 
-
-import com.sun.source.tree.ContinueTree;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +14,7 @@ public class LoadOptionsScreen extends JFrame implements ActionListener, Runnabl
     private static final int HEIGHT = 500;
 
 
-    GUIutilities guIutilities = new GUIutilities();
+    GUI_utilities GUIutilities = new GUI_utilities();
 
     JButton backButton = new JButton("Back");
     JButton continueButton = new JButton("Finish");
@@ -24,20 +22,20 @@ public class LoadOptionsScreen extends JFrame implements ActionListener, Runnabl
     GridLayout grdLayout = new GridLayout(0, 3);
     public LoadOptionsScreen()
     {
-        JPanel backButtonShelf = guIutilities.createPanel(Color.darkGray);
-        JPanel background = guIutilities.createPanel(Color.darkGray);
-        JPanel pnlEast = guIutilities.createPanel(Color.white);
+        JPanel backButtonShelf = GUIutilities.createPanel(Color.darkGray);
+        JPanel background = GUIutilities.createPanel(Color.darkGray);
+        JPanel pnlEast = GUIutilities.createPanel(Color.white);
         pnlEast.setPreferredSize(new Dimension(150,310));
-        JPanel pnlSouth = guIutilities.createPanel(Color.darkGray);
+        JPanel pnlSouth = GUIutilities.createPanel(Color.darkGray);
         pnlSouth.setPreferredSize(new Dimension(150,70));
         pnlSouth.add(backButtonShelf);
         backButtonShelf.setSize(30,100);
         pnlSouth.setLayout(grdLayout);
-        JPanel pnlWest = guIutilities.createPanel(Color.darkGray);
+        JPanel pnlWest = GUIutilities.createPanel(Color.darkGray);
         pnlWest.setPreferredSize(new Dimension(150,310));
-        JPanel pnlNorth = guIutilities.createPanel(Color.darkGray);
+        JPanel pnlNorth = GUIutilities.createPanel(Color.darkGray);
         pnlNorth.setPreferredSize(new Dimension(150,70));
-        JPanel pnlCenter = guIutilities.createPanel(Color.white);
+        JPanel pnlCenter = GUIutilities.createPanel(Color.white);
         pnlCenter.setPreferredSize(new Dimension(150,310));
         background.setLayout(new BorderLayout());
 
@@ -75,7 +73,7 @@ public class LoadOptionsScreen extends JFrame implements ActionListener, Runnabl
         else if(event.getSource() == backButton)
         {
             setVisible(false);
-            new TitleScreen();
+            new TitleScreen("main screen");
         }
 
     }

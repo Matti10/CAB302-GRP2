@@ -2,7 +2,7 @@ package maze;
 
 import java.util.*;
 
-import org.javatuples.Pair;
+//import org.javatuples.Pair;
 
 public class Maze {
 

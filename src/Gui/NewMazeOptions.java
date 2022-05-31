@@ -1,4 +1,4 @@
-package Gui;
+package GUI;
 
 // Screen for option s before a user creates a new maze like size ect
 
