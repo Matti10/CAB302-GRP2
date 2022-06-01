@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.Serial;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -23,8 +24,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class MazeDBUI extends JFrame {
+    @Serial
     private static final long serialVersionUID = -5050538890770582361L;
-    private JList mazeNameList;
+    private JList<String> mazeNameList;
     private JTextField mazeName;
     private JTextField author;
     private JTextField dateTimeCreated;
@@ -78,7 +80,7 @@ public class MazeDBUI extends JFrame {
     }
 
     private JScrollPane makeMazeNameListPane() {
-        mazeNameList = new JList(data.getModel());
+        mazeNameList = new JList<>(data.getModel());
         mazeNameList.setFixedCellWidth(200);
 
         JScrollPane scroller = new JScrollPane(mazeNameList);
@@ -219,26 +221,11 @@ public class MazeDBUI extends JFrame {
         }
     }
 
-    /**
-     * Checks size of data/model and enables/disables the delete button
-     *
-     */
     private void checkListSize() {
         deleteButton.setEnabled(data.getSize() != 0);
     }
 
-    /**
-     * Handles events for the three buttons on the UI.
-     *
-     * @author Malcolm Corney
-     * @version $Id: Exp $
-     *
-     */
     private class ButtonListener implements ActionListener {
-
-        /**
-         * @see ActionListener#actionPerformed(ActionEvent)
-         */
         public void actionPerformed(ActionEvent e) {
             int size = data.getSize();
 
@@ -252,40 +239,28 @@ public class MazeDBUI extends JFrame {
             }
         }
 
-        /**
-         * When the new button is pressed, clear the field display, make them
-         * editable and enable the save button.
-         */
         private void newPressed() {
             clearFields();
             setFieldsEditable(true);
             saveButton.setEnabled(true);
         }
 
-        /**
-         * When the save button is pressed, check that the name field contains
-         * something. If it does, create a new MazeDBObj object and attempt to add it
-         * to the data model. Change the fields back to not editable and make the
-         * save button inactive.
-         *
-         * Check the list size to see if the delete button should be enabled.
-         */
         private void savePressed() {
             if (mazeName.getText() != null && !mazeName.getText().equals("")) {
-                String mazeData1 = "";
-                String mazeData2 = "";
+                StringBuilder mazeData1 = new StringBuilder();
+                StringBuilder mazeData2 = new StringBuilder();
                 if (mazeData.getText().length() > 10) {
                     for (int i = 0; i < 10; i++) {
-                        mazeData1 += mazeData.getText().charAt(i);
+                        mazeData1.append(mazeData.getText().charAt(i));
                     }
                     for (int i = 10; i < mazeData.getText().length(); i++) {
-                        mazeData2 += mazeData.getText().charAt(i);
+                        mazeData2.append(mazeData.getText().charAt(i));
                     }
                 } else {
-                    mazeData1 = mazeData.getText();
+                    mazeData1 = new StringBuilder(mazeData.getText());
                 }
                 MazeDBObj m = new MazeDBObj(mazeName.getText(), author.getText(), dateTimeCreated .getText(),
-                        dateTimeEdited.getText(), mazeDimensions.getText(), mazeData1, mazeData2);
+                        dateTimeEdited.getText(), mazeDimensions.getText(), mazeData1.toString(), mazeData2.toString());
                 data.add(m);
             }
             setFieldsEditable(false);
@@ -293,16 +268,6 @@ public class MazeDBUI extends JFrame {
             checkListSize();
         }
 
-        /**
-         * When the delete button is pressed remove the selected name from the
-         * data model.
-         *
-         * Clear the fields that were displayed and check to see if the delete
-         * button should be displayed.
-         *
-         * The index here handles cases where the first element of the list is
-         * deleted.
-         */
         private void deletePressed() {
             int index = mazeNameList.getSelectedIndex();
             data.remove(mazeNameList.getSelectedValue());

@@ -26,13 +26,16 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     private static final String DELETE_MAZE = "DELETE FROM mazes WHERE mazeName=?";
     private static final String COUNT_ROWS = "SELECT COUNT(*) FROM mazes";
 
-    private Connection connection;
+    private final Connection connection;
     private PreparedStatement addMaze;
     private PreparedStatement getMazeList;
     private PreparedStatement getMaze;
     private PreparedStatement deleteMaze;
     private PreparedStatement rowCount;
 
+    /**
+     * A constructor that initialises a JDBC connection and creates links between the list of maze objects and the database
+     */
     public JDBCMazeListDataSource() {
         connection = DBConnection.getInstance();
         try {
@@ -48,6 +51,11 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         }
     }
 
+    /**
+     * A method that adds a maze object to the database
+     *
+     * @param m - the maze object to be added
+     */
     public void addMaze(MazeDBObj m) {
         try {
             addMaze.setString(1, m.getMazeName());
@@ -64,8 +72,8 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     }
 
     public Set<String> mazeNameSet() {
-        Set<String> mazeNames = new TreeSet<String>();
-        ResultSet rs = null;
+        Set<String> mazeNames = new TreeSet<>();
+        ResultSet rs;
 
         try {
             rs = getMazeList.executeQuery();
@@ -77,9 +85,15 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         return mazeNames;
     }
 
+    /**
+     * A method that retrieves the maze object associated with a specified maze name
+     *
+     * @param mazeName - the name of the maze to be returned as a string
+     * @return - the maze object that matches the specified maze name
+     */
     public MazeDBObj getMazeName(String mazeName) {
         MazeDBObj m = new MazeDBObj();
-        ResultSet rs = null;
+        ResultSet rs;
 
         try {
             getMaze.setString(1, mazeName);
@@ -98,8 +112,13 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         return m;
     }
 
+    /**
+     * A method that analyses the amount of mazes stored in the database
+     *
+     * @return - the amount of mazes stored in the database as an integer
+     */
     public int getSize() {
-        ResultSet rs = null;
+        ResultSet rs;
         int rows = 0;
 
         try {
@@ -113,6 +132,11 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         return rows;
     }
 
+    /**
+     * A method that removes a specified maze from the database
+     *
+     * @param mazeName - the name of the maze to be deleted
+     */
     public void deleteMaze(String mazeName) {
         try {
             deleteMaze.setString(1, mazeName);
@@ -122,6 +146,9 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         }
     }
 
+    /**
+     * A method that closes the database connection
+     */
     public void close() {
         try {
             connection.close();
