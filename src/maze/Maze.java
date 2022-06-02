@@ -44,9 +44,10 @@ public class Maze {
     }
 
     // maze constructor
+    //length [1 to 100], height [1 to 100], isSealed [true or false] - calvey
     public Maze(int length, int height, boolean isSealed) {
 
-        if (length < 0 || height < 0) {
+        if (length < 1 || height < 1) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
         }
 
@@ -57,6 +58,7 @@ public class Maze {
         this.mazeArray = new Cell[length][height];
     }
 
+    //start/end position column [0 to length-1], row [0 to height-1] (assuming indexed from 0, or is it from 1?)  - calvey
     public void setStartEndPos(coordinate startPosition, coordinate endPosition) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
@@ -72,6 +74,7 @@ public class Maze {
         }
     }
 
+    //not sure what this does  - calvey
     public void editGameArray(coordinate pos, Cell newCell) {
         //set new cell
         mazeArray[pos.col][pos.row] = newCell;
@@ -102,6 +105,7 @@ public class Maze {
 
     }
 
+    //length [1 to 100], height [1 to 100], isSealed [true or false], start/end posx [0 to length-1], start/end posy [0 to height-1]
     public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY) {
         //create maze object
         Maze maze = new Maze(3, 3, true);
