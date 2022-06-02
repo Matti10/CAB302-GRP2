@@ -6,6 +6,8 @@ import java.awt.*;
 public class Chunk extends JFrame{
     GUI_utilities utility = new GUI_utilities();
 
+    GridLayout layout = new GridLayout(3,3);
+
     JPanel northEastCorner = utility.createPanel(Color.black);
     JPanel southEastCorner = utility.createPanel(Color.black);
     JPanel southWestCorner = utility.createPanel(Color.black);
@@ -15,20 +17,27 @@ public class Chunk extends JFrame{
     JPanel bottomCell      = utility.createPanel(Color.white);
     JPanel rightCell       = utility.createPanel(Color.white);
     JPanel leftCell        = utility.createPanel(Color.white);
-    JFrame background = new JFrame();
+    JPanel backgroundCell = new JPanel();
 
-    public JFrame packChunk(){
-        this.background.add(this.northEastCorner);
-        this.background.add(this.southEastCorner);
-        this.background.add(this.southWestCorner);
-        this.background.add(this.northWestCorner);
-        this.background.add(this.centerCell);
-        this.background.add(this.topCell);
-        this.background.add(this.bottomCell);
-        this.background.add(this.rightCell);
-        this.background.add(this.leftCell);
+
+    public JPanel packChunk(){ //chunks have to be added from left to right top to bottom
+
+        this.backgroundCell.setSize(10,10);
+        this.backgroundCell.
+        //row one
+        this.backgroundCell.add(this.northWestCorner);
+        this.backgroundCell.add(this.topCell);
+        this.backgroundCell.add(this.northEastCorner);
+        //row 2
+        this.backgroundCell.add(this.leftCell);
+        this.backgroundCell.add(this.centerCell);
+        this.backgroundCell.add(this.rightCell);
+        //row 3
+        this.backgroundCell.add(this.southWestCorner);
+        this.backgroundCell.add(this.bottomCell);
+        this.backgroundCell.add(this.southEastCorner);
         pack();
-        return this.background;
+        return this.backgroundCell;
     }
 
 
