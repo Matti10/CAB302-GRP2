@@ -9,30 +9,34 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
     public static final int WIDTH = 3000;
     public static final int HEIGHT = 2000; // set these to have a consistent size between screens
+    private static BorderLayout layout = new BorderLayout();
 
-    private JPanel pnlOne;
+    JFrame background = new JFrame();
+    Chunk maze = new Chunk();
 
-    private JPanel createPanel (Color c) {
-        var panel = new JPanel();
-        panel.setBackground(c);
-        return panel;
-    }
 
-    private void CreateGUI(){
-        setSize(WIDTH,HEIGHT);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        pnlOne  = createPanel(Color.white);
 
-        //panel related code to go here
+
+
+    public void CreateGUI(){
+
+        background.setSize(1500,700);
+        background.setLocationRelativeTo(null);
+
+
+
+        
         pack();
-        setVisible(true);
+        background.setVisible(true);
+    }
+
+    public void AddMaze(){
+        background.getContentPane().setBackground(Color.black);
+        background.add(maze.packChunk());
+        pack();
     }
 
 
-    public TitleScreen(String title) throws HeadlessException {
-        super(title);
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
