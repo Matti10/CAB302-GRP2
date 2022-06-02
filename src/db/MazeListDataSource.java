@@ -2,6 +2,7 @@ package db;
 
 import java.util.Set;
 
+//Do I javadoc this?
 public interface MazeListDataSource {
     void addMaze(MazeDBObj m);
 
