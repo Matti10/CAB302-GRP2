@@ -167,8 +167,12 @@ public class Maze {
     }
 
     //return cell of given coordinate
-    Cell getCell(coordinate coord) {
+    public Cell getCell(coordinate coord) {
         return mazeArray[coord.col][coord.row];
+    }
+    
+    public Maze getMaze() {
+        return this;
     }
 
     coordinate newCoord(int col, int row) {
