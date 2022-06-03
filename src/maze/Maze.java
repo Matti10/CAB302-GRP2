@@ -174,6 +174,10 @@ public class Maze {
     public Maze getMaze() {
         return this;
     }
+    
+    public Cell[][] getMazeArray() {
+        return this;
+    }
 
     coordinate newCoord(int col, int row) {
         if (row < 0 || col < 0) {
