@@ -1,14 +1,10 @@
 package testsuite;
 
-import maze.Maze;
+import db.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class testDB {
-    Maze maze;
-
-    @BeforeEach
-    void setup() {
-        maze = new Maze();
-    }
 
 }
