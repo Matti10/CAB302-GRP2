@@ -1,3 +1,5 @@
+
+import GUI.Chunk;
 import GUI.TitleScreen;
 import maze.*;
 
@@ -7,7 +9,11 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
-        Maze testMaze = new Maze(3, 3, true/*,new coordinate(0,0), new coordinate(9,9)*/);
+        Maze testMaze = new Maze(10, 10, true/*,new coordinate(0,0), new coordinate(9,9)*/);
+        testMaze.initMazeArray();
+
+
+
         /*
        testMaze.randomMaze();
         coordinate[] allWalls = new coordinate[6];
@@ -26,7 +32,9 @@ public class Main {
         */
         TitleScreen titleScreen = new TitleScreen();
         titleScreen.CreateGUI();
-        titleScreen.AddMaze();
+        titleScreen.AddMaze(testMaze);
+
+
     }
 //    public static void main(String args[]){
 //        TitleScreen gui = new TitleScreen("Main Screen");

@@ -105,6 +105,9 @@ public class Maze {
 
     }
 
+    public int[] getDimensions() {
+        return new int[] {this.length, this.height};
+    }
     //length [1 to 100], height [1 to 100], isSealed [true or false], start/end posx [0 to length-1], start/end posy [0 to height-1]
     public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY) {
         //create maze object
@@ -175,7 +178,7 @@ public class Maze {
         return this;
     }
     
-    public Cell[][] getMazeArray() {
+    public Maze getMazeArray() {
         return this;
     }
 
