@@ -1,5 +1,10 @@
 package GUI;
 
+
+import maze.Cell;
+import maze.Maze;
+import maze.coordinate;
+
 import  java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,12 +18,32 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     private GridBagConstraints mazeLayoutConstraints = new GridBagConstraints();
     private GridBagConstraints displayPaneLeftLayoutConstraints = new GridBagConstraints();
     private GridBagConstraints displayPaneRightLayoutConstraints = new GridBagConstraints();
+    private Chunk[] chunkArray;
+    GridBagLayout mazePaneLayout = new GridBagLayout();
+    GridBagConstraints mazePaneConstraints = new GridBagConstraints();
+
+    Chunk test = new Chunk();
+
 
     JFrame background = new JFrame();
     Chunk maze = new Chunk();
     JPanel mazeDisplayPane = new JPanel();
     JPanel displayPaneLeft = new JPanel();
     JPanel displayPaneRight = new JPanel();
+
+
+    JScrollPane mazeScroll = new JScrollPane(mazeDisplayPane);
+
+
+
+
+    private Chunk[] initChunks(int chunkCount) {
+        Chunk[] chunks = new Chunk[chunkCount];
+        for (int i=0;i<chunkCount;i++) {
+            chunks[i] = new Chunk();
+        }
+        return chunks;
+    }
 
 
     public void CreateGUI(){
@@ -43,7 +68,11 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         mazeLayoutConstraints.weighty = 0.1;
         mazeLayoutConstraints.fill = GridBagConstraints.BOTH;
         mazeDisplayPane.setBackground(Color.yellow);
+        mazeDisplayPane.setLayout(mazePaneLayout);
+
+
         background.add(mazeDisplayPane, mazeLayoutConstraints);
+        mazeScroll.revalidate();
 
 
         displayPaneRightLayoutConstraints.gridx = 2;
@@ -63,9 +92,30 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         background.setVisible(true);
     }
 
-    public void AddMaze(){
-        background.getContentPane().setBackground(Color.black);
+    public void AddMaze(Maze maze){
+
+        int [] mazeDim = maze.getDimensions();
+        chunkArray = initChunks(mazeDim[0] * mazeDim[1]);
+
+        coordinate thisCoord;
+        int i = 0;
+        for(int row = 0; row < mazeDim[1] ; row++){
+            for(int column = 0; column < mazeDim[0]; column++){
+                thisCoord = new coordinate(column,row);
+                //System.out.print(row+"\n");
+                //System.out.print(column+"\n\n");
+                Cell thisCell = maze.getCell(thisCoord);
+                mazePaneConstraints.gridx = row;
+                mazePaneConstraints.gridy = column;
+                mazeDisplayPane.add(chunkArray[i].packChunk(thisCell),mazePaneConstraints);
+                i++;
+            }
+            System.out.print(i);
+        }
+        System.out.print("Done!");
+
         pack();
+
     }
 
 
