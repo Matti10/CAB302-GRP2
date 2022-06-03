@@ -52,7 +52,11 @@ public class Cell
 
 
     public boolean[] toWallList(){
-        return new boolean[]{bottomWall,leftWall,rightWall};
+        return new boolean[]{bottomWall,leftWall,rightWall,topWall};
+    }
+    
+    public Cell getCell(){
+        return this;   
     }
 
     public Cell getCell()
