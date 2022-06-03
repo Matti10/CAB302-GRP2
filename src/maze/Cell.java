@@ -58,11 +58,4 @@ public class Cell
     public Cell getCell(){
         return this;   
     }
-
-    public Cell getCell()
-    {
-        return this;
-    }
-
-
 }
