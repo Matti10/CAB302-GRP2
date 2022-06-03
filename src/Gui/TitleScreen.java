@@ -27,36 +27,32 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         background.setLayout(backgroundLayout);
         background.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        mazeLayoutConstraints.gridx = 1;
-        mazeLayoutConstraints.gridy = 0;
-        mazeLayoutConstraints.gridheight = 0;
-        mazeLayoutConstraints.gridwidth = 0;
-        mazeLayoutConstraints.weightx = 0;
-        mazeLayoutConstraints.weighty = 0;
-        mazeLayoutConstraints.fill = GridBagConstraints.HORIZONTAL;
-        mazeDisplayPane.setBackground(Color.yellow);
-        background.add(mazeDisplayPane, mazeLayoutConstraints);
+
 
 
         displayPaneLeftLayoutConstraints.gridx = 0;
         displayPaneLeftLayoutConstraints.gridy = 0;
-        displayPaneLeftLayoutConstraints.gridheight = 1;
-        displayPaneLeftLayoutConstraints.gridwidth = 0;
         displayPaneLeftLayoutConstraints.weightx = 0.0;
         displayPaneLeftLayoutConstraints.weighty = 0.1;
         displayPaneLeftLayoutConstraints.fill = GridBagConstraints.VERTICAL;
         background.add(displayPaneLeft, displayPaneLeftLayoutConstraints);
-        /*
-        displayPaneRightLayoutConstraints.gridx = 3;
-        displayPaneRightLayoutConstraints.gridy = 0;
-        displayPaneRightLayoutConstraints.gridheight = 1;
-        displayPaneRightLayoutConstraints.gridwidth = 0;
-        displayPaneRightLayoutConstraints.weightx = 0.0;
-        displayPaneRightLayoutConstraints.weighty = 0.1;
-        displayPaneRightLayoutConstraints.fill = GridBagConstraints.VERTICAL;
-        background.add(displayPaneLeft,displayPaneRightLayoutConstraints);
 
-         */
+        mazeLayoutConstraints.gridx = 1;
+        mazeLayoutConstraints.gridy = 0;
+        mazeLayoutConstraints.weightx = 0.1;
+        mazeLayoutConstraints.weighty = 0.1;
+        mazeLayoutConstraints.fill = GridBagConstraints.BOTH;
+        mazeDisplayPane.setBackground(Color.yellow);
+        background.add(mazeDisplayPane, mazeLayoutConstraints);
+
+
+        displayPaneRightLayoutConstraints.gridx = 2;
+        displayPaneRightLayoutConstraints.gridy = 0;
+        displayPaneRightLayoutConstraints.weightx = 0.0;
+        displayPaneRightLayoutConstraints.weighty = 0.2;
+        displayPaneRightLayoutConstraints.fill = GridBagConstraints.VERTICAL;
+        background.add(displayPaneRight,displayPaneRightLayoutConstraints);
+
 
 
 
