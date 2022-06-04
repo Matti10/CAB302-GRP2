@@ -8,7 +8,7 @@ import java.awt.*;
 public class Chunk extends JFrame{
     GUI_utilities utility = new GUI_utilities();
 
-    GridLayout layout = new GridLayout(3,3);
+    GridLayout layout = new GridLayout(3,3,1,1);
     JPanel northEastCorner = utility.createPanel(Color.black);
     JPanel southEastCorner = utility.createPanel(Color.black);
     JPanel southWestCorner = utility.createPanel(Color.black);
