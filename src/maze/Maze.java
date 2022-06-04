@@ -79,17 +79,18 @@ public class Maze {
 
 
     //add an image to the maze
-    public void addImage(String name, String path, coordinate location)
+    public void addImage(String name, String path, Coordinate location)
     {
         images.add(new imageLocation(path,name,location));
     }
 
-    public void removeImage(coordinate location)
+    public void removeImage(Coordinate location)
     {
         try
         {
             //loop through all positions in list plus 1. If n + 1 is reached, error is thrown as image doesn't exist
-            for (int i = 0; i < images.size() + 1; i++) {
+            int i = 0;
+            for (; i < images.size() + 1; i++) {
                 if (images.get(i).location == location)
                 {
                     break;
@@ -100,7 +101,7 @@ public class Maze {
         }
         catch (Exception e)
         {
-            throw new Exception("No image found at this location");
+            throw new IllegalArgumentException("No image found at this location");
         }
 
     }
@@ -210,8 +211,8 @@ public class Maze {
         return this;
     }
 
-    public Maze getMazeArray() {
-        return this;
+    public Cell[][] getMazeArray() {
+        return mazeArray;
     }
 
     //crete a new Coordinate

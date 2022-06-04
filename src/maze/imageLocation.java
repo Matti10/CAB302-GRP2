@@ -3,9 +3,9 @@ package maze;
 public class imageLocation {
     String path;
     String name;
-    coordinate location;
+    Coordinate location;
 
-    imageLocation(String path, String name, coordinate location)
+    imageLocation(String path, String name, Coordinate location)
     {
         this.path = path;
         this.name = name;
