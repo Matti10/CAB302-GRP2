@@ -8,7 +8,7 @@ import java.awt.*;
 public class Chunk extends JFrame{
     GUI_utilities utility = new GUI_utilities();
 
-    GridLayout layout = new GridLayout(3,3,1,1);
+    GridLayout layout = new GridLayout(3,3);
     JPanel northEastCorner = utility.createPanel(Color.black);
     JPanel southEastCorner = utility.createPanel(Color.black);
     JPanel southWestCorner = utility.createPanel(Color.black);
@@ -46,15 +46,17 @@ public class Chunk extends JFrame{
         this.backgroundCell.add(this.southWestCorner);
         this.backgroundCell.add(this.bottomCell);
         this.backgroundCell.add(this.southEastCorner);
-        pack();
+
 
 
         if(topWall    == false) topCell.setBackground(Color.white);
         if(bottomWall == false) bottomCell.setBackground(Color.white);
         if(leftWall   == false) leftCell.setBackground(Color.white);
         if(rightWall  == false) rightCell.setBackground(Color.white);
+        pack();
 
         return this.backgroundCell;
+
     }
 
 

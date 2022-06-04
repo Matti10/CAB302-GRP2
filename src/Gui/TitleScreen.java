@@ -84,7 +84,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
 
         background.add(mazeDisplayPane, mazeLayoutConstraints);
-        mazeScroll.revalidate();
+
 
         displayPaneRight.setPreferredSize(displayPanesSize);
         displayPaneRightLayoutConstraints.gridx = 5;
@@ -125,6 +125,9 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
                 //thisCell.edit(T,B,L,R);
                 mazePaneConstraints.gridx = row;
                 mazePaneConstraints.gridy = column;
+                mazePaneConstraints.ipady = 1;
+                mazePaneConstraints.ipadx = 1;
+
                 mazeDisplayPane.add(chunkArray[i].packChunk(thisCell),mazePaneConstraints);
                 i++;
                 /*temp = L;
@@ -139,6 +142,8 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         System.out.print("Done!");
 
         pack();
+        background.revalidate();
+        background.repaint();
 
     }
 
