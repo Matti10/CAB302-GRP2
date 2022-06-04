@@ -34,7 +34,7 @@ public class Main {
         titleScreen.AddMaze(testMaze);
 
 
-        System.out.print(testMaze.export());
+        System.out.print("\n"+testMaze.export()[0]+", length: "+testMaze.export()[0].length()+"\n'"+testMaze.export()[1]+",");
 
 
 

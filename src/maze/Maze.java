@@ -30,32 +30,32 @@ public class Maze {
 
     Coordinate startPosition;
     Coordinate endPosition;
-    int height;
-    int length;
+    int xCount;
+    int yCount;
     Cell[][] mazeArray; //2d array of cell objects
     boolean isSealed;
 
     public Maze() {
         //initialise maze properties
-        this.length = 0;
-        this.height = 0;
+        this.xCount = 0;
+        this.yCount = 0;
         this.isSealed = true;
-        this.mazeArray = new Cell[length][height];
+        this.mazeArray = new Cell[xCount][yCount];
     }
 
     // maze constructor
     //length [1 to 100], height [1 to 100], isSealed [true or false] - calvey
-    public Maze(int length, int height, boolean isSealed) {
+    public Maze(int xCount, int yCount, boolean isSealed) {
 
-        if (length < 1 || height < 1) {
+        if (xCount < 1 || yCount < 1) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
         }
 
         //initialise maze properties
-        this.length = length;
-        this.height = height;
+        this.xCount = xCount;
+        this.yCount = yCount;
         this.isSealed = isSealed;
-        this.mazeArray = new Cell[length][height];
+        this.mazeArray = new Cell[xCount][yCount];
     }
 
     //start/end position column [0 to length-1], row [0 to height-1] (assuming indexed from 0, or is it from 1?)  - calvey
@@ -66,39 +66,38 @@ public class Maze {
 
     public void initMazeArray() {
         //initialise each cell in mazeArray
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int x = 0; x < xCount; x++) {
+            for (int y = 0; y < yCount; y++) {
                 //fill mazeArray with blank cells
-                mazeArray[i][j] = new Cell(false, false, false, false);
+                mazeArray[x][y] = new Cell(false, false, false, false);
             }
         }
     }
 
-    //not sure what this does  - calvey
     public void editGameArray(Coordinate pos, Cell newCell) {
         //set new cell
-        mazeArray[pos.col][pos.row] = newCell;
+        mazeArray[pos.xCoord][pos.yCoord] = newCell;
 
         // todo - tidy this
 
         try {
-            mazeArray[pos.col - 1][pos.row].rightWall = newCell.leftWall;
+            mazeArray[pos.xCoord - 1][pos.yCoord].rightWall = newCell.leftWall;
         } catch (Exception e) {
             //if there is no cell to the left, do nothing
         }
         try {
             //if there is a cell to the right, match its left wall with the current cells right wall
-            mazeArray[pos.col + 1][pos.row].leftWall = newCell.rightWall;
+            mazeArray[pos.xCoord + 1][pos.yCoord].leftWall = newCell.rightWall;
         } catch (Exception e) {
             //if there is no cell to the right, do nothing
         }
         try {
-            mazeArray[pos.col][pos.row + 1].topWall = newCell.bottomWall;
+            mazeArray[pos.xCoord][pos.yCoord + 1].topWall = newCell.bottomWall;
         } catch (Exception e) {
             //if there is no cell below, do nothing
         }
         try {
-            mazeArray[pos.col][pos.row - 1].bottomWall = newCell.topWall;
+            mazeArray[pos.xCoord][pos.yCoord - 1].bottomWall = newCell.topWall;
         } catch (Exception e) {
             //if there is no cell above, do nothing
         }
@@ -106,12 +105,12 @@ public class Maze {
     }
 
     public int[] getDimensions() {
-        return new int[] {this.length, this.height};
+        return new int[] {this.xCount, this.yCount};
     }
     //length [1 to 100], height [1 to 100], isSealed [true or false], start/end posx [0 to length-1], start/end posy [0 to height-1]
-    public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY) {
+    public static Maze initMaze(int xCount, int yCount, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY) {
         //create maze object
-        Maze maze = new Maze(length, height, isSealed);
+        Maze maze = new Maze(xCount, yCount, isSealed);
 
         //set start and  end pos
         maze.setStartEndPos(maze.newCoord(startPositionX, startPositionY), maze.newCoord(endPositionX, endPositionY));
@@ -122,32 +121,32 @@ public class Maze {
     }
 
     //fill maze object with random maze
-    // todo - make random maze solveable
+    // todo - make random maze solvable
     public void randomMaze() {
         Random rand = new Random();
 
         // iterate over all maze cells and assign them with a random wall type
-        for (int col = 0; col < length; col++) {
-            for (int row = 0; row < height; row++) {
-                Cell currentCell = mazeArray[col][row];
+        for (int xCoord = 0; xCoord < xCount; xCoord++) {
+            for (int yCoord = 0; yCoord < yCount; yCoord++) {
+                Cell currentCell = mazeArray[xCoord][yCoord];
 
-                if (col == 0) {
+                if (xCoord == 0) {
                     //if the cell is in the first column, randomly assign the wall
 //                    currentCell.leftWall = rand.nextBoolean();
                     currentCell.leftWall = true;
                 } else {
                     // if it's not the first column set left wall to be the leftCells right wall (as they're the same wall)
-                    Cell lefCell = mazeArray[col - 1][row];
+                    Cell lefCell = mazeArray[xCoord - 1][yCoord];
                     currentCell.leftWall = lefCell.rightWall;
                 }
 
-                if (row == 0) {
+                if (yCoord == 0) {
                     //if the cell is in the first row, randomly set its top wall
 //                    currentCell.topWall = rand.nextBoolean();
                     currentCell.topWall = true;
                 } else {
                     //if it's not the first row set top wall to be the aboveCells bottom wall (as they're the same wall)
-                    Cell aboveCell = mazeArray[col][row - 1];
+                    Cell aboveCell = mazeArray[xCoord][yCoord - 1];
                     currentCell.topWall = aboveCell.bottomWall;
                 }
 
@@ -171,7 +170,7 @@ public class Maze {
 
     //return cell of given Coordinate
     public Cell getCell(Coordinate coord) {
-        return mazeArray[coord.col][coord.row];
+        return mazeArray[coord.xCoord][coord.yCoord];
     }
     
     public Maze getMaze() {
@@ -182,15 +181,15 @@ public class Maze {
         return this;
     }
 
-    Coordinate newCoord(int col, int row) {
-        if (row < 0 || col < 0) {
+    Coordinate newCoord(int xCoord, int yCoord) {
+        if (yCoord < 0 || xCoord < 0) {
             throw new IllegalArgumentException("Coordinates must be greater than zero");
         }
-        if (row > length || col > height) {
+        if (yCoord > xCount || xCoord > yCount) {
             throw new IllegalArgumentException("Coordinates must be within than game size");
         }
 
-        return new Coordinate(col, row);
+        return new Coordinate(xCoord, yCoord);
     }
 
     //checks the walls of a cell against its surrounding cells using a set of rules
@@ -228,12 +227,12 @@ public class Maze {
     public String ToString() {
         String output = "\n";
         // iterate over all maze cells and assign them with a random wall type
-        for (int row = 0; row < mazeArray.length; row++) {
-            for (int col = 0; col < mazeArray[row].length; col++) {
-                if (mazeArray[col][row].leftWall) {
+        for (int y = 0; y < mazeArray.length; y++) {
+            for (int x = 0; x < mazeArray[y].length; x++) {
+                if (mazeArray[x][y].leftWall) {
                     output += '|'; //add a vertical wall
                 }
-                if (mazeArray[col][row].topWall) {
+                if (mazeArray[x][y].topWall) {
                     output += '_'; // add a horizontal wall
                 } else {
                     output += " ";
@@ -253,22 +252,22 @@ public class Maze {
             public List<Coordinate> solveMaze(Coordinate pos, List<Coordinate> moves, Character previousPos) {
                 moves.add(pos);
 
-                if (pos.row == endPosition.row && pos.col == endPosition.col) {
+                if (pos.yCoord == endPosition.yCoord && pos.xCoord == endPosition.xCoord) {
                     isSolved = true;
                     return moves;
                 } else {
                     Cell cell = getCell(pos);
                     if (!cell.leftWall && previousPos != 'L') {  //if there's no left wall, move left
-                        return solveMaze(new Coordinate(pos.col - 1, pos.row), moves, 'R');
+                        return solveMaze(new Coordinate(pos.xCoord - 1, pos.yCoord), moves, 'R');
                     }
                     if (!cell.rightWall && previousPos != 'R') {
-                        return solveMaze(new Coordinate(pos.col + 1, pos.row), moves, 'L');
+                        return solveMaze(new Coordinate(pos.xCoord + 1, pos.yCoord), moves, 'L');
                     }
                     if (!cell.bottomWall && previousPos != 'B') {
-                        return solveMaze(new Coordinate(pos.col, pos.row + 1), moves, 'T');
+                        return solveMaze(new Coordinate(pos.xCoord, pos.yCoord + 1), moves, 'T');
                     }
                     if (!cell.topWall && previousPos != 'T') {
-                        return solveMaze(new Coordinate(pos.col, pos.row - 1), moves, 'B');
+                        return solveMaze(new Coordinate(pos.xCoord, pos.yCoord - 1), moves, 'B');
                     }
 
                     //if all nodes are explored and maze isn't solved, bubble back up tree
@@ -299,15 +298,41 @@ public class Maze {
         }
     }
 
-    public ArrayList<Character> export() {
-        Coordinate coordForExport = new Coordinate(0,0);
-        return CellToChar(getCell(coordForExport));
+    public String[] export() {
+        String mazeData = "";
+        String mazeDataOverflow = "";
+        for (int y = 0; y<yCount; y++) {
+            for (int x = 0; x<xCount; x++) {
+                if (mazeData.length() < 8000)  mazeData += (CellToChar(getCell(newCoord(x,y))));
+                else mazeDataOverflow += (CellToChar(getCell(newCoord(x,y))));
+            }
+        }
 
+        String[] z = new String[2];
+        z[0] = mazeData;
+        z[1] = mazeDataOverflow;
+        return z;
 
-        //throw new UnsupportedOperationException("export is Not Implemented");
+        /*
+        StringBuilder mazeData1 = new StringBuilder();
+        StringBuilder mazeData2 = new StringBuilder();
+        if (mazeData.getText().length() > 10) {
+            for (int i = 0; i < 10; i++) {
+                mazeData1.append(mazeData.getText().charAt(i));
+            }
+            for (int i = 10; i < mazeData.getText().length(); i++) {
+                mazeData2.append(mazeData.getText().charAt(i));
+            }
+        } else {
+            mazeData1 = new StringBuilder(mazeData.getText());
+        }
+        MazeDBObj m = new MazeDBObj(mazeName.getText(), author.getText(), dateTimeCreated .getText(),
+                dateTimeEdited.getText(), mazeDimensions.getText(), mazeData1.toString(), mazeData2.toString());
+        data.add(m);
+         */
     }
 
-    private ArrayList<Character> CellToChar(Cell cell) {
+    private Character CellToChar(Cell cell) {
         boolean L = cell.leftWall;
         boolean R = cell.rightWall;
         boolean T = cell.topWall;
@@ -316,17 +341,17 @@ public class Maze {
         ArrayList<Character> cellPossibilities = new ArrayList<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'));
         ArrayList<Character> toRemove = new ArrayList<>();
 
-        if (L) Collections.addAll(toRemove,'e','g','h','j','l','m','n','p');
+        if (!L) Collections.addAll(toRemove,'e','g','h','j','l','m','n','p');
         else Collections.addAll(toRemove,'a','b','c','d','f','i','k','o');
-        if (R) Collections.addAll(toRemove,'c','g','i','k','l','n','o','p');
+        if (!R) Collections.addAll(toRemove,'c','g','i','k','l','n','o','p');
         else Collections.addAll(toRemove,'a','b','d','e','f','h','j','m');
-        if (T) Collections.addAll(toRemove,'b','f','j','k','m','n','o','p');
+        if (!T) Collections.addAll(toRemove,'b','f','j','k','m','n','o','p');
         else Collections.addAll(toRemove,'a','c','d','e','g','h','i','l');
-        if (B) Collections.addAll(toRemove,'d','f','h','i','l','m','o','p');
+        if (!B) Collections.addAll(toRemove,'d','f','h','i','l','m','o','p');
         else Collections.addAll(toRemove,'a','b','c','e','g','j','k','n');
         cellPossibilities.removeAll(toRemove);
 
-        return cellPossibilities;
+        return cellPossibilities.get(0);
     }
 
     Maze importMaze(String path) //this could return void/bool (and require a blank maze to be created in the func body)
