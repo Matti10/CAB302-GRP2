@@ -111,32 +111,18 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
         Coordinate thisCoord;
         int i = 0;
-        /*boolean L = true;
-        boolean R = false;
-        boolean T = true;
-        boolean B = false;
-        boolean temp;*/
-        for(int row = 0; row < mazeDim[1] ; row++){
-            for(int column = 0; column < mazeDim[0]; column++){
-                thisCoord = new Coordinate(column,row);
-                //System.out.print(row+"\n");
-                //System.out.print(column+"\n\n");
+        for(int y = 0; y < mazeDim[1] ; y++){
+            for(int x = 0; x < mazeDim[0]; x++){
+                thisCoord = new Coordinate(x,y);
                 Cell thisCell = maze.getCell(thisCoord);
-                //thisCell.edit(T,B,L,R);
-                mazePaneConstraints.gridx = row;
-                mazePaneConstraints.gridy = column;
+                mazePaneConstraints.gridx = x;
+                mazePaneConstraints.gridy = y;
                 mazePaneConstraints.ipady = 1;
                 mazePaneConstraints.ipadx = 1;
 
                 mazeDisplayPane.add(chunkArray[i].packChunk(thisCell),mazePaneConstraints);
                 i++;
-                /*temp = L;
-                L = R;
-                R = temp;*/
             }
-            /*temp = T;
-            T = B;
-            B = temp;*/
             System.out.print(i+",");
         }
         System.out.print("Done!");
