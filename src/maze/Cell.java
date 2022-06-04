@@ -6,6 +6,8 @@ public class Cell
     boolean bottomWall;
     boolean leftWall;
     boolean rightWall;
+
+
     boolean isStart;
     boolean isEnd;
 
@@ -41,20 +43,19 @@ public class Cell
 
     public void edit(boolean topWall, boolean bottomWall, boolean leftWall, boolean rightWall)
     {
+
         this.topWall = topWall;
         this.bottomWall = bottomWall;
         this.leftWall = leftWall;
         this.rightWall = rightWall;
     }
 
+
     public boolean[] toWallList(){
-        boolean[] list = {bottomWall,leftWall,rightWall};
-        return list;
+        return new boolean[]{bottomWall,leftWall,rightWall,topWall};
     }
-
-    public Cell getCell()
-    {
-        return this;
+    
+    public Cell getCell(){
+        return this;   
     }
-
 }
