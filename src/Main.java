@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
-        Maze testMaze = Maze.initMaze(10,10,true,0,0,9,9);
+        Maze testMaze = Maze.initMaze(10,10,true,0,0,9,9,"someName");
         testMaze.randomMaze();
 
 

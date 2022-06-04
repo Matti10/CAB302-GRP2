@@ -2,14 +2,12 @@ package maze;
 
 import java.util.*;
 
-//import org.javatuples.Pair;
-
 public class Maze {
 
     public static void main(String[] args) {
 
 
-        Maze testMaze = initMaze(3, 3, true, 1, 0, 2, 1);
+        Maze testMaze = initMaze(3, 3, true, 1, 0, 2, 1,"TestMaze");
 
         Coordinate[] allWalls = new Coordinate[6];
         allWalls[0] = new Coordinate(0, 0);
@@ -34,6 +32,8 @@ public class Maze {
     int length;
     Cell[][] mazeArray; //2d array of cell objects
     boolean isSealed;
+    String name;
+    ArrayList<imageLocation> images;
 
     public Maze() {
         //initialise maze properties
@@ -45,7 +45,7 @@ public class Maze {
 
     // maze constructor
     //length [1 to 100], height [1 to 100], isSealed [true or false] - calvey
-    public Maze(int length, int height, boolean isSealed) {
+    public Maze(int length, int height, boolean isSealed, String name) {
 
         if (length < 1 || height < 1) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
@@ -55,15 +55,18 @@ public class Maze {
         this.length = length;
         this.height = height;
         this.isSealed = isSealed;
+        this.name = name;
         this.mazeArray = new Cell[length][height];
     }
 
     //start/end position column [0 to length-1], row [0 to height-1] (assuming indexed from 0, or is it from 1?)  - calvey
+    //setter for the start and end location of the maze
     public void setStartEndPos(Coordinate startPosition, Coordinate endPosition) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
     }
 
+    //initialises the gameArray
     public void initMazeArray() {
         //initialise each cell in mazeArray
         for (int i = 0; i < length; i++) {
@@ -74,7 +77,36 @@ public class Maze {
         }
     }
 
-    //not sure what this does  - calvey
+
+    //add an image to the maze
+    public void addImage(String name, String path, Coordinate location)
+    {
+        images.add(new imageLocation(path,name,location));
+    }
+
+    public void removeImage(Coordinate location)
+    {
+        try
+        {
+            //loop through all positions in list plus 1. If n + 1 is reached, error is thrown as image doesn't exist
+            int i = 0;
+            for (; i < images.size() + 1; i++) {
+                if (images.get(i).location == location)
+                {
+                    break;
+                }
+            }
+
+            images.remove(i);
+        }
+        catch (Exception e)
+        {
+            throw new IllegalArgumentException("No image found at this location");
+        }
+
+    }
+
+    //backend helper function to update a cell and then edit the walls of the surrounding cells to match the edited cell
     public void editGameArray(Coordinate pos, Cell newCell) {
         //set new cell
         mazeArray[pos.col][pos.row] = newCell;
@@ -109,9 +141,9 @@ public class Maze {
         return new int[] {this.length, this.height};
     }
     //length [1 to 100], height [1 to 100], isSealed [true or false], start/end posx [0 to length-1], start/end posy [0 to height-1]
-    public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY) {
+    public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY, String name) {
         //create maze object
-        Maze maze = new Maze(length, height, isSealed);
+        Maze maze = new Maze(length, height, isSealed, name);
 
         //set start and  end pos
         maze.setStartEndPos(maze.newCoord(startPositionX, startPositionY), maze.newCoord(endPositionX, endPositionY));
@@ -152,13 +184,14 @@ public class Maze {
                 }
 
 
-//                do {
-                currentCell = randomWalls(currentCell);
-//                } while (wallCheck(currentCell, mazeArray[col][row - 1], mazeArray[col - 1][row]));
+
+                randomWalls(currentCell);
+
             }
         }
     }
 
+    //randomly sets the walls of a given cell
     static Cell randomWalls(Cell currentCell) {
         Random rand = new Random();
 
@@ -173,15 +206,16 @@ public class Maze {
     public Cell getCell(Coordinate coord) {
         return mazeArray[coord.col][coord.row];
     }
-    
+
     public Maze getMaze() {
         return this;
     }
-    
-    public Maze getMazeArray() {
-        return this;
+
+    public Cell[][] getMazeArray() {
+        return mazeArray;
     }
 
+    //crete a new Coordinate
     Coordinate newCoord(int col, int row) {
         if (row < 0 || col < 0) {
             throw new IllegalArgumentException("Coordinates must be greater than zero");
@@ -193,38 +227,7 @@ public class Maze {
         return new Coordinate(col, row);
     }
 
-    //checks the walls of a cell against its surrounding cells using a set of rules
-    static boolean wallCheck(Cell currentCell, Cell aboveCell, Cell leftCell) {
-        //ensure each wall touches at least one adjacent wall
-        //only need to test the bottom right corner of each cell, as the top left corner of a cell is the same as the bottom right of another cell.
-        //if the right wall is on, check it connects with another applicable wall
-        if (
-                (currentCell.rightWall && aboveCell.bottomWall) ||
-                        (currentCell.rightWall && aboveCell.rightWall) //||
-//            (currentCell.rightWall && rightCell.topWall) ||
-//            (currentCell.rightWall && rightCell.bottomWall) ||
-//            (currentCell.rightWall && belowCell.topWall) ||
-//            (currentCell.rightWall && belowCell.rightWall)
-        ) {
-            return false;
-        }
-        //if the top wall is on, check it connects with another applicable wall
-        else if (
-//                (currentCell.bottomWall && belowCell.leftWall) ||
-//                (currentCell.bottomWall && belowCell.rightWall) ||
-                (currentCell.bottomWall && leftCell.rightWall) ||
-                        (currentCell.bottomWall && leftCell.bottomWall) //||
-//                (currentCell.bottomWall && rightCell.bottomWall) ||
-//                (currentCell.bottomWall && rightCell.leftWall)
-        ) {
-            return false;
-        } else {
-            return true;
-        }
-
-
-    }
-
+    //outputs the maze to a string (badly)
     public String ToString() {
         String output = "\n";
         // iterate over all maze cells and assign them with a random wall type
@@ -245,6 +248,7 @@ public class Maze {
         return output;
     }
 
+    //solves the maze for the first solution
     public List<Coordinate> getFirstSolution() {
         class Helper {
 
@@ -253,11 +257,14 @@ public class Maze {
             public List<Coordinate> solveMaze(Coordinate pos, List<Coordinate> moves, Character previousPos) {
                 moves.add(pos);
 
+                //check if the end position of the maze has been located
                 if (pos.row == endPosition.row && pos.col == endPosition.col) {
                     isSolved = true;
-                    return moves;
+                    return moves; //return the list of moves taken
                 } else {
                     Cell cell = getCell(pos);
+
+                    //if a wall isn't active, explore the cell in that direction
                     if (!cell.leftWall && previousPos != 'L') {  //if there's no left wall, move left
                         return solveMaze(new Coordinate(pos.col - 1, pos.row), moves, 'R');
                     }
@@ -274,7 +281,7 @@ public class Maze {
                     //if all nodes are explored and maze isn't solved, bubble back up tree
                     if (!isSolved)
                     {
-                        moves.remove(pos);
+                        moves.remove(pos); //remove the current move as it doen't lead to the solution
                         return moves;
                     }
 
@@ -332,6 +339,8 @@ public class Maze {
     Maze importMaze(String path) //this could return void/bool (and require a blank maze to be created in the func body)
     {
         throw new UnsupportedOperationException("export is Not Implemented");
+        // @Calvey - We will need to work together to implement this one :)
+
     }
 
 }
