@@ -8,12 +8,12 @@ import java.awt.*;
 public class Chunk extends JFrame{
     GUI_utilities utility = new GUI_utilities();
 
-    GridLayout layout = new GridLayout(3,3,6,6);
+    GridLayout layout = new GridLayout(3,3,1,1);
     JPanel northEastCorner = utility.createPanel(Color.black);
     JPanel southEastCorner = utility.createPanel(Color.black);
     JPanel southWestCorner = utility.createPanel(Color.black);
     JPanel northWestCorner = utility.createPanel(Color.black);
-    JPanel centerCell      = utility.createPanel(Color.pink);
+    JPanel centerCell      = utility.createPanel(Color.pink); //////////////
     JPanel topCell         = utility.createPanel(Color.black);
     JPanel bottomCell      = utility.createPanel(Color.black);
     JPanel rightCell       = utility.createPanel(Color.black);
@@ -49,10 +49,10 @@ public class Chunk extends JFrame{
         pack();
 
 
-        if(topWall    == false) topCell.setBackground(Color.black);
-        if(bottomWall == false) bottomCell.setBackground(Color.black);
-        if(leftWall   == false) leftCell.setBackground(Color.black);
-        if(rightWall  == false) rightCell.setBackground(Color.black);
+        if(topWall    == false) topCell.setBackground(Color.white);
+        if(bottomWall == false) bottomCell.setBackground(Color.white);
+        if(leftWall   == false) leftCell.setBackground(Color.white);
+        if(rightWall  == false) rightCell.setBackground(Color.white);
 
         return this.backgroundCell;
     }

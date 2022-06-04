@@ -111,7 +111,7 @@ public class Maze {
     //length [1 to 100], height [1 to 100], isSealed [true or false], start/end posx [0 to length-1], start/end posy [0 to height-1]
     public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY) {
         //create maze object
-        Maze maze = new Maze(3, 3, true);
+        Maze maze = new Maze(length, height, isSealed);
 
         //set start and  end pos
         maze.setStartEndPos(maze.newCoord(startPositionX, startPositionY), maze.newCoord(endPositionX, endPositionY));
