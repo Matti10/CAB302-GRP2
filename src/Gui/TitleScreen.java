@@ -66,6 +66,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
 
         displayPaneLeft.setPreferredSize(displayPanesSize);
+        displayPaneLeft.setMinimumSize(displayPanesSize);
         displayPaneLeftLayoutConstraints.gridx = 0;
         displayPaneLeftLayoutConstraints.gridy = 0;
         displayPaneLeftLayoutConstraints.weightx = 0.0;
@@ -83,10 +84,11 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         mazeDisplayPane.setLayout(mazePaneLayout);
 
 
-        background.add(mazeDisplayPane, mazeLayoutConstraints);
+        background.add(mazeScroll, mazeLayoutConstraints);
 
 
         displayPaneRight.setPreferredSize(displayPanesSize);
+        displayPaneRight.setMinimumSize(displayPanesSize);
         displayPaneRightLayoutConstraints.gridx = 5;
         displayPaneRightLayoutConstraints.gridy = 0;
         displayPaneRightLayoutConstraints.weightx = 0.0;
@@ -99,7 +101,8 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
 
 
-
+        this.repaint();
+        this.validate();
         pack();
         background.setVisible(true);
     }
