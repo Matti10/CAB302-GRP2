@@ -17,9 +17,5 @@ public class Main {
         titleScreen.CreateGUI();
         titleScreen.AddMaze(testMaze);
 
-
-        System.out.print("\n"+testMaze.export()[0]+", length: "+testMaze.export()[0].length()+"\n'"+testMaze.export()[1]+",");
-
-
     }
 }

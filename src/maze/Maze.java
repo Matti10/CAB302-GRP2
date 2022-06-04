@@ -1,5 +1,6 @@
 package maze;
 
+import db.MazeDBObj;
 import java.util.*;
 
 public class Maze {
@@ -307,9 +308,15 @@ public class Maze {
         }
     }
 
-    public String[] export() {
+    public Boolean export() {
+        String mazeName = "testName";
+        String author = "testAuthor";
+        String dateTimeCreated = "1000000000";
+        String dateTimeEdited = "1000010000";
+        String mazeDimensions = xCount+"x"+yCount;
         String mazeData = "";
         String mazeDataOverflow = "";
+
         for (int y = 0; y<yCount; y++) {
             for (int x = 0; x<xCount; x++) {
                 if (mazeData.length() < 8000)  mazeData += (CellToChar(getCell(newCoord(x,y))));
@@ -317,28 +324,10 @@ public class Maze {
             }
         }
 
-        String[] z = new String[2];
-        z[0] = mazeData;
-        z[1] = mazeDataOverflow;
-        return z;
-
-        /*
-        StringBuilder mazeData1 = new StringBuilder();
-        StringBuilder mazeData2 = new StringBuilder();
-        if (mazeData.getText().length() > 10) {
-            for (int i = 0; i < 10; i++) {
-                mazeData1.append(mazeData.getText().charAt(i));
-            }
-            for (int i = 10; i < mazeData.getText().length(); i++) {
-                mazeData2.append(mazeData.getText().charAt(i));
-            }
-        } else {
-            mazeData1 = new StringBuilder(mazeData.getText());
-        }
-        MazeDBObj m = new MazeDBObj(mazeName.getText(), author.getText(), dateTimeCreated .getText(),
-                dateTimeEdited.getText(), mazeDimensions.getText(), mazeData1.toString(), mazeData2.toString());
-        data.add(m);
-         */
+        MazeDBObj m = new MazeDBObj(mazeName, author, dateTimeCreated,
+                dateTimeEdited, mazeDimensions, mazeData, mazeDataOverflow);
+        //data.add(m);
+        return true;
     }
 
     private Character CellToChar(Cell cell) {
