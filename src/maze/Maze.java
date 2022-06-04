@@ -2,13 +2,12 @@ package maze;
 
 import java.util.*;
 
-
 public class Maze {
 
     public static void main(String[] args) {
 
 
-        Maze testMaze = initMaze(3, 3, true, 1, 0, 2, 1);
+        Maze testMaze = initMaze(3, 3, true, 1, 0, 2, 1,"TestMaze");
 
         coordinate[] allWalls = new coordinate[6];
         allWalls[0] = new coordinate(0, 0);
@@ -33,6 +32,8 @@ public class Maze {
     int length;
     Cell[][] mazeArray; //2d array of cell objects
     boolean isSealed;
+    String name;
+    ArrayList<imageLocation> images;
 
     public Maze() {
         //initialise maze properties
@@ -44,7 +45,7 @@ public class Maze {
 
     // maze constructor
     //length [1 to 100], height [1 to 100], isSealed [true or false] - calvey
-    public Maze(int length, int height, boolean isSealed) {
+    public Maze(int length, int height, boolean isSealed, String name) {
 
         if (length < 1 || height < 1) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
@@ -54,6 +55,7 @@ public class Maze {
         this.length = length;
         this.height = height;
         this.isSealed = isSealed;
+        this.name = name;
         this.mazeArray = new Cell[length][height];
     }
 
@@ -73,6 +75,33 @@ public class Maze {
                 mazeArray[i][j] = new Cell(false, false, false, false);
             }
         }
+    }
+
+    //add an image to the maze
+    public void addImage(String name, String path, coordinate location)
+    {
+        images.add(new imageLocation(path,name,location));
+    }
+
+    public void removeImage(coordinate location)
+    {
+        try
+        {
+            //loop through all positions in list plus 1. If n + 1 is reached, error is thrown as image doesn't exist
+            for (int i = 0; i < images.size() + 1; i++) {
+                if (images.get(i).location == location)
+                {
+                    break;
+                }
+            }
+
+            images.remove(i);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("No image found at this location");
+        }
+
     }
 
     //backend helper function to update a cell and then edit the walls of the surrounding cells to match the edited cell
@@ -107,9 +136,9 @@ public class Maze {
     }
 
     //length [1 to 100], height [1 to 100], isSealed [true or false], start/end posx [0 to length-1], start/end posy [0 to height-1]
-    public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY) {
+    public static Maze initMaze(int length, int height, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY, String name) {
         //create maze object
-        Maze maze = new Maze(3, 3, true);
+        Maze maze = new Maze(3, 3, true, name);
 
         //set start and  end pos
         maze.setStartEndPos(maze.newCoord(startPositionX, startPositionY), maze.newCoord(endPositionX, endPositionY));
@@ -119,8 +148,7 @@ public class Maze {
         return maze;
     }
 
-    //fill maze object with random maze
-    // todo - make random maze solveable
+    //fill maze object with cells with random walls
     public void randomMaze() {
         Random rand = new Random();
 
@@ -150,9 +178,9 @@ public class Maze {
                 }
 
 
-//                do {
-                currentCell = randomWalls(currentCell);
-//                } while (wallCheck(currentCell, mazeArray[col][row - 1], mazeArray[col - 1][row]));
+
+                randomWalls(currentCell);
+
             }
         }
     }

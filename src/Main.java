@@ -1,12 +1,10 @@
 import GUI.TitleScreen;
-import maze.*;
-
-import java.util.concurrent.TimeUnit;
+import maze.Maze;
 
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        Maze testMaze = new Maze(3, 3, true/*,new coordinate(0,0), new coordinate(9,9)*/);
+        Maze testMaze = new Maze(3, 3, true, "testMaze"/*,new coordinate(0,0), new coordinate(9,9)*/);
 
 /*        testMaze.randomMaze();
         coordinate[] allWalls = new coordinate[6];
