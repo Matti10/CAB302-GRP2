@@ -3,7 +3,7 @@ package GUI;
 
 import maze.Cell;
 import maze.Maze;
-import maze.coordinate;
+import maze.Coordinate;
 
 import  java.awt.*;
 import javax.swing.*;
@@ -97,20 +97,32 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         int [] mazeDim = maze.getDimensions();
         chunkArray = initChunks(mazeDim[0] * mazeDim[1]);
 
-        coordinate thisCoord;
+        Coordinate thisCoord;
         int i = 0;
+        /*boolean L = true;
+        boolean R = false;
+        boolean T = true;
+        boolean B = false;
+        boolean temp;*/
         for(int row = 0; row < mazeDim[1] ; row++){
             for(int column = 0; column < mazeDim[0]; column++){
-                thisCoord = new coordinate(column,row);
+                thisCoord = new Coordinate(column,row);
                 //System.out.print(row+"\n");
                 //System.out.print(column+"\n\n");
                 Cell thisCell = maze.getCell(thisCoord);
+                //thisCell.edit(T,B,L,R);
                 mazePaneConstraints.gridx = row;
                 mazePaneConstraints.gridy = column;
                 mazeDisplayPane.add(chunkArray[i].packChunk(thisCell),mazePaneConstraints);
                 i++;
+                /*temp = L;
+                L = R;
+                R = temp;*/
             }
-            System.out.print(i);
+            /*temp = T;
+            T = B;
+            B = temp;*/
+            System.out.print(i+",");
         }
         System.out.print("Done!");
 

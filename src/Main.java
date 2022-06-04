@@ -16,13 +16,13 @@ public class Main {
 
         /*
        testMaze.randomMaze();
-        coordinate[] allWalls = new coordinate[6];
-        allWalls[0] = new coordinate(0, 0);
-        allWalls[1] = new coordinate(0, 1);
-        allWalls[2] = new coordinate(0, 2);
-        allWalls[3] = new coordinate(1, 2);
-        allWalls[4] = new coordinate(2, 0);
-        allWalls[5] = new coordinate(2, 2);
+        Coordinate[] allWalls = new Coordinate[6];
+        allWalls[0] = new Coordinate(0, 0);
+        allWalls[1] = new Coordinate(0, 1);
+        allWalls[2] = new Coordinate(0, 2);
+        allWalls[3] = new Coordinate(1, 2);
+        allWalls[4] = new Coordinate(2, 0);
+        allWalls[5] = new Coordinate(2, 2);
 
 
         testMaze.edit(allWalls, new Cell(true, true, true, true));
@@ -33,6 +33,9 @@ public class Main {
         TitleScreen titleScreen = new TitleScreen();
         titleScreen.CreateGUI();
         titleScreen.AddMaze(testMaze);
+
+
+        System.out.print(testMaze.export());
 
 
     }
