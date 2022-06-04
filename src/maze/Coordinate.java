@@ -11,6 +11,10 @@ public class Coordinate {
         this.y = y;
     }
 
+    public int[] toIntArray() {
+        return new int[] {x,y};
+    }
+
     public String toString(){
         return  "col (x): " + x + " row (y): "  + y +"\n";
     }

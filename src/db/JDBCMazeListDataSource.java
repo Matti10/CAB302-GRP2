@@ -17,10 +17,13 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
                     + "dateCreated INT(11)," //check length=10, shouldn't ever trigger using unix timestamps
                     + "dateEdited INT(11)," //check length=10, shouldn't ever trigger using unix timestamps
                     + "mazeDimensions VARCHAR(8)," //as long as valid maze dims, will work (<=100x100)
+                    + "isSealed TINYINT(1),"
+                    + "startPos VARCHAR(8),"
+                    + "endPos VARCHAR(8),"
                     + "mazeData VARCHAR(8000)," //make sure this works, should go up to 7999
                     + "mazeDataOverflow VARCHAR(2002));"; //make sure this works, should go up to 2001. total 10,000 for both (100x100)
 
-    private static final String INSERT_MAZE = "INSERT INTO mazes (mazeName, author, dateCreated, dateEdited, mazeDimensions, mazeData, mazeDataOverflow) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_MAZE = "INSERT INTO mazes (mazeName, author, dateCreated, dateEdited, mazeDimensions, isSealed, startPos, endPos, mazeData, mazeDataOverflow) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_MAZE_NAMES = "SELECT mazeName FROM mazes";
     private static final String GET_MAZE = "SELECT * FROM mazes WHERE mazeName=?";
     private static final String DELETE_MAZE = "DELETE FROM mazes WHERE mazeName=?";
@@ -63,8 +66,11 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
             addMaze.setString(3, m.getDateTimeCreated());
             addMaze.setString(4, m.getDateTimeEdited());
             addMaze.setString(5, m.getMazeDimensions());
-            addMaze.setString(6, m.getMazeData());
-            addMaze.setString(7, m.getMazeDataOverflow());
+            addMaze.setString(6, m.getIsSealed());
+            addMaze.setString(7, m.getStartPos());
+            addMaze.setString(8, m.getEndPos());
+            addMaze.setString(9, m.getMazeData());
+            addMaze.setString(10, m.getMazeDataOverflow());
             addMaze.execute();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -104,6 +110,9 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
             m.setDateTimeCreated(rs.getString("dateCreated"));
             m.setDateTimeEdited(rs.getString("dateEdited"));
             m.setMazeDimensions(rs.getString("mazeDimensions"));
+            m.setIsSealed(rs.getString("isSealed"));
+            m.setStartPos(rs.getString("startPos"));
+            m.setEndPos(rs.getString("endPos"));
             m.setMazeData(rs.getString("mazeData"));
             m.setMazeDataOverflow(rs.getString("mazeDataOverflow"));
         } catch (SQLException ex) {

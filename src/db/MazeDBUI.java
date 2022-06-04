@@ -260,7 +260,7 @@ public class MazeDBUI extends JFrame {
                     mazeData1 = new StringBuilder(mazeData.getText());
                 }
                 MazeDBObj m = new MazeDBObj(mazeName.getText(), author.getText(), dateTimeCreated .getText(),
-                        dateTimeEdited.getText(), mazeDimensions.getText(), mazeData1.toString(), mazeData2.toString());
+                        dateTimeEdited.getText(), mazeDimensions.getText(), "1","1,1", "2,1", mazeData1.toString(), mazeData2.toString());
                 data.add(m);
             }
             setFieldsEditable(false);

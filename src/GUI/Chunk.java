@@ -23,7 +23,7 @@ public class Chunk extends JFrame{
 
 
     public JPanel packChunk(Cell cell){ //chunks have to be added from left to right top to bottom
-        boolean [] walls =cell.toWallList();
+        boolean [] walls   = cell.toWallList();
         boolean bottomWall = walls[0];
         boolean leftWall   = walls[1];
         boolean rightWall  = walls[2];

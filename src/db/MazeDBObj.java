@@ -11,6 +11,9 @@ public class MazeDBObj implements Comparable<MazeDBObj>, Serializable {
     private String dateTimeCreated;
     private String dateTimeEdited;
     private String mazeDimensions;
+    private String isSealed;
+    private String startPos;
+    private String endPos;
     private String mazeData;
     private String mazeDataOverflow;
 
@@ -24,15 +27,19 @@ public class MazeDBObj implements Comparable<MazeDBObj>, Serializable {
      * @param dateTimeCreated - auto-generated date and time the maze was created in unix-timestamp form
      * @param dateTimeEdited - auto-generated date and time the waze was last edited in unix-timestamp form
      * @param mazeDimensions - a DB-appropriate string of the maze's x and y dimensions
+     * @param isSealed - a DB-appropriate boolean of the maze's sealed/unsealed status
      * @param mazeData - a DB-appropriate string representation of the cells (/chunks?), storing up to 8000 cells (/chunks?)
      * @param mazeDataOverflow - a DB-appropriate string storing the excess cells (/chunks?) of the maze, if the maze is made up of more than 8000 cells (/chunks?)
      */
-    public MazeDBObj(String mazeName, String author, String dateTimeCreated, String dateTimeEdited, String mazeDimensions, String mazeData, String mazeDataOverflow) {
+    public MazeDBObj(String mazeName, String author, String dateTimeCreated, String dateTimeEdited, String mazeDimensions, String isSealed, String startPos, String endPos, String mazeData, String mazeDataOverflow) {
         this.mazeName = mazeName;
         this.author = author;
         this.dateTimeCreated = dateTimeCreated;
         this.dateTimeEdited = dateTimeEdited;
         this.mazeDimensions = mazeDimensions;
+        this.isSealed = isSealed;
+        this.startPos = startPos;
+        this.endPos = endPos;
         this.mazeData = mazeData;
         this.mazeDataOverflow = mazeDataOverflow;
     }
@@ -125,6 +132,30 @@ public class MazeDBObj implements Comparable<MazeDBObj>, Serializable {
      */
     public void setMazeDimensions(String mazeDimensions) {
         this.mazeDimensions = mazeDimensions;
+    }
+
+    public String getIsSealed() {
+        return isSealed;
+    }
+
+    public void setIsSealed(String isSealed) {
+        this.isSealed = isSealed;
+    }
+
+    public String getStartPos() {
+        return startPos;
+    }
+
+    public void setStartPos(String startPos) {
+        this.startPos = startPos;
+    }
+
+    public String getEndPos() {
+        return endPos;
+    }
+
+    public void setEndPos(String endPos) {
+        this.endPos = endPos;
     }
 
     /**

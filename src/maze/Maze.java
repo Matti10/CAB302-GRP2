@@ -1,14 +1,18 @@
 package maze;
 
 import db.MazeDBObj;
+import db.MazeListData;
+
+import java.time.Instant;
 import java.util.*;
 
 public class Maze {
+    MazeListData mData;
 
     public static void main(String[] args) {
 
 
-        Maze testMaze = initMaze(5, 5, true, 1, 0, 2, 1,"TestMaze");
+        Maze testMaze = initMaze(5, 5, true, 1, 0, 2, 1,"TestMaze", new MazeListData());
 
         Coordinate[] allWalls = new Coordinate[6];
         allWalls[0] = new Coordinate(0, 0);
@@ -36,20 +40,24 @@ public class Maze {
     String name;
     ArrayList<imageLocation> images;
 
-    public Maze() {
+    public Maze(MazeListData mData) { //not sure if this breaks everything??? do we need a maze constructor with 0 parameters?
         //initialise maze properties
         this.xCount = 0;
         this.yCount = 0;
         this.isSealed = true;
         this.mazeArray = new Cell[xCount][yCount];
+        this.mData = mData;
     }
 
     // maze constructor
     //length [1 to 100], height [1 to 100], isSealed [true or false] - calvey
-    public Maze(int xCount, int yCount, boolean isSealed, String name) {
-
+    public Maze(int xCount, int yCount, boolean isSealed, String name, MazeListData mData) {
         if (xCount < 1 || yCount < 1) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
+        } else if (xCount > 100 || yCount > 100) {
+            throw new IllegalArgumentException("Length and Height must be less than 100");
+        } else if (xCount == 100 && yCount == 100) {
+            throw new IllegalArgumentException("Length and Height combined must not create over 9,999 maze cells");
         }
 
         //initialise maze properties
@@ -58,6 +66,7 @@ public class Maze {
         this.isSealed = isSealed;
         this.name = name;
         this.mazeArray = new Cell[xCount][yCount];
+        this.mData = mData;
 
     }
 
@@ -143,9 +152,9 @@ public class Maze {
         return new int[] {this.xCount, this.yCount};
     }
     //length [1 to 100], height [1 to 100], isSealed [true or false], start/end posx [0 to length-1], start/end posy [0 to height-1]
-    public static Maze initMaze(int xCount, int yCount, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY, String name) {
+    public static Maze initMaze(int xCount, int yCount, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY, String name, MazeListData data) {
         //create maze object
-        Maze maze = new Maze(xCount, yCount, isSealed, name);
+        Maze maze = new Maze(xCount, yCount, isSealed, name, data);
 
         //set start and  end pos
         maze.setStartEndPos(maze.newCoord(startPositionX, startPositionY), maze.newCoord(endPositionX, endPositionY));
@@ -308,15 +317,23 @@ public class Maze {
         }
     }
 
-    public Boolean export() {
-        String mazeName = "testName";
-        String author = "testAuthor";
-        String dateTimeCreated = "1000000000";
-        String dateTimeEdited = "1000010000";
+    public void export(String mazeName, String author, String creationTime) {
+        String dateTimeCreated;
+        long currentUnixTime = Instant.now().getEpochSecond();
+
+        if (creationTime == null) dateTimeCreated = String.valueOf(currentUnixTime);
+        else dateTimeCreated = creationTime;
+
+        String dateTimeEdited = String.valueOf(currentUnixTime);
         String mazeDimensions = xCount+"x"+yCount;
+
+        int[] startPosArr = startPosition.toIntArray();
+        int[] endPosArr = endPosition.toIntArray();
+        String startPos = startPosArr[0]+","+startPosArr[1];
+        String endPos = endPosArr[0]+","+endPosArr[1];
+
         String mazeData = "";
         String mazeDataOverflow = "";
-
         for (int y = 0; y<yCount; y++) {
             for (int x = 0; x<xCount; x++) {
                 if (mazeData.length() < 8000)  mazeData += (CellToChar(getCell(newCoord(x,y))));
@@ -324,39 +341,66 @@ public class Maze {
             }
         }
 
-        MazeDBObj m = new MazeDBObj(mazeName, author, dateTimeCreated,
-                dateTimeEdited, mazeDimensions, mazeData, mazeDataOverflow);
-        //data.add(m);
-        return true;
+        mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, String.valueOf(isSealed), startPos, endPos, mazeData, mazeDataOverflow));
+    }
+    //should this be in this file? should it be creating a new maze and returning it, or modifying the current maze object??
+    public Maze importMaze(String mazeName) { //this could return void/bool (and require a blank maze to be created in the func body)
+        //need to use the newCoord() function!!!!!
+        MazeDBObj m = mData.get(mazeName);
+
+        String[] arrDims = m.getMazeDimensions().split("x");
+        int xCnt = Integer.parseInt(arrDims[0]);
+        int yCnt = Integer.parseInt(arrDims[1]);
+
+        boolean seal = Boolean.parseBoolean(m.getIsSealed());
+
+        String[] start = m.getStartPos().split(",");
+        int xStart = Integer.parseInt(start[0]);
+        int yStart = Integer.parseInt(start[1]);
+
+        String[] end = m.getEndPos().split(",");
+        int xEnd = Integer.parseInt(end[0]);
+        int yEnd = Integer.parseInt(end[1]);
+
+        Maze maze = Maze.initMaze(xCnt,yCnt,seal,xStart,yStart,xEnd,yEnd,m.getMazeName(),mData);
+
+        //For below, wanting to edit an individual cell at a specific coordinate. how to implement?
+        String mazeData = m.getMazeData()+m.getMazeDataOverflow();
+        Coordinate thisCoord;
+        Cell thisCell;
+        for (int i=0; i<mazeData.length(); i++) {
+            thisCoord = new Coordinate(i,i);
+            thisCell = CharToCell(mazeData.charAt(i));
+            //maze.edit(thisCoord, thisCell); // needs coord array??
+        }
+
+        // @Calvey - We will need to work together to implement this one :)
+        return maze;
     }
 
     private Character CellToChar(Cell cell) {
-        boolean L = cell.leftWall;
-        boolean R = cell.rightWall;
-        boolean T = cell.topWall;
-        boolean B = cell.bottomWall;
-
         ArrayList<Character> cellPossibilities = new ArrayList<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'));
         ArrayList<Character> toRemove = new ArrayList<>();
 
-        if (!L) Collections.addAll(toRemove,'e','g','h','j','l','m','n','p');
+        if (!cell.leftWall) Collections.addAll(toRemove,'e','g','h','j','l','m','n','p');
         else Collections.addAll(toRemove,'a','b','c','d','f','i','k','o');
-        if (!R) Collections.addAll(toRemove,'c','g','i','k','l','n','o','p');
+        if (!cell.rightWall) Collections.addAll(toRemove,'c','g','i','k','l','n','o','p');
         else Collections.addAll(toRemove,'a','b','d','e','f','h','j','m');
-        if (!T) Collections.addAll(toRemove,'b','f','j','k','m','n','o','p');
+        if (!cell.topWall) Collections.addAll(toRemove,'b','f','j','k','m','n','o','p');
         else Collections.addAll(toRemove,'a','c','d','e','g','h','i','l');
-        if (!B) Collections.addAll(toRemove,'d','f','h','i','l','m','o','p');
+        if (!cell.bottomWall) Collections.addAll(toRemove,'d','f','h','i','l','m','o','p');
         else Collections.addAll(toRemove,'a','b','c','e','g','j','k','n');
         cellPossibilities.removeAll(toRemove);
 
         return cellPossibilities.get(0);
     }
 
-    Maze importMaze(String path) //this could return void/bool (and require a blank maze to be created in the func body)
-    {
-        throw new UnsupportedOperationException("export is Not Implemented");
-        // @Calvey - We will need to work together to implement this one :)
+    private Cell CharToCell(Character c) {
+        ArrayList<Character> LWallChars = new ArrayList<>(Arrays.asList('e','g','h','j','l','m','n','p'));
+        ArrayList<Character> RWallChars = new ArrayList<>(Arrays.asList('c','g','i','k','l','n','o','p'));
+        ArrayList<Character> TWallChars = new ArrayList<>(Arrays.asList('b','f','j','k','m','n','o','p'));
+        ArrayList<Character> BWallChars = new ArrayList<>(Arrays.asList('d','f','h','i','l','m','o','p'));
 
+        return new Cell(TWallChars.contains(c),BWallChars.contains(c),LWallChars.contains(c),RWallChars.contains(c));
     }
-
 }
