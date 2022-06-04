@@ -7,7 +7,7 @@ public class Maze {
     public static void main(String[] args) {
 
 
-        Maze testMaze = initMaze(3, 3, true, 1, 0, 2, 1,"TestMaze");
+        Maze testMaze = initMaze(5, 5, true, 1, 0, 2, 1,"TestMaze");
 
         Coordinate[] allWalls = new Coordinate[6];
         allWalls[0] = new Coordinate(0, 0);
@@ -109,28 +109,28 @@ public class Maze {
     //backend helper function to update a cell and then edit the walls of the surrounding cells to match the edited cell
     public void editGameArray(Coordinate pos, Cell newCell) {
         //set new cell
-        mazeArray[pos.col][pos.row] = newCell;
+        mazeArray[pos.x][pos.y] = newCell;
 
         // todo - tidy this
 
         try {
-            mazeArray[pos.col - 1][pos.row].rightWall = newCell.leftWall;
+            mazeArray[pos.x - 1][pos.y].rightWall = newCell.leftWall;
         } catch (Exception e) {
             //if there is no cell to the left, do nothing
         }
         try {
             //if there is a cell to the right, match its left wall with the current cells right wall
-            mazeArray[pos.col + 1][pos.row].leftWall = newCell.rightWall;
+            mazeArray[pos.x + 1][pos.y].leftWall = newCell.rightWall;
         } catch (Exception e) {
             //if there is no cell to the right, do nothing
         }
         try {
-            mazeArray[pos.col][pos.row + 1].topWall = newCell.bottomWall;
+            mazeArray[pos.x][pos.y + 1].topWall = newCell.bottomWall;
         } catch (Exception e) {
             //if there is no cell below, do nothing
         }
         try {
-            mazeArray[pos.col][pos.row - 1].bottomWall = newCell.topWall;
+            mazeArray[pos.x][pos.y - 1].bottomWall = newCell.topWall;
         } catch (Exception e) {
             //if there is no cell above, do nothing
         }
@@ -204,7 +204,7 @@ public class Maze {
 
     //return cell of given Coordinate
     public Cell getCell(Coordinate coord) {
-        return mazeArray[coord.col][coord.row];
+        return mazeArray[coord.x][coord.y];
     }
 
     public Maze getMaze() {
@@ -216,15 +216,15 @@ public class Maze {
     }
 
     //crete a new Coordinate
-    Coordinate newCoord(int col, int row) {
-        if (row < 0 || col < 0) {
+    Coordinate newCoord(int x, int y) {
+        if (x < 0 || y < 0) {
             throw new IllegalArgumentException("Coordinates must be greater than zero");
         }
-        if (row > length || col > height) {
+        if (x > length || y > height) {
             throw new IllegalArgumentException("Coordinates must be within than game size");
         }
 
-        return new Coordinate(col, row);
+        return new Coordinate(x, y);
     }
 
     //outputs the maze to a string (badly)
@@ -258,7 +258,7 @@ public class Maze {
                 moves.add(pos);
 
                 //check if the end position of the maze has been located
-                if (pos.row == endPosition.row && pos.col == endPosition.col) {
+                if (pos.y == endPosition.y && pos.x == endPosition.x) {
                     isSolved = true;
                     return moves; //return the list of moves taken
                 } else {
@@ -266,16 +266,16 @@ public class Maze {
 
                     //if a wall isn't active, explore the cell in that direction
                     if (!cell.leftWall && previousPos != 'L') {  //if there's no left wall, move left
-                        return solveMaze(new Coordinate(pos.col - 1, pos.row), moves, 'R');
+                        return solveMaze(new Coordinate(pos.x - 1, pos.y), moves, 'R');
                     }
                     if (!cell.rightWall && previousPos != 'R') {
-                        return solveMaze(new Coordinate(pos.col + 1, pos.row), moves, 'L');
+                        return solveMaze(new Coordinate(pos.x + 1, pos.y), moves, 'L');
                     }
                     if (!cell.bottomWall && previousPos != 'B') {
-                        return solveMaze(new Coordinate(pos.col, pos.row + 1), moves, 'T');
+                        return solveMaze(new Coordinate(pos.x, pos.y + 1), moves, 'T');
                     }
                     if (!cell.topWall && previousPos != 'T') {
-                        return solveMaze(new Coordinate(pos.col, pos.row - 1), moves, 'B');
+                        return solveMaze(new Coordinate(pos.x, pos.y - 1), moves, 'B');
                     }
 
                     //if all nodes are explored and maze isn't solved, bubble back up tree
