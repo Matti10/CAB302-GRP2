@@ -74,8 +74,34 @@ public class Maze {
     //start/end position column [0 to length-1], row [0 to height-1] (assuming indexed from 0, or is it from 1?)  - calvey
     //setter for the start and end location of the maze
     public void setStartEndPos(Coordinate startPosition, Coordinate endPosition) {
+
+        class Helper {
+            //if maze is unsealed, this func is used to open the exit/entrance (so the maze isn't sealed)
+            void setEntranceExitWalls(Coordinate pos) {
+                if (pos.x == 0) {
+                    edit(pos, new Cell(true, true, false, true));
+                } else if (pos.x == xCount - 1) {
+                    edit(pos, new Cell(true, true, true, false));
+                } else if (pos.y == 0) {
+                    edit(pos, new Cell(false, true, true, true));
+                } else if (pos.y == yCount - 1) {
+                    edit(pos, new Cell(true, false, true, true));
+                } else {
+                    throw new IllegalArgumentException("when maze is unsealed, start/end position must be on the edge of the maze");
+                }
+            }
+        }
+
+        //if maze isn't sealed, 'breakthrough' the outer walls
+        if (!isSealed) {
+            Helper helper = new Helper();
+            helper.setEntranceExitWalls(startPosition);
+            helper.setEntranceExitWalls(endPosition);
+        }
+
         this.startPosition = startPosition;
         this.endPosition = endPosition;
+
     }
 
     //initialises the gameArray
@@ -84,7 +110,7 @@ public class Maze {
         for (int x = 0; x < xCount; x++) {
             for (int y = 0; y < yCount; y++) {
                 //fill mazeArray with blank cells
-                mazeArray[x][y] = new Cell(false, false, false, false);
+                mazeArray[x][y] = new Cell(true, true, true, true);
             }
         }
     }
@@ -117,10 +143,10 @@ public class Maze {
             boolean isSolved = false;
             double complexity;
 
-            public Helper(double complexity)
-            {
+            public Helper(double complexity) {
                 this.complexity = complexity;
             }
+
             Coordinate bestMove(Coordinate pos) {
                 //find which direction moves towards the exit
                 int xDist = pos.x - endPosition.x;
@@ -128,36 +154,32 @@ public class Maze {
 
                 if (Math.abs(xDist) > Math.abs(yDist)) {
                     if (xDist > 0) {
-                        return newCoord(-1,0);
+                        return newCoord(-1, 0);
                     } else {
-                        return newCoord(1,0);
+                        return newCoord(1, 0);
                     }
                 } else {
                     if (yDist > 0) {
-                        return newCoord(0,-1);
+                        return newCoord(0, -1);
                     } else {
-                        return newCoord(0,1);
+                        return newCoord(0, 1);
                     }
                 }
             }
+
             //returns the distance to the edge in the direction of move
-            int distToEdge(Coordinate pos,Coordinate move)
-            {
+            int distToEdge(Coordinate pos, Coordinate move) {
                 int edgeBuffer = 2; //buffers the distance to the edge
-                if (move.x > 0)
-                {
+                if (move.x > 0) {
                     return xCount - pos.x - edgeBuffer;
                 }
-                if (move.x < 0)
-                {
+                if (move.x < 0) {
                     return pos.x - edgeBuffer;
                 }
-                if (move.y > 0)
-                {
+                if (move.y > 0) {
                     return yCount - pos.y - edgeBuffer;
                 }
-                if (move.y < 0)
-                {
+                if (move.y < 0) {
                     return pos.y - edgeBuffer;
                 }
 
@@ -165,14 +187,12 @@ public class Maze {
             }
 
             //return an int between -1 and 1 inclusive, which is representive a direction in the maze
-            int randomDirection()
-            {
-                return (int)Math.floor(Math.random() * (1 - (-1)  + 1) - 1);
+            int randomDirection() {
+                return (int) Math.floor(Math.random() * (1 - (-1) + 1) - 1);
             }
 
-            int randomInt(int min, int max)
-            {
-                return (int)Math.floor(Math.random() * (max - min  + 1) + min);
+            int randomInt(int min, int max) {
+                return (int) Math.floor(Math.random() * (max - min + 1) + min);
             }
 
             Coordinate invertMove(Coordinate move)//reverse a move
@@ -180,20 +200,17 @@ public class Maze {
                 int x = move.x;
                 int y = move.y;
 
-                if (x != 0)
-                {
+                if (x != 0) {
                     x = x * -1;
                 }
-                if (y != 0)
-                {
+                if (y != 0) {
                     y = y * -1;
                 }
 
-                return newCoord(x,y);
+                return newCoord(x, y);
             }
 
-            Coordinate randomMove(Coordinate previousMove)
-            {
+            Coordinate randomMove(Coordinate previousMove) {
                 Random rand = new Random();
 
                 previousMove = invertMove(previousMove); //invert the move so it's equivilant to moving back to the previous cell
@@ -201,15 +218,14 @@ public class Maze {
                 Coordinate move = previousMove;
                 while (move == previousMove || !(move.x == 0 ^ move.y == 0)) //while we're moving back the way we came and x or y isn't 0
                 {
-                    move = newCoord(randomDirection(),randomDirection());
+                    move = newCoord(randomDirection(), randomDirection());
                 }
 
                 return move;
             }
 
-            Coordinate applyMove(Coordinate move, Coordinate pos)
-            {
-                return newCoord(move.x+pos.x, move.y+pos.y);
+            Coordinate applyMove(Coordinate move, Coordinate pos) {
+                return newCoord(move.x + pos.x, move.y + pos.y);
             }
 
             public List<Coordinate> exploreSolution(Coordinate pos, List<Coordinate> moves, Coordinate previousMove, int directionBias) {
@@ -227,33 +243,60 @@ public class Maze {
                     if (directionBias > 0) //if there is any direction bias moves left, make them
                     {
                         //explore in the same direction as the previous move
-                        return  exploreSolution(applyMove(previousMove,pos),moves,previousMove,directionBias - 1);
-                    }
-                    else
-                    {
+                        return exploreSolution(applyMove(previousMove, pos), moves, previousMove, directionBias - 1);
+                    } else {
                         //decide if moving towards the exit
                         if (complexity + Math.random() > 1) //the higher the complexity, the less likely this is to return true
                         {
                             //explore random
                             move = randomMove(previousMove);
-                            directionBias = randomInt(0,distToEdge(pos,move))/3;
-                        }
-                        else
-                        {
+                            directionBias = randomInt(0, distToEdge(pos, move)) / 3;
+                        } else {
                             //explore towards exit
                             move = bestMove(pos);
                         }
                         //apply move and explore next node
-                        Coordinate nextPos = applyMove(move,pos);
+                        Coordinate nextPos = applyMove(move, pos);
                         //check nextPos is legal if it is, move randomly until legal
-                        while ((nextPos.x <0 || nextPos.y < 0 || nextPos.x >= xCount || nextPos.y >= yCount) && !moves.contains(nextPos)){
+                        while ((nextPos.x < 0 || nextPos.y < 0 || nextPos.x >= xCount || nextPos.y >= yCount) && !moves.contains(nextPos)) {
                             //illegal
-                            nextPos = applyMove(randomMove(previousMove),pos);
+                            nextPos = applyMove(randomMove(previousMove), pos);
                         }
-                        return exploreSolution(nextPos,moves,move,directionBias);
+                        return exploreSolution(nextPos, moves, move, directionBias);
                     }
 
-//todo -  decrease blobbing on higher complexities (a paramater to explore a given direction for x amount of moves
+
+                }
+            }
+
+            public void addSolutionToMaze(List<Coordinate> solution) {
+
+                for (int i = 0; i < solution.size() - 1; i++) {
+                    Coordinate curPos = solution.get(i);
+                    Coordinate nextPos = solution.get(i + 1);
+                    Cell curCell = getCell(curPos);
+                    Cell newCell = new Cell(curCell.topWall, curCell.bottomWall, curCell.leftWall, curCell.rightWall);
+
+                    //establish the direction of the next move
+                    if (curPos.x - nextPos.x > 0) {
+                        //left move - turn off left wall of current cell
+                        newCell.leftWall = false;
+                    }
+                    if (curPos.x - nextPos.x < 0) {
+                        //right move
+                        newCell.rightWall = false;
+                    }
+                    if (curPos.y - nextPos.y < 0) {
+                        //down move
+                        newCell.bottomWall = false;
+                    }
+                    if (curPos.y - nextPos.y > 0) {
+                        //UP move
+                        newCell.topWall = false;
+                    }
+
+                    edit(curPos, newCell);
+
                 }
             }
 
@@ -267,10 +310,15 @@ public class Maze {
         Helper helper = new Helper(complexity);
 
         //explore maze for a solution from start point
-        return helper.exploreSolution(startPosition, new ArrayList<Coordinate>(), newCoord(0,0),0);
+        List<Coordinate> sol = helper.exploreSolution(startPosition, new ArrayList<Coordinate>(), newCoord(0, 0), 0);
+
+        helper.addSolutionToMaze(sol);
+
+        return sol;
 
 
     }
+
 
     //backend helper function to update a cell and then edit the walls of the surrounding cells to match the edited cell
     public void editGameArray(Coordinate pos, Cell newCell) {
@@ -312,10 +360,11 @@ public class Maze {
         //create maze object
         Maze maze = new Maze(xCount, yCount, isSealed, name, data);
 
+        maze.initMazeArray();
+
         //set start and  end pos
         maze.setStartEndPos(maze.newCoord(startPositionX, startPositionY), maze.newCoord(endPositionX, endPositionY));
 
-        maze.initMazeArray();
 
         return maze;
     }
@@ -370,7 +419,7 @@ public class Maze {
 
     //return cell of given Coordinate
     public Cell getCell(Coordinate coord) {
-        return mazeArray[coord.x][coord.y];
+        return mazeArray[coord.x][coord.y].getCell();
     }
 
     public Maze getMaze() {
@@ -464,13 +513,17 @@ public class Maze {
 
     public void edit(Coordinate[] cellPositions, Cell newWalls) {
         for (Coordinate pos : cellPositions) {
-            editGameArray(pos, newWalls);
+            editGameArray(pos, new Cell(newWalls.topWall, newWalls.bottomWall, newWalls.leftWall, newWalls.rightWall));
         }
+    }
+
+    public void edit(Coordinate cellPositions, Cell newWalls) {
+        editGameArray(cellPositions, new Cell(newWalls.topWall, newWalls.bottomWall, newWalls.leftWall, newWalls.rightWall));
     }
 
     public void edit(List<Coordinate> cellPositions, Cell newWalls) {
         for (Coordinate pos : cellPositions) {
-            editGameArray(pos, newWalls);
+            editGameArray(pos, new Cell(newWalls.topWall, newWalls.bottomWall, newWalls.leftWall, newWalls.rightWall));
         }
     }
 
