@@ -28,9 +28,9 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     JFrame    background          = new JFrame();
     JMenuBar  menuBar             = new JMenuBar();
     JMenu     fileBar             = new JMenu("File");
-    JMenu     saveBar             = new JMenu("save");
-    JMenu     saveAsBar           = new JMenu("Save as");
-    JMenu     loadBar             = new JMenu("Load");
+    JMenuItem saveBar             = new JMenuItem("save");
+    JMenuItem saveAsBar           = new JMenuItem("Save as");
+    JMenuItem loadBar             = new JMenuItem("Load");
     JPanel    mazeDisplayPane     = new JPanel();
     JPanel    displayPaneLeft     = new JPanel();
     JPanel    displayPaneRight    = new JPanel();
@@ -38,7 +38,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
     JScrollPane mazeScroll = new JScrollPane(mazeDisplayPane);
 
-
+    private Maze currentMaze;
 
 
     private Chunk[] initChunks(int chunkCount) {
@@ -54,8 +54,10 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
         menuBar.add(fileBar);
         fileBar.add(saveBar);
+        saveBar.addActionListener(this);
         fileBar.add(saveAsBar);
         fileBar.add(loadBar);
+        loadBar.addActionListener(this);
         background.setJMenuBar(menuBar);
 
 
@@ -108,7 +110,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     }
 
     public void AddMaze(Maze maze){
-
+        currentMaze = maze;
         int [] mazeDim = maze.getDimensions();
         chunkArray = initChunks(mazeDim[0] * mazeDim[1]);
 
@@ -139,8 +141,17 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
+        if(event.getSource() == loadBar){
+            System.out.print("\nLoad Menu Item Clicked\n");
+            currentMaze.importMaze("someName");
 
+        }
+        if(event.getSource() == saveBar){
+            System.out.print("\nSave Menu Item Clicked\n");
+            currentMaze.export("someName","author","07/06/2022");
+
+        }
     }
 
     @Override
