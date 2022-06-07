@@ -113,7 +113,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         currentMaze = maze;
         int [] mazeDim = maze.getDimensions();
         chunkArray = initChunks(mazeDim[0] * mazeDim[1]);
-
+        Dimension ChunkSize = new Dimension(200,200);
         Coordinate thisCoord;
         int i = 0;
         for(int y = 0; y < mazeDim[1] ; y++){
@@ -124,6 +124,9 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
                 mazePaneConstraints.gridy = y;
                 mazePaneConstraints.ipady = 1;
                 mazePaneConstraints.ipadx = 1;
+
+                chunkArray[i].setMinimumSize(ChunkSize);
+                chunkArray[i].setPreferredSize(ChunkSize);
 
                 mazeDisplayPane.add(chunkArray[i].packChunk(thisCell),mazePaneConstraints);
                 i++;
