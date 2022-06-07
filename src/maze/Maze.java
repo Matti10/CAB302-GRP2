@@ -13,7 +13,7 @@ public class Maze {
     public static void main(String[] args) {
 
 
-        Maze testMaze = initMaze(5, 5, true, 1, 0, 2, 1,"TestMaze", new MazeListData());
+        Maze testMaze = initMaze(5, 5, true, 1, 0, 2, 1, "TestMaze", new MazeListData());
 
         Coordinate[] allWalls = new Coordinate[6];
         allWalls[0] = new Coordinate(0, 0);
@@ -188,7 +188,7 @@ public class Maze {
 
             //return an int between -1 and 1 inclusive, which is representive a direction in the maze
             int randomDirection() {
-                return (int) Math.floor(Math.random() * (1 - (-1) + 1) - 1);
+                return randomInt(-1, 1);
             }
 
             int randomInt(int min, int max) {
@@ -225,14 +225,21 @@ public class Maze {
             }
 
             Coordinate applyMove(Coordinate move, Coordinate pos) {
-                return newCoord(move.x + pos.x, move.y + pos.y);
+                try
+                {
+                    return newCoord(move.x + pos.x, move.y + pos.y);
+                }catch (Exception e)
+                {
+                    return applyMove(randomMove(move),pos);
+                }
+
             }
 
-            public List<Coordinate> exploreSolution(Coordinate pos, List<Coordinate> moves, Coordinate previousMove, int directionBias) {
+            public List<Coordinate> exploreSolution(Coordinate pos, List<Coordinate> moves, Coordinate previousMove, int directionBias, Coordinate destination) {
                 moves.add(pos);
 
                 //check if the end position of the maze has been located
-                if (pos.y == endPosition.y && pos.x == endPosition.x) {
+                if (pos.y == destination.y && pos.x == destination.x) {
                     isSolved = true;
                     return moves; //return the list of moves taken
                 } else {
@@ -243,7 +250,7 @@ public class Maze {
                     if (directionBias > 0) //if there is any direction bias moves left, make them
                     {
                         //explore in the same direction as the previous move
-                        return exploreSolution(applyMove(previousMove, pos), moves, previousMove, directionBias - 1);
+                        return exploreSolution(applyMove(previousMove, pos), moves, previousMove, directionBias - 1, destination);
                     } else {
                         //decide if moving towards the exit
                         if (complexity + Math.random() > 1) //the higher the complexity, the less likely this is to return true
@@ -255,6 +262,7 @@ public class Maze {
                             //explore towards exit
                             move = bestMove(pos);
                         }
+
                         //apply move and explore next node
                         Coordinate nextPos = applyMove(move, pos);
                         //check nextPos is legal if it is, move randomly until legal
@@ -262,14 +270,15 @@ public class Maze {
                             //illegal
                             nextPos = applyMove(randomMove(previousMove), pos);
                         }
-                        return exploreSolution(nextPos, moves, move, directionBias);
+                        return exploreSolution(nextPos, moves, move, directionBias, destination);
                     }
 
 
                 }
             }
 
-            public void addSolutionToMaze(List<Coordinate> solution) {
+
+            public void addMovesToMaze(List<Coordinate> solution) {
 
                 for (int i = 0; i < solution.size() - 1; i++) {
                     Coordinate curPos = solution.get(i);
@@ -300,7 +309,21 @@ public class Maze {
                 }
             }
 
+            public void addRandomPaths(int numPaths)
+            {
+                for (int i = 0; i < numPaths; i++)
+                {
+                    //random start position
+                    Coordinate startPos = newCoord(randomInt(0,xCount-1),randomInt(0,yCount-1));
+                    Coordinate endPos = newCoord(randomInt(0,xCount-1),randomInt(0,yCount-1));
+
+
+                    addMovesToMaze(exploreSolution(startPos, new ArrayList<Coordinate>(), newCoord(0, 0), 0, endPos));
+                }
+            }
+
         }
+
 
         //data validation
         if (0 > complexity || complexity > 1) {
@@ -310,10 +333,10 @@ public class Maze {
         Helper helper = new Helper(complexity);
 
         //explore maze for a solution from start point
-        List<Coordinate> sol = helper.exploreSolution(startPosition, new ArrayList<Coordinate>(), newCoord(0, 0), 0);
+        List<Coordinate> sol = helper.exploreSolution(startPosition, new ArrayList<Coordinate>(), newCoord(0, 0), 0, endPosition);
 
-        helper.addSolutionToMaze(sol);
-
+        helper.addMovesToMaze(sol);
+        helper.addRandomPaths((xCount+yCount)/20);
         return sol;
 
 
@@ -432,7 +455,7 @@ public class Maze {
 
     //crete a new Coordinate
     Coordinate newCoord(int x, int y) {
-        if (x >= xCount || y >= yCount) {
+        if (x > xCount || y > yCount) {
             throw new IllegalArgumentException("Coordinates must be within than game size");
         }
 
@@ -535,24 +558,25 @@ public class Maze {
         else dateTimeCreated = creationTime;
 
         String dateTimeEdited = String.valueOf(currentUnixTime);
-        String mazeDimensions = xCount+"x"+yCount;
+        String mazeDimensions = xCount + "x" + yCount;
 
         int[] startPosArr = startPosition.toIntArray();
         int[] endPosArr = endPosition.toIntArray();
-        String startPos = startPosArr[0]+","+startPosArr[1];
-        String endPos = endPosArr[0]+","+endPosArr[1];
+        String startPos = startPosArr[0] + "," + startPosArr[1];
+        String endPos = endPosArr[0] + "," + endPosArr[1];
 
         String mazeData = "";
         String mazeDataOverflow = "";
-        for (int y = 0; y<yCount; y++) {
-            for (int x = 0; x<xCount; x++) {
-                if (mazeData.length() < 8000)  mazeData += (CellToChar(getCell(newCoord(x,y))));
-                else mazeDataOverflow += (CellToChar(getCell(newCoord(x,y))));
+        for (int y = 0; y < yCount; y++) {
+            for (int x = 0; x < xCount; x++) {
+                if (mazeData.length() < 8000) mazeData += (CellToChar(getCell(newCoord(x, y))));
+                else mazeDataOverflow += (CellToChar(getCell(newCoord(x, y))));
             }
         }
 
         mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, String.valueOf(isSealed), startPos, endPos, mazeData, mazeDataOverflow));
     }
+
     //should this be in this file? should it be creating a new maze and returning it, or modifying the current maze object??
     public Maze importMaze(String mazeName) { //this could return void/bool (and require a blank maze to be created in the func body)
         //need to use the newCoord() function!!!!!
@@ -572,14 +596,14 @@ public class Maze {
         int xEnd = Integer.parseInt(end[0]);
         int yEnd = Integer.parseInt(end[1]);
 
-        Maze maze = Maze.initMaze(xCnt,yCnt,seal,xStart,yStart,xEnd,yEnd,m.getMazeName(),mData);
+        Maze maze = Maze.initMaze(xCnt, yCnt, seal, xStart, yStart, xEnd, yEnd, m.getMazeName(), mData);
 
         //For below, wanting to edit an individual cell at a specific coordinate. how to implement?
-        String mazeData = m.getMazeData()+m.getMazeDataOverflow();
+        String mazeData = m.getMazeData() + m.getMazeDataOverflow();
         Coordinate thisCoord;
         Cell thisCell;
-        for (int i=0; i<mazeData.length(); i++) {
-            thisCoord = new Coordinate(i,i);
+        for (int i = 0; i < mazeData.length(); i++) {
+            thisCoord = new Coordinate(i, i);
             thisCell = CharToCell(mazeData.charAt(i));
             //maze.edit(thisCoord, thisCell); // needs coord array??
         }
@@ -592,25 +616,25 @@ public class Maze {
         ArrayList<Character> cellPossibilities = new ArrayList<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'));
         ArrayList<Character> toRemove = new ArrayList<>();
 
-        if (!cell.leftWall) Collections.addAll(toRemove,'e','g','h','j','l','m','n','p');
-        else Collections.addAll(toRemove,'a','b','c','d','f','i','k','o');
-        if (!cell.rightWall) Collections.addAll(toRemove,'c','g','i','k','l','n','o','p');
-        else Collections.addAll(toRemove,'a','b','d','e','f','h','j','m');
-        if (!cell.topWall) Collections.addAll(toRemove,'b','f','j','k','m','n','o','p');
-        else Collections.addAll(toRemove,'a','c','d','e','g','h','i','l');
-        if (!cell.bottomWall) Collections.addAll(toRemove,'d','f','h','i','l','m','o','p');
-        else Collections.addAll(toRemove,'a','b','c','e','g','j','k','n');
+        if (!cell.leftWall) Collections.addAll(toRemove, 'e', 'g', 'h', 'j', 'l', 'm', 'n', 'p');
+        else Collections.addAll(toRemove, 'a', 'b', 'c', 'd', 'f', 'i', 'k', 'o');
+        if (!cell.rightWall) Collections.addAll(toRemove, 'c', 'g', 'i', 'k', 'l', 'n', 'o', 'p');
+        else Collections.addAll(toRemove, 'a', 'b', 'd', 'e', 'f', 'h', 'j', 'm');
+        if (!cell.topWall) Collections.addAll(toRemove, 'b', 'f', 'j', 'k', 'm', 'n', 'o', 'p');
+        else Collections.addAll(toRemove, 'a', 'c', 'd', 'e', 'g', 'h', 'i', 'l');
+        if (!cell.bottomWall) Collections.addAll(toRemove, 'd', 'f', 'h', 'i', 'l', 'm', 'o', 'p');
+        else Collections.addAll(toRemove, 'a', 'b', 'c', 'e', 'g', 'j', 'k', 'n');
         cellPossibilities.removeAll(toRemove);
 
         return cellPossibilities.get(0);
     }
 
     private Cell CharToCell(Character c) {
-        ArrayList<Character> LWallChars = new ArrayList<>(Arrays.asList('e','g','h','j','l','m','n','p'));
-        ArrayList<Character> RWallChars = new ArrayList<>(Arrays.asList('c','g','i','k','l','n','o','p'));
-        ArrayList<Character> TWallChars = new ArrayList<>(Arrays.asList('b','f','j','k','m','n','o','p'));
-        ArrayList<Character> BWallChars = new ArrayList<>(Arrays.asList('d','f','h','i','l','m','o','p'));
+        ArrayList<Character> LWallChars = new ArrayList<>(Arrays.asList('e', 'g', 'h', 'j', 'l', 'm', 'n', 'p'));
+        ArrayList<Character> RWallChars = new ArrayList<>(Arrays.asList('c', 'g', 'i', 'k', 'l', 'n', 'o', 'p'));
+        ArrayList<Character> TWallChars = new ArrayList<>(Arrays.asList('b', 'f', 'j', 'k', 'm', 'n', 'o', 'p'));
+        ArrayList<Character> BWallChars = new ArrayList<>(Arrays.asList('d', 'f', 'h', 'i', 'l', 'm', 'o', 'p'));
 
-        return new Cell(TWallChars.contains(c),BWallChars.contains(c),LWallChars.contains(c),RWallChars.contains(c));
+        return new Cell(TWallChars.contains(c), BWallChars.contains(c), LWallChars.contains(c), RWallChars.contains(c));
     }
 }
