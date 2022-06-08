@@ -24,6 +24,7 @@ public class Maze {
         this.isSealed = true;
         this.mazeArray = new Cell[xCount][yCount];
         this.mData = mData;
+        this.images = new ArrayList<imageLocation>();
     }
 
     // maze constructor
@@ -44,6 +45,8 @@ public class Maze {
         this.name = name;
         this.mazeArray = new Cell[xCount][yCount];
         this.mData = mData;
+        this.images = new ArrayList<imageLocation>();
+
 
     }
 
@@ -56,11 +59,11 @@ public class Maze {
             void setEntranceExitWalls(Coordinate pos) {
                 if (pos.x == 0) {
                     edit(pos, new Cell(true, true, false, true));
-                } else if (pos.x == xCount - 1) {
+                } else if (pos.x == xCount-1) {
                     edit(pos, new Cell(true, true, true, false));
                 } else if (pos.y == 0) {
                     edit(pos, new Cell(false, true, true, true));
-                } else if (pos.y == yCount - 1) {
+                } else if (pos.y == yCount-1) {
                     edit(pos, new Cell(true, false, true, true));
                 } else {
                     throw new IllegalArgumentException("when maze is unsealed, start/end position must be on the edge of the maze");
@@ -168,17 +171,18 @@ public class Maze {
 
     public List<Coordinate> setRandomSolution(double complexity) {
         class Helper {
-            boolean isSolved = false;
+            boolean isSolved;
             double complexity;
 
             public Helper(double complexity) {
                 this.complexity = complexity;
+                this.isSolved = false;
             }
 
-            Coordinate bestMove(Coordinate pos) {
+            Coordinate bestMove(Coordinate pos, Coordinate dest) {
                 //find which direction moves towards the exit
-                int xDist = pos.x - endPosition.x;
-                int yDist = pos.y - endPosition.y;
+                int xDist = pos.x - dest.x;
+                int yDist = pos.y - dest.y;
 
                 if (Math.abs(xDist) > Math.abs(yDist)) {
                     if (xDist > 0) {
@@ -239,7 +243,6 @@ public class Maze {
             }
             ///delete me
             Coordinate randomMove(Coordinate previousMove) {
-                Random rand = new Random();
 
                 previousMove = invertMove(previousMove); //invert the move so it's equivilant to moving back to the previous cell
 
@@ -293,6 +296,7 @@ public class Maze {
 
             }
 
+
             public List<Coordinate> exploreSolution(Coordinate pos, List<Coordinate> moves, Coordinate previousMove, int directionBias, Coordinate destination) {
                 moves.add(pos);
 
@@ -318,16 +322,16 @@ public class Maze {
                             directionBias = randomInt(0, distToEdge(pos, move)) / 3;
                         } else {
                             //explore towards exit
-                            move = bestMove(pos);
+                            move = bestMove(pos, destination);
                         }
 
                         //apply move and explore next node
                         Coordinate nextPos = applyMove(move, pos);
                         //check nextPos is legal if it is, move randomly until legal
-                        while ((nextPos.x < 0 || nextPos.y < 0 || nextPos.x >= xCount || nextPos.y >= yCount) && !moves.contains(nextPos)) {
-                            //illegal
-                            nextPos = applyMove(randomMove(previousMove), pos);
-                        }
+//                        while ((nextPos.x < 0 || nextPos.y < 0 || nextPos.x >= xCount || nextPos.y >= yCount) && !moves.contains(nextPos)) {
+//                            //illegal
+//                            nextPos = applyMove(randomMove(previousMove), pos);
+//                        }
                         return exploreSolution(nextPos, moves, move, directionBias, destination);
                     }
 
@@ -374,7 +378,7 @@ public class Maze {
                     //random start position
                     Coordinate startPos = newCoord(randomInt(0,xCount-1),randomInt(0,yCount-1));
                     Coordinate endPos = newCoord(randomInt(0,xCount-1),randomInt(0,yCount-1));
-
+                    isSolved = false;
 
                     addMovesToMaze(exploreSolution(startPos, new ArrayList<Coordinate>(), newCoord(0, 0), 0, endPos));
                 }
@@ -394,7 +398,7 @@ public class Maze {
         List<Coordinate> sol = helper.exploreSolution(startPosition, new ArrayList<Coordinate>(), newCoord(0, 0), 0, endPosition);
 
         helper.addMovesToMaze(sol);
-        helper.addRandomPaths((xCount+yCount)/20);
+        helper.addRandomPaths((xCount+yCount)/6);
         return sol;
 
 
@@ -513,7 +517,7 @@ public class Maze {
 
     //crete a new Coordinate
     Coordinate newCoord(int x, int y) {
-        if (x > xCount || y > yCount) {
+        if (x >= xCount || y >= yCount) {
             throw new IllegalArgumentException("Coordinates must be within than game size");
         }
 
