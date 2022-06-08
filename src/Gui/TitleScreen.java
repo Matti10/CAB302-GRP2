@@ -111,6 +111,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
     public void AddMaze(Maze maze){
         currentMaze = maze;
+        mazeDisplayPane.removeAll();
         int [] mazeDim = maze.getDimensions();
         chunkArray = initChunks(mazeDim[0] * mazeDim[1]);
         Dimension ChunkSize = new Dimension(200,200);
@@ -147,13 +148,14 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     public void actionPerformed(ActionEvent event) {
         if(event.getSource() == loadBar){
             System.out.print("\nLoad Menu Item Clicked\n");
-            currentMaze.importMaze("someName");
+            Maze importedMaze = currentMaze.importMaze("someName");
+            //Maze testBlankMaze = Maze.initMaze(3,3,false,(1,0),)
 
+            this.AddMaze(importedMaze);
         }
         if(event.getSource() == saveBar){
             System.out.print("\nSave Menu Item Clicked\n");
-            currentMaze.export("someName","author","07/06/2022");
-
+            currentMaze.export("someName","author","1654643415");
         }
     }
 
@@ -161,7 +163,4 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     public void run() {
 
     }
-
-
-
 }

@@ -25,10 +25,12 @@ public class MazeListData {
      *          //what does this do I guess?
      */
     public void add(MazeDBObj m) {
-        if (!listModel.contains(m.getMazeName())) {
-            listModel.addElement(m.getMazeName());
-            mazeListData.addMaze(m);
+        if (listModel.contains(m.getMazeName())) {
+            listModel.removeElement(m.getMazeName());
+            this.remove(m.getMazeName());
         }
+        listModel.addElement(m.getMazeName());
+        mazeListData.addMaze(m);
     }
 
     /**
@@ -56,7 +58,7 @@ public class MazeListData {
      * @return - the name of the maze matching the key
      */
     public MazeDBObj get(Object key) {
-        return mazeListData.getMazeName((String) key);
+        return mazeListData.getMazeDBObj((String) key);
     }
 
     /**
@@ -66,6 +68,16 @@ public class MazeListData {
      */
     public ListModel<String> getModel() {
         return listModel;
+    }
+
+    public String[][] getDisplayData() {
+        String[][] all = new String[getSize()][];
+        MazeDBObj m;
+        for (int i=0;i<getSize();i++) {
+            m = mazeListData.getMazeDBObj(listModel.getElementAt(i));
+            all[i] = new String[]{m.getMazeName(),m.getAuthor(),m.getMazeDimensions(),m.getDateTimeCreated(),m.getDateTimeEdited()};
+        }
+        return all;
     }
 
     /**

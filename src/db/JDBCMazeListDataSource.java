@@ -23,7 +23,7 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
                     + "mazeData VARCHAR(8000)," //make sure this works, should go up to 7999
                     + "mazeDataOverflow VARCHAR(2002));"; //make sure this works, should go up to 2001. total 10,000 for both (100x100)
 
-    private static final String INSERT_MAZE = "INSERT INTO mazes (mazeName, author, dateCreated, dateEdited, mazeDimensions, isSealed, startPos, endPos, mazeData, mazeDataOverflow) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_MAZE = "INSERT INTO mazes (mazeName, author, dateCreated, dateEdited, mazeDimensions, isSealed, startPos, endPos, mazeData, mazeDataOverflow) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_MAZE_NAMES = "SELECT mazeName FROM mazes";
     private static final String GET_MAZE = "SELECT * FROM mazes WHERE mazeName=?";
     private static final String DELETE_MAZE = "DELETE FROM mazes WHERE mazeName=?";
@@ -87,7 +87,6 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
         return mazeNames;
     }
 
@@ -97,7 +96,7 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
      * @param mazeName - the name of the maze to be returned as a string
      * @return - the maze object that matches the specified maze name
      */
-    public MazeDBObj getMazeName(String mazeName) {
+    public MazeDBObj getMazeDBObj(String mazeName) {
         MazeDBObj m = new MazeDBObj();
         ResultSet rs;
 

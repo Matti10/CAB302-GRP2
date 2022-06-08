@@ -551,6 +551,7 @@ public class Maze {
     }
 
     public void export(String mazeName, String author, String creationTime) {
+        //MUST confirm overwrite if mazeName already exists in mData. data will be overwritten if mazeNames match.
         String dateTimeCreated;
         long currentUnixTime = Instant.now().getEpochSecond();
 
@@ -564,6 +565,7 @@ public class Maze {
         int[] endPosArr = endPosition.toIntArray();
         String startPos = startPosArr[0] + "," + startPosArr[1];
         String endPos = endPosArr[0] + "," + endPosArr[1];
+        int sealedVal = isSealed? 1 : 0;
 
         String mazeData = "";
         String mazeDataOverflow = "";
@@ -573,43 +575,35 @@ public class Maze {
                 else mazeDataOverflow += (CellToChar(getCell(newCoord(x, y))));
             }
         }
-
-        mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, String.valueOf(isSealed), startPos, endPos, mazeData, mazeDataOverflow));
+        mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, String.valueOf(sealedVal), startPos, endPos, mazeData, mazeDataOverflow));
     }
 
-    //should this be in this file? should it be creating a new maze and returning it, or modifying the current maze object??
-    public Maze importMaze(String mazeName) { //this could return void/bool (and require a blank maze to be created in the func body)
-        //need to use the newCoord() function!!!!!
+    public Maze importMaze(String mazeName) {
         MazeDBObj m = mData.get(mazeName);
 
         String[] arrDims = m.getMazeDimensions().split("x");
-        int xCnt = Integer.parseInt(arrDims[0]);
-        int yCnt = Integer.parseInt(arrDims[1]);
+        this.xCount = Integer.parseInt(arrDims[0]);
+        this.yCount = Integer.parseInt(arrDims[1]);
 
-        boolean seal = Boolean.parseBoolean(m.getIsSealed());
+        this.isSealed = Boolean.parseBoolean(m.getIsSealed());
 
         String[] start = m.getStartPos().split(",");
-        int xStart = Integer.parseInt(start[0]);
-        int yStart = Integer.parseInt(start[1]);
+        this.startPosition = new Coordinate(Integer.parseInt(start[0]),Integer.parseInt(start[1]));
 
         String[] end = m.getEndPos().split(",");
-        int xEnd = Integer.parseInt(end[0]);
-        int yEnd = Integer.parseInt(end[1]);
+        this.endPosition = new Coordinate(Integer.parseInt(end[0]),Integer.parseInt(end[1]));
 
-        Maze maze = Maze.initMaze(xCnt, yCnt, seal, xStart, yStart, xEnd, yEnd, m.getMazeName(), mData);
-
-        //For below, wanting to edit an individual cell at a specific coordinate. how to implement?
         String mazeData = m.getMazeData() + m.getMazeDataOverflow();
         Coordinate thisCoord;
         Cell thisCell;
         for (int i = 0; i < mazeData.length(); i++) {
-            thisCoord = new Coordinate(i, i);
+            int thisY = i/xCount;
+            int thisX = i-(thisY*yCount);
+            thisCoord = new Coordinate(thisX,thisY);
             thisCell = CharToCell(mazeData.charAt(i));
-            //maze.edit(thisCoord, thisCell); // needs coord array??
+            this.edit(thisCoord, thisCell);
         }
-
-        // @Calvey - We will need to work together to implement this one :)
-        return maze;
+        return this;
     }
 
     private Character CellToChar(Cell cell) {
