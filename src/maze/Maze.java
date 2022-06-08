@@ -4,7 +4,6 @@ import db.MazeDBObj;
 import db.MazeListData;
 
 import java.time.Instant;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Maze {
@@ -29,7 +28,6 @@ public class Maze {
         for (Coordinate coord : testMaze.getFirstSolution()) {
             System.out.print(coord.toString());
         }
-
     }
 
     Coordinate startPosition;
@@ -550,7 +548,14 @@ public class Maze {
         }
     }
 
-    public void export(String mazeName, String author, String creationTime) {
+    /**
+     * Exports the maze to the DB.
+     *
+     * @param mazeName - the name of the maze
+     * @param author - the author of the maze
+     * @param creationTime - the maze's unix-formatted date/time of creation
+     */
+    public void exportMaze(String mazeName, String author, String creationTime) {
         //MUST confirm overwrite if mazeName already exists in mData. data will be overwritten if mazeNames match.
         String dateTimeCreated;
         long currentUnixTime = Instant.now().getEpochSecond();
@@ -578,6 +583,13 @@ public class Maze {
         mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, String.valueOf(sealedVal), startPos, endPos, mazeData, mazeDataOverflow));
     }
 
+    /**
+     * Imports the maze from the DB.
+     *
+     * @param mazeName - the name of the maze to be imported
+     * @return - the current maze object, modified to meet the specifications
+     *           of the imported maze
+     */
     public Maze importMaze(String mazeName) {
         MazeDBObj m = mData.get(mazeName);
 
@@ -606,6 +618,14 @@ public class Maze {
         return this;
     }
 
+    /**
+     * Converts a Cell object to its Character-pairing to minimise the size of
+     * data being stored in the DB. The specific pairings between cells and
+     * characters are kept consistent throughout.
+     *
+     * @param cell - the Cell object to be converted
+     * @return - the Cell object's paired character
+     */
     private Character CellToChar(Cell cell) {
         ArrayList<Character> cellPossibilities = new ArrayList<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'));
         ArrayList<Character> toRemove = new ArrayList<>();
@@ -623,6 +643,14 @@ public class Maze {
         return cellPossibilities.get(0);
     }
 
+    /**
+     * Converts a Character Cell-pairing to minimise the size of data being
+     * stored in the DB. The specific pairings between cells and characters
+     * are kept consistent throughout.
+     *
+     * @param c - the Character to be converted
+     * @return - the Character's paired Cell object
+     */
     private Cell CharToCell(Character c) {
         ArrayList<Character> LWallChars = new ArrayList<>(Arrays.asList('e', 'g', 'h', 'j', 'l', 'm', 'n', 'p'));
         ArrayList<Character> RWallChars = new ArrayList<>(Arrays.asList('c', 'g', 'i', 'k', 'l', 'n', 'o', 'p'));

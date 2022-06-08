@@ -37,7 +37,7 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     private PreparedStatement rowCount;
 
     /**
-     * A constructor that initialises a JDBC connection and creates links between the list of maze objects and the database
+     * Constructs a JDBC connection and creates links between the list of maze objects and the database.
      */
     public JDBCMazeListDataSource() {
         connection = DBConnection.getInstance();
@@ -55,9 +55,9 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     }
 
     /**
-     * A method that adds a maze object to the database
+     * Adds a DB-formatted maze object to the database.
      *
-     * @param m - the maze object to be added
+     * @param m - the DB-formatted maze object to be added
      */
     public void addMaze(MazeDBObj m) {
         try {
@@ -77,6 +77,11 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         }
     }
 
+    /**
+     * Retrieves a set of maze names from the DB.
+     *
+     * @return - a set of maze names
+     */
     public Set<String> mazeNameSet() {
         Set<String> mazeNames = new TreeSet<>();
         ResultSet rs;
@@ -91,10 +96,12 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     }
 
     /**
-     * A method that retrieves the maze object associated with a specified maze name
+     * Builds a maze object from the DB with information associated with
+     * a specified maze name.
      *
-     * @param mazeName - the name of the maze to be returned as a string
-     * @return - the maze object that matches the specified maze name
+     * @param mazeName - the name of the maze to be built
+     * @return - the DB-formatted maze object matching the specified maze
+     *           name
      */
     public MazeDBObj getMazeDBObj(String mazeName) {
         MazeDBObj m = new MazeDBObj();
@@ -121,7 +128,7 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     }
 
     /**
-     * A method that analyses the amount of mazes stored in the database
+     * Retrieves the amount of mazes stored in the DB.
      *
      * @return - the amount of mazes stored in the database as an integer
      */
@@ -141,7 +148,7 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     }
 
     /**
-     * A method that removes a specified maze from the database
+     * Removes a specified maze from the DB.
      *
      * @param mazeName - the name of the maze to be deleted
      */
