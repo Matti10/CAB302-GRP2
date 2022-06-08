@@ -207,7 +207,7 @@ public class Maze {
 
                 return newCoord(x, y);
             }
-
+            ///delete me
             Coordinate randomMove(Coordinate previousMove) {
                 Random rand = new Random();
 
