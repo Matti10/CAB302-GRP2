@@ -4,21 +4,29 @@ public class imageLocation {
     String path;
     String name;
     Coordinate topLeftLocation; //top left cell of image
-    Coordinate bottomRightLoction;
+    Coordinate bottomRightLocation;
 
     int size;
 
-    imageLocation(String path, String name, Coordinate topLeftLocation,Coordinate bottomRightLoction, int size)
+    imageLocation(String path, String name, Coordinate topLeftLocation,Coordinate bottomRightLocation, int size)
     {
         this.path = path;
         this.name = name;
         this.topLeftLocation = topLeftLocation;
-        this.bottomRightLoction = bottomRightLoction;
+        this.bottomRightLocation = bottomRightLocation;
         this.size = size;
     }
 
-    imageLocation getImageLocation()
+    imageLocation getImage()
     {
         return this;
+    }
+
+    Coordinate[] getImageLocation()
+    {
+        Coordinate[] arr = new Coordinate[2];
+        arr[0] = topLeftLocation;
+        arr[1] = bottomRightLocation;
+        return arr;
     }
 }

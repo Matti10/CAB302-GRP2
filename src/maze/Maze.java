@@ -115,16 +115,18 @@ public class Maze {
 
 
     //add an image to the maze
-    public void addImage(String name, String path, Coordinate topLeftLocation,Coordinate bottomRightLoction, int size) {
-        images.add(new imageLocation(path, name, topLeftLocation, bottomRightLoction, size));
+    public void addImage(String name, String path, Coordinate topLeftLocation,Coordinate bottomRightLocation, int size) {
+        images.add(new imageLocation(path, name, topLeftLocation, bottomRightLocation, size));
     }
 
+
+    //pass value of the top left cell of image
     public void removeImage(Coordinate location) {
         try {
             //loop through all positions in list plus 1. If n + 1 is reached, error is thrown as image doesn't exist
             int i = 0;
             for (; i < images.size() + 1; i++) {
-                if (images.get(i).location == location) {
+                if (images.get(i).topLeftLocation == location) {
                     break;
                 }
             }
@@ -132,6 +134,23 @@ public class Maze {
             images.remove(i);
         } catch (Exception e) {
             throw new IllegalArgumentException("No image found at this location");
+        }
+
+    }
+
+    public void removeImage(String name) {
+        try {
+            //loop through all positions in list plus 1. If n + 1 is reached, error is thrown as image doesn't exist
+            int i = 0;
+            for (; i < images.size() + 1; i++) {
+                if (images.get(i).name == name) {
+                    break;
+                }
+            }
+
+            images.remove(i);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("No image found with this name");
         }
 
     }
@@ -617,7 +636,7 @@ public class Maze {
                 else mazeDataOverflow += (CellToChar(getCell(newCoord(x, y))));
             }
         }
-        mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, String.valueOf(sealedVal), startPos, endPos, mazeData, mazeDataOverflow));
+        //mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, String.valueOf(sealedVal), startPos, endPos, mazeData, mazeDataOverflow));
     }
 
     /**
