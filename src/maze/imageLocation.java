@@ -6,15 +6,18 @@ public class imageLocation {
     Coordinate topLeftLocation; //top left cell of image
     Coordinate bottomRightLocation;
 
+    boolean isAccesible;
+
     int size;
 
-    imageLocation(String path, String name, Coordinate topLeftLocation,Coordinate bottomRightLocation, int size)
+    imageLocation(String path, String name, Coordinate topLeftLocation,Coordinate bottomRightLocation, int size, boolean isAccesible)
     {
         this.path = path;
         this.name = name;
         this.topLeftLocation = topLeftLocation;
         this.bottomRightLocation = bottomRightLocation;
         this.size = size;
+        this.isAccesible = isAccesible;
     }
 
     imageLocation getImage()

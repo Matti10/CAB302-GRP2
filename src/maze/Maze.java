@@ -8,28 +8,6 @@ import java.util.*;
 
 public class Maze {
     MazeListData mData;
-
-    public static void main(String[] args) {
-
-
-        Maze testMaze = initMaze(99, 99, true, 1, 0, 2, 1, "TestMaze", new MazeListData());
-
-        Coordinate[] allWalls = new Coordinate[6];
-        allWalls[0] = new Coordinate(0, 0);
-        allWalls[1] = new Coordinate(0, 1);
-        allWalls[2] = new Coordinate(0, 2);
-        allWalls[3] = new Coordinate(1, 2);
-        allWalls[4] = new Coordinate(2, 0);
-        allWalls[5] = new Coordinate(2, 2);
-
-        testMaze.edit(allWalls, new Cell(true, true, true, true));
-
-        System.out.print(testMaze.ToString());
-        for (Coordinate coord : testMaze.getFirstSolution()) {
-            System.out.print(coord.toString());
-        }
-    }
-
     Coordinate startPosition;
     Coordinate endPosition;
     int xCount;
@@ -115,10 +93,43 @@ public class Maze {
 
 
     //add an image to the maze
-    public void addImage(String name, String path, Coordinate topLeftLocation,Coordinate bottomRightLocation, int size) {
-        images.add(new imageLocation(path, name, topLeftLocation, bottomRightLocation, size));
+    public void addImage(String name, String path, Coordinate topLeftLocation,Coordinate bottomRightLocation, int size, boolean isAccessible) {
+        images.add(new imageLocation(path, name, topLeftLocation, bottomRightLocation, size, isAccessible));
+
+        setImageAccesibility();
+
     }
 
+    void setImageAccesibility()
+    {
+        for (imageLocation image: images)
+        {
+
+            imageLocation imageObject = image.getImage();
+
+            Cell inaccessibleCell = new Cell(true,true,true,true);
+            Cell accessibleCell = new Cell(false,false,false,false);
+
+
+                for(int x = imageObject.topLeftLocation.x; x <= imageObject.bottomRightLocation.x; x++)
+                {
+                    for(int y = imageObject.topLeftLocation.y; y <= imageObject.bottomRightLocation.y; y++)
+                    {
+                        if (imageObject.isAccesible)
+                        {
+                            //if image is accesible, set all cells 'under' the image to have all walls turned off
+                            edit(newCoord(x,y),accessibleCell);
+                        }
+                        else
+                        {
+                            //if image isn't accesible, set all cells 'under' the image to have all walls turned on
+                            edit(newCoord(x,y),inaccessibleCell);
+                        }
+                    }
+                }
+
+        }
+    }
 
     //pass value of the top left cell of image
     public void removeImage(Coordinate location) {
@@ -133,7 +144,7 @@ public class Maze {
 
             images.remove(i);
         } catch (Exception e) {
-            throw new IllegalArgumentException("No image found at this location");
+            throw new IllegalArgumentException("No image found at this location - ensure you're referenceing by the images top right coordinate");
         }
 
     }
@@ -244,11 +255,41 @@ public class Maze {
             Coordinate applyMove(Coordinate move, Coordinate pos) {
                 try
                 {
-                    return newCoord(move.x + pos.x, move.y + pos.y);
+                    Coordinate newPos = newCoord(move.x + pos.x, move.y + pos.y);
+                    if (isAccesible(newPos))
+                    {
+                        return newPos;
+                    }
+                    else
+                    {
+                        return applyMove(randomMove(move),pos);
+                    }
+
                 }catch (Exception e)
                 {
                     return applyMove(randomMove(move),pos);
                 }
+
+            }
+
+            boolean isAccesible(Coordinate pos)
+            {
+                //check the position has an inaccesible image
+                for (imageLocation i : images)
+                {
+                    imageLocation image = i.getImage();
+                    if (
+                        !image.isAccesible &&
+                        pos.x > image.topLeftLocation.x &&
+                        pos.x < image.bottomRightLocation.x &&
+                        pos.y > image.topLeftLocation.y &&
+                        pos.y < image.bottomRightLocation.y
+                    )
+                    {
+                        return false;
+                    }
+                }
+                return true;
 
             }
 
