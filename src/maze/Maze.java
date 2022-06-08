@@ -620,13 +620,14 @@ public class Maze {
         }
     }
 
-    public void analyse()
+    public String analyse()
     {
         //find number cells in solution
         List<Coordinate> sol = getFirstSolution();
         int countSolCells = sol.size();
 
-        //find number of dead ends
+
+        //find number of cells not in solution
         int countDeadEnd = 0;
 
         for (int i=0; i < xCount; i++)
@@ -635,13 +636,14 @@ public class Maze {
             {
                 Cell cell = getCell(newCoord(i,j));
 
-                if (!(cell.bottomWall && cell.leftWall && cell.rightWall && cell.topWall))
+                if (!cell.bottomWall || !cell.leftWall || !cell.rightWall || !cell.topWall)
                 {
                     countDeadEnd++;
                 }
             }
 
         }
+        return "Solution travel through " + (countSolCells/(xCount*yCount)) + "% of the maze. " + ((countDeadEnd - countSolCells)/(xCount*yCount)) + "% of cells lead to a dead end";
     }
 
     /**
