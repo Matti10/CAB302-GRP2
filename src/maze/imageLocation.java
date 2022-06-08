@@ -3,13 +3,18 @@ package maze;
 public class imageLocation {
     String path;
     String name;
-    Coordinate location;
+    Coordinate topLeftLocation; //top left cell of image
+    Coordinate bottomRightLoction;
 
-    imageLocation(String path, String name, Coordinate location)
+    int size;
+
+    imageLocation(String path, String name, Coordinate topLeftLocation,Coordinate bottomRightLoction, int size)
     {
         this.path = path;
         this.name = name;
-        this.location = location;
+        this.topLeftLocation = topLeftLocation;
+        this.bottomRightLoction = bottomRightLoction;
+        this.size = size;
     }
 
     imageLocation getImageLocation()

@@ -12,7 +12,7 @@ public class Maze {
     public static void main(String[] args) {
 
 
-        Maze testMaze = initMaze(5, 5, true, 1, 0, 2, 1, "TestMaze", new MazeListData());
+        Maze testMaze = initMaze(99, 99, true, 1, 0, 2, 1, "TestMaze", new MazeListData());
 
         Coordinate[] allWalls = new Coordinate[6];
         allWalls[0] = new Coordinate(0, 0);
@@ -115,8 +115,8 @@ public class Maze {
 
 
     //add an image to the maze
-    public void addImage(String name, String path, Coordinate location) {
-        images.add(new imageLocation(path, name, location));
+    public void addImage(String name, String path, Coordinate topLeftLocation,Coordinate bottomRightLoction, int size) {
+        images.add(new imageLocation(path, name, topLeftLocation, bottomRightLoction, size));
     }
 
     public void removeImage(Coordinate location) {
@@ -548,6 +548,42 @@ public class Maze {
         }
     }
 
+    public Boolean hasImage()
+    {
+        if(images.size() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void analyse()
+    {
+        //find number cells in solution
+        List<Coordinate> sol = getFirstSolution();
+        int countSolCells = sol.size();
+
+        //find number of dead ends
+        int countDeadEnd = 0;
+
+        for (int i=0; i < xCount; i++)
+        {
+            for (int j=0; j < yCount; j++)
+            {
+                Cell cell = getCell(newCoord(i,j));
+
+                if (!(cell.bottomWall && cell.leftWall && cell.rightWall && cell.topWall))
+                {
+                    countDeadEnd++;
+                }
+            }
+
+        }
+    }
+
     /**
      * Exports the maze to the DB.
      *
@@ -557,6 +593,8 @@ public class Maze {
      */
     public void exportMaze(String mazeName, String author, String creationTime) {
         //MUST confirm overwrite if mazeName already exists in mData. data will be overwritten if mazeNames match.
+
+
         String dateTimeCreated;
         long currentUnixTime = Instant.now().getEpochSecond();
 
@@ -570,7 +608,6 @@ public class Maze {
         int[] endPosArr = endPosition.toIntArray();
         String startPos = startPosArr[0] + "," + startPosArr[1];
         String endPos = endPosArr[0] + "," + endPosArr[1];
-        int sealedVal = isSealed? 1 : 0;
 
         String mazeData = "";
         String mazeDataOverflow = "";
@@ -605,6 +642,9 @@ public class Maze {
         String[] end = m.getEndPos().split(",");
         this.endPosition = new Coordinate(Integer.parseInt(end[0]),Integer.parseInt(end[1]));
 
+        //Maze maze = Maze.initMaze(xCnt, yCnt, seal, xStart, yStart, xEnd, yEnd, m.getMazeName(), mData); //I think this line needs to be delete @Calvey (from my merge fuckup)
+
+        //For below, wanting to edit an individual cell at a specific coordinate. how to implement?
         String mazeData = m.getMazeData() + m.getMazeDataOverflow();
         Coordinate thisCoord;
         Cell thisCell;
