@@ -155,7 +155,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         }
         if(event.getSource() == saveBar){
             System.out.print("\nSave Menu Item Clicked\n");
-            currentMaze.export("someName","author","1654643415");
+            currentMaze.exportMaze("someName","author","1654643415");
         }
     }
 
