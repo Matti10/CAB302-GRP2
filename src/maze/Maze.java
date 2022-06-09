@@ -708,23 +708,26 @@ public class Maze {
      * @param author - the author of the maze
      * @param creationTime - the maze's unix-formatted date/time of creation
      */
+    /**
+     * Exports the maze to the DB.
+     *
+     * @param mazeName - the name of the maze
+     * @param author - the author of the maze
+     * @param creationTime - the maze's unix-formatted date/time of creation
+     */
     public void exportMaze(String mazeName, String author, String creationTime) {
         //MUST confirm overwrite if mazeName already exists in mData. data will be overwritten if mazeNames match.
-
-
-        String dateTimeCreated;
-        long currentUnixTime = Instant.now().getEpochSecond();
-
-        if (creationTime == null) dateTimeCreated = String.valueOf(currentUnixTime);
-        else dateTimeCreated = creationTime;
-
-        String dateTimeEdited = String.valueOf(currentUnixTime);
-        String mazeDimensions = xCount + "x" + yCount;
+        String dateTimeEdited = String.valueOf(Instant.now().getEpochSecond());
+        String dateTimeCreated = creationTime;
+        if (Objects.equals(dateTimeCreated, "")) dateTimeCreated = dateTimeEdited;
 
         int[] startPosArr = startPosition.toIntArray();
         int[] endPosArr = endPosition.toIntArray();
         String startPos = startPosArr[0] + "," + startPosArr[1];
         String endPos = endPosArr[0] + "," + endPosArr[1];
+
+        String mazeDimensions = xCount + "x" + yCount;
+        String sealedState = String.valueOf(isSealed? 1:0);
 
         String mazeData = "";
         String mazeDataOverflow = "";
@@ -734,7 +737,7 @@ public class Maze {
                 else mazeDataOverflow += (CellToChar(getCell(newCoord(x, y))));
             }
         }
-        //mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, String.valueOf(sealedVal), startPos, endPos, mazeData, mazeDataOverflow));
+        mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, sealedState, startPos, endPos, mazeData, mazeDataOverflow));
     }
 
     /**
@@ -754,21 +757,17 @@ public class Maze {
         this.isSealed = Boolean.parseBoolean(m.getIsSealed());
 
         String[] start = m.getStartPos().split(",");
-        this.startPosition = new Coordinate(Integer.parseInt(start[0]),Integer.parseInt(start[1]));
-
         String[] end = m.getEndPos().split(",");
-        this.endPosition = new Coordinate(Integer.parseInt(end[0]),Integer.parseInt(end[1]));
+        this.startPosition = newCoord(Integer.parseInt(start[0]),Integer.parseInt(start[1]));
+        this.endPosition = newCoord(Integer.parseInt(end[0]),Integer.parseInt(end[1]));
 
-        //Maze maze = Maze.initMaze(xCnt, yCnt, seal, xStart, yStart, xEnd, yEnd, m.getMazeName(), mData); //I think this line needs to be delete @Calvey (from my merge fuckup)
-
-        //For below, wanting to edit an individual cell at a specific coordinate. how to implement?
         String mazeData = m.getMazeData() + m.getMazeDataOverflow();
         Coordinate thisCoord;
         Cell thisCell;
         for (int i = 0; i < mazeData.length(); i++) {
             int thisY = i/xCount;
             int thisX = i-(thisY*yCount);
-            thisCoord = new Coordinate(thisX,thisY);
+            thisCoord = newCoord(thisX,thisY);
             thisCell = CharToCell(mazeData.charAt(i));
             this.edit(thisCoord, thisCell);
         }
