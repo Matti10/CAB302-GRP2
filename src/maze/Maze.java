@@ -59,11 +59,11 @@ public class Maze {
             void setEntranceExitWalls(Coordinate pos) {
                 if (pos.x == 0) {
                     edit(pos, new Cell(true, true, false, true));
-                } else if (pos.x == xCount-1) {
+                } else if (pos.x == xCount - 1) {
                     edit(pos, new Cell(true, true, true, false));
                 } else if (pos.y == 0) {
                     edit(pos, new Cell(false, true, true, true));
-                } else if (pos.y == yCount-1) {
+                } else if (pos.y == yCount - 1) {
                     edit(pos, new Cell(true, false, true, true));
                 } else {
                     throw new IllegalArgumentException("when maze is unsealed, start/end position must be on the edge of the maze");
@@ -96,37 +96,30 @@ public class Maze {
 
 
     //add an image to the maze
-    public void addImage(String name, String path, Coordinate topLeftLocation,Coordinate bottomRightLocation, int size, boolean isAccessible) {
+    public void addImage(String name, String path, Coordinate topLeftLocation, Coordinate bottomRightLocation, int size, boolean isAccessible) {
         images.add(new imageLocation(path, name, topLeftLocation, bottomRightLocation, size, isAccessible));
 
         setImageAccesibility();
 
     }
 
-    void setImageAccesibility()
-    {
-        for (imageLocation image: images)
-        {
+    void setImageAccesibility() {
+        for (imageLocation image : images) {
 
             imageLocation imageObject = image.getImage();
 
-            Cell inaccessibleCell = new Cell(true,true,true,true);
-            Cell accessibleCell = new Cell(false,false,false,false);
+            Cell inaccessibleCell = new Cell(true, true, true, true);
+            Cell accessibleCell = new Cell(false, false, false, false);
 
 
-            for(int x = imageObject.topLeftLocation.x; x <= imageObject.bottomRightLocation.x; x++)
-            {
-                for(int y = imageObject.topLeftLocation.y; y <= imageObject.bottomRightLocation.y; y++)
-                {
-                    if (imageObject.isAccesible)
-                    {
+            for (int x = imageObject.topLeftLocation.x; x <= imageObject.bottomRightLocation.x; x++) {
+                for (int y = imageObject.topLeftLocation.y; y <= imageObject.bottomRightLocation.y; y++) {
+                    if (imageObject.isAccesible) {
                         //if image is accesible, set all cells 'under' the image to have all walls turned off
-                        edit(newCoord(x,y),accessibleCell);
-                    }
-                    else
-                    {
+                        edit(newCoord(x, y), accessibleCell);
+                    } else {
                         //if image isn't accesible, set all cells 'under' the image to have all walls turned on
-                        edit(newCoord(x,y),inaccessibleCell);
+                        edit(newCoord(x, y), inaccessibleCell);
                     }
                 }
             }
@@ -241,6 +234,7 @@ public class Maze {
 
                 return newCoord(x, y);
             }
+
             ///delete me
             Coordinate randomMove(Coordinate previousMove) {
 
@@ -255,31 +249,24 @@ public class Maze {
                 return move;
             }
 
-            Coordinate applyMove(Coordinate move, Coordinate pos, Coordinate previousMove,  List<Coordinate> moves) {
-                try
-                {
+            Coordinate applyMove(Coordinate move, Coordinate pos, Coordinate previousMove, List<Coordinate> moves) {
+                try {
                     Coordinate newPos = newCoord(move.x + pos.x, move.y + pos.y);
-                    if (isAccesible(newPos) && newPos.x >= 0 && newPos.y >= 0 && !moves.contains(newPos))
-                    {
+                    if (isAccesible(newPos) && newPos.x >= 0 && newPos.y >= 0 && !moves.contains(newPos)) {
                         return newPos;
-                    }
-                    else
-                    {
-                        return applyMove(randomMove(previousMove),pos, previousMove, moves);
+                    } else {
+                        return applyMove(randomMove(previousMove), pos, previousMove, moves);
                     }
 
-                }catch (Exception e)
-                {
-                    return applyMove(randomMove(previousMove),pos, previousMove, moves);
+                } catch (Exception e) {
+                    return applyMove(randomMove(previousMove), pos, previousMove, moves);
                 }
 
             }
 
-            boolean isAccesible(Coordinate pos)
-            {
+            boolean isAccesible(Coordinate pos) {
                 //check the position has an inaccesible image
-                for (imageLocation i : images)
-                {
+                for (imageLocation i : images) {
                     imageLocation image = i.getImage();
                     if (
                             !image.isAccesible &&
@@ -287,8 +274,7 @@ public class Maze {
                                     pos.x < image.bottomRightLocation.x &&
                                     pos.y > image.topLeftLocation.y &&
                                     pos.y < image.bottomRightLocation.y
-                    )
-                    {
+                    ) {
                         return false;
                     }
                 }
@@ -312,7 +298,7 @@ public class Maze {
                     if (directionBias > 0) //if there is any direction bias moves left, make them
                     {
                         //explore in the same direction as the previous move
-                        return exploreSolution(applyMove(previousMove, pos,previousMove, moves), moves, previousMove, directionBias - 1, destination);
+                        return exploreSolution(applyMove(previousMove, pos, previousMove, moves), moves, previousMove, directionBias - 1, destination);
                     } else {
                         //decide if moving towards the exit
                         if (complexity + Math.random() > 1) //the higher the complexity, the less likely this is to return true
@@ -371,70 +357,65 @@ public class Maze {
                 }
             }
 
-            List<Coordinate> exploreBlankCells(Coordinate pos, List<Coordinate> moves, Coordinate previousMove)
-            {
+            List<Coordinate> exploreBlankCells(Coordinate pos, List<Coordinate> moves, Coordinate previousMove) {
                 moves.add(pos);
 
-                if (getCell(pos).isEmpty())
-                {
+                if (getCell(pos).isEmpty()) {
                     Coordinate move = randomMove(previousMove);
-                    Coordinate nextPos = applyMove(move,pos,previousMove,moves);
+                    Coordinate nextPos = applyMove(move, pos, previousMove, moves);
 
-                    return exploreBlankCells(nextPos,moves,move);
-                }
-                else{
+                    return exploreBlankCells(nextPos, moves, move);
+                } else {
                     //when cell with wall is found, return moves
                     return moves;
                 }
             }
 
-            void addRandomPaths()
-            {
-                for (int x = 0; x < xCount; x++)
-                {
-                    for (int y = yCount-1; y >= 0; y--)
-                    {
-                        Coordinate pos = newCoord(x,y);
-                        if (getCell(pos).isEmpty())
-                        {
-                            addMovesToMaze(exploreBlankCells(pos, new ArrayList<>(),newCoord(0,0)));
+            void addRandomPaths() {
+                for (int x = 0; x < xCount; x++) {
+                    for (int y = yCount - 1; y >= 0; y--) {
+                        Coordinate pos = newCoord(x, y);
+                        if (getCell(pos).isEmpty()) {
+                            addMovesToMaze(exploreBlankCells(pos, new ArrayList<>(), newCoord(0, 0)));
                         }
                     }
                 }
-
-
             }
 
-            public void fixClumping(List<Coordinate> solution)
-            {
-                for (int x = 0; x < xCount; x++) {
-                    for (int y = yCount - 1; y >= 0; y--) {
-                        Coordinate pos = newCoord(x,y);
-                        Cell curCell = getCell(pos);
 
-                        //if the cell is in the solution, don't touch it
-                        if (solution.contains(pos))
-                        {
-                            continue;
-                        }
+            public void fixClumping() {
+                for (int x = 0; x < xCount - 1; x++) {
+                    for (int y = 0; y < yCount - 1; y++) {
 
-                        //if all the walls are off
-                        if (!curCell.leftWall && !curCell.rightWall && !curCell.bottomWall && !curCell.topWall)
-                        {
-                            //randomly turn one of the walls on
-                            int i = randomInt(0,3);
-                            boolean[] curWalls = curCell.toWallList();
-                            curWalls[i] = true;
+                        Coordinate pos = newCoord(x, y);
+                        Cell curCell = getCell(pos); //current cell
+                        Cell diagCell = getCell(newCoord(x + 1, y + 1)); //cell in the bottom right corner of a 1x1 grid starting @ curCEll
 
-                            curCell.editWallUsingArray(curWalls);
+                        //detect if the cells form a "loop"
+                        if (
+                                !curCell.rightWall &&
+                                        !curCell.bottomWall &&
+                                        !diagCell.topWall &&
+                                        !diagCell.leftWall
+                        ) {
+                            //there's a loop
+                            //randomly turn one of the walls thats creating the loop on
+                            int i = randomInt(0, 1);
+                            if (i > 0)
+                            {
+                                curCell.bottomWall = true;
+                            }
+                            else
+                            {
+                                curCell.rightWall = true;
+                            }
+                            edit(pos, curCell);
                         }
                     }
                 }
             }
 
         }
-
-
 
 
         //data validation
@@ -449,7 +430,9 @@ public class Maze {
 
         helper.addMovesToMaze(sol);
         helper.addRandomPaths();
-        helper.fixClumping(sol);
+        helper.fixClumping();
+        helper.addMovesToMaze(sol); //re-add solution to maze incase part of it was removed when clumping was fixed
+
         return sol;
 
 
@@ -663,20 +646,15 @@ public class Maze {
         }
     }
 
-    public Boolean hasImage()
-    {
-        if(images.size() > 0)
-        {
+    public Boolean hasImage() {
+        if (images.size() > 0) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    public String analyse()
-    {
+    public String analyse() {
         //find number cells in solution
         List<Coordinate> sol = getFirstSolution();
         int countSolCells = sol.size();
@@ -685,20 +663,17 @@ public class Maze {
         //find number of cells not in solution
         int countDeadEnd = 0;
 
-        for (int i=0; i < xCount; i++)
-        {
-            for (int j=0; j < yCount; j++)
-            {
-                Cell cell = getCell(newCoord(i,j));
+        for (int i = 0; i < xCount; i++) {
+            for (int j = 0; j < yCount; j++) {
+                Cell cell = getCell(newCoord(i, j));
 
-                if (!cell.bottomWall || !cell.leftWall || !cell.rightWall || !cell.topWall)
-                {
+                if (!cell.bottomWall || !cell.leftWall || !cell.rightWall || !cell.topWall) {
                     countDeadEnd++;
                 }
             }
 
         }
-        return "Solution travel through " + (countSolCells/(xCount*yCount)) + "% of the maze. " + ((countDeadEnd - countSolCells)/(xCount*yCount)) + "% of cells lead to a dead end";
+        return "Solution travel through " + (countSolCells / (xCount * yCount)) + "% of the maze. " + ((countDeadEnd - countSolCells) / (xCount * yCount)) + "% of cells lead to a dead end";
     }
 
     /**
@@ -711,8 +686,8 @@ public class Maze {
     /**
      * Exports the maze to the DB.
      *
-     * @param mazeName - the name of the maze
-     * @param author - the author of the maze
+     * @param mazeName     - the name of the maze
+     * @param author       - the author of the maze
      * @param creationTime - the maze's unix-formatted date/time of creation
      */
     public void exportMaze(String mazeName, String author, String creationTime) {
@@ -727,7 +702,7 @@ public class Maze {
         String endPos = endPosArr[0] + "," + endPosArr[1];
 
         String mazeDimensions = xCount + "x" + yCount;
-        String sealedState = String.valueOf(isSealed? 1:0);
+        String sealedState = String.valueOf(isSealed ? 1 : 0);
 
         String mazeData = "";
         String mazeDataOverflow = "";
@@ -745,7 +720,7 @@ public class Maze {
      *
      * @param mazeName - the name of the maze to be imported
      * @return - the current maze object, modified to meet the specifications
-     *           of the imported maze
+     * of the imported maze
      */
     public Maze importMaze(String mazeName) {
         MazeDBObj m = mData.get(mazeName);
@@ -758,16 +733,16 @@ public class Maze {
 
         String[] start = m.getStartPos().split(",");
         String[] end = m.getEndPos().split(",");
-        this.startPosition = newCoord(Integer.parseInt(start[0]),Integer.parseInt(start[1]));
-        this.endPosition = newCoord(Integer.parseInt(end[0]),Integer.parseInt(end[1]));
+        this.startPosition = newCoord(Integer.parseInt(start[0]), Integer.parseInt(start[1]));
+        this.endPosition = newCoord(Integer.parseInt(end[0]), Integer.parseInt(end[1]));
 
         String mazeData = m.getMazeData() + m.getMazeDataOverflow();
         Coordinate thisCoord;
         Cell thisCell;
         for (int i = 0; i < mazeData.length(); i++) {
-            int thisY = i/xCount;
-            int thisX = i-(thisY*yCount);
-            thisCoord = newCoord(thisX,thisY);
+            int thisY = i / xCount;
+            int thisX = i - (thisY * yCount);
+            thisCoord = newCoord(thisX, thisY);
             thisCell = CharToCell(mazeData.charAt(i));
             this.edit(thisCoord, thisCell);
         }
