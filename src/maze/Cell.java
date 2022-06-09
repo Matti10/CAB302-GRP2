@@ -34,6 +34,11 @@ public class Cell
         this.rightWall = rightWall;
     }
 
+    public void editWallUsingArray(boolean[] wallArray)
+    {
+        this.edit(wallArray[0], wallArray[1], wallArray[2], wallArray[3]);
+    }
+
 
     public boolean[] toWallList(){
         return new boolean[]{bottomWall,leftWall,rightWall,topWall};
@@ -41,5 +46,17 @@ public class Cell
     
     public Cell getCell(){
         return this;   
+    }
+
+    public boolean isEmpty()
+    {
+        if (topWall && bottomWall && leftWall && rightWall)
+        {
+            return  true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

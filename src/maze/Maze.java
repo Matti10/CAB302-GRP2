@@ -255,22 +255,22 @@ public class Maze {
                 return move;
             }
 
-            Coordinate applyMove(Coordinate move, Coordinate pos) {
+            Coordinate applyMove(Coordinate move, Coordinate pos, Coordinate previousMove,  List<Coordinate> moves) {
                 try
                 {
                     Coordinate newPos = newCoord(move.x + pos.x, move.y + pos.y);
-                    if (isAccesible(newPos))
+                    if (isAccesible(newPos) && newPos.x >= 0 && newPos.y >= 0 && !moves.contains(newPos))
                     {
                         return newPos;
                     }
                     else
                     {
-                        return applyMove(randomMove(move),pos);
+                        return applyMove(randomMove(previousMove),pos, previousMove, moves);
                     }
 
                 }catch (Exception e)
                 {
-                    return applyMove(randomMove(move),pos);
+                    return applyMove(randomMove(previousMove),pos, previousMove, moves);
                 }
 
             }
@@ -312,7 +312,7 @@ public class Maze {
                     if (directionBias > 0) //if there is any direction bias moves left, make them
                     {
                         //explore in the same direction as the previous move
-                        return exploreSolution(applyMove(previousMove, pos), moves, previousMove, directionBias - 1, destination);
+                        return exploreSolution(applyMove(previousMove, pos,previousMove, moves), moves, previousMove, directionBias - 1, destination);
                     } else {
                         //decide if moving towards the exit
                         if (complexity + Math.random() > 1) //the higher the complexity, the less likely this is to return true
@@ -326,7 +326,7 @@ public class Maze {
                         }
 
                         //apply move and explore next node
-                        Coordinate nextPos = applyMove(move, pos);
+                        Coordinate nextPos = applyMove(move, pos, previousMove, moves);
                         //check nextPos is legal if it is, move randomly until legal
 //                        while ((nextPos.x < 0 || nextPos.y < 0 || nextPos.x >= xCount || nextPos.y >= yCount) && !moves.contains(nextPos)) {
 //                            //illegal
@@ -371,20 +371,70 @@ public class Maze {
                 }
             }
 
-            public void addRandomPaths(int numPaths)
+            List<Coordinate> exploreBlankCells(Coordinate pos, List<Coordinate> moves, Coordinate previousMove)
             {
-                for (int i = 0; i < numPaths; i++)
-                {
-                    //random start position
-                    Coordinate startPos = newCoord(randomInt(0,xCount-1),randomInt(0,yCount-1));
-                    Coordinate endPos = newCoord(randomInt(0,xCount-1),randomInt(0,yCount-1));
-                    isSolved = false;
+                moves.add(pos);
 
-                    addMovesToMaze(exploreSolution(startPos, new ArrayList<Coordinate>(), newCoord(0, 0), 0, endPos));
+                if (getCell(pos).isEmpty())
+                {
+                    Coordinate move = randomMove(previousMove);
+                    Coordinate nextPos = applyMove(move,pos,previousMove,moves);
+
+                    return exploreBlankCells(nextPos,moves,move);
+                }
+                else{
+                    //when cell with wall is found, return moves
+                    return moves;
+                }
+            }
+
+            void addRandomPaths()
+            {
+                for (int x = 0; x < xCount; x++)
+                {
+                    for (int y = yCount-1; y >= 0; y--)
+                    {
+                        Coordinate pos = newCoord(x,y);
+                        if (getCell(pos).isEmpty())
+                        {
+                            addMovesToMaze(exploreBlankCells(pos, new ArrayList<>(),newCoord(0,0)));
+                        }
+                    }
+                }
+
+
+            }
+
+            public void fixClumping(List<Coordinate> solution)
+            {
+                for (int x = 0; x < xCount; x++) {
+                    for (int y = yCount - 1; y >= 0; y--) {
+                        Coordinate pos = newCoord(x,y);
+                        Cell curCell = getCell(pos);
+
+                        //if the cell is in the solution, don't touch it
+                        if (solution.contains(pos))
+                        {
+                            continue;
+                        }
+
+                        //if all the walls are off
+                        if (!curCell.leftWall && !curCell.rightWall && !curCell.bottomWall && !curCell.topWall)
+                        {
+                            //randomly turn one of the walls on
+                            int i = randomInt(0,3);
+                            boolean[] curWalls = curCell.toWallList();
+                            curWalls[i] = true;
+
+                            curCell.editWallUsingArray(curWalls);
+                        }
+                    }
                 }
             }
 
         }
+
+
 
 
         //data validation
@@ -398,7 +448,8 @@ public class Maze {
         List<Coordinate> sol = helper.exploreSolution(startPosition, new ArrayList<Coordinate>(), newCoord(0, 0), 0, endPosition);
 
         helper.addMovesToMaze(sol);
-        helper.addRandomPaths((xCount+yCount)/6);
+        helper.addRandomPaths();
+        helper.fixClumping(sol);
         return sol;
 
 
