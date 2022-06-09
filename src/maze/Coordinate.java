@@ -1,20 +1,21 @@
 package maze;
 
 public class Coordinate {
-    public int row;
-    public int col;
+    public int x;
+    public int y;
 
 
-    public Coordinate(int col, int row)
+    public Coordinate(int x, int y)
     {
-//        super(3,3,false/*, new Coordinate(0,0),new Coordinate(0,0)*/); //not sure about this...
+        this.x = x;
+        this.y = y;
+    }
 
-
-        this.row = row;
-        this.col = col;
+    public int[] toIntArray() {
+        return new int[] {x,y};
     }
 
     public String toString(){
-        return  "col: " + col + " row: "  + row +"\n";
+        return  "col (x): " + x + " row (y): "  + y +"\n";
     }
 }

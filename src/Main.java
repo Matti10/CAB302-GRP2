@@ -1,44 +1,39 @@
-
-import GUI.Chunk;
 import GUI.TitleScreen;
+import db.MazeListData;
 import maze.*;
+import java.util.*;
+
 
 import java.util.concurrent.TimeUnit;
 
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
+        MazeListData mazeData = new MazeListData();
+        // to get information on all mazes currently saved, call mazeData.getDisplayData().
+        // returns a String[][], data selectable via String[i][j] where i indexes through
+        // the mazes and j indexes through that maze's info (all strings):
+        // [i][0] = maze name
+        // [i][1] = author
+        // [i][2] = maze dimensions
+        // [i][3] = date/time created (in unix, will need to convert)
+        // [i][4] = date/time edited (in unix, will need to convert)
+        // lmk if any other info should be returned also. ordered by date edited, probably.
 
-        Maze testMaze = Maze.initMaze(10,10,true,0,0,9,9,"someName");
-        testMaze.randomMaze();
+        int len = 6;
 
+        Maze testMaze = Maze.initMaze(len, len, false, 1, 0, len-1, len-1, "someName", mazeData);
 
-        /*
-       testMaze.randomMaze();
-        Coordinate[] allWalls = new Coordinate[6];
-        allWalls[0] = new Coordinate(0, 0);
-        allWalls[1] = new Coordinate(0, 1);
-        allWalls[2] = new Coordinate(0, 2);
-        allWalls[3] = new Coordinate(1, 2);
-        allWalls[4] = new Coordinate(2, 0);
-        allWalls[5] = new Coordinate(2, 2);
+        List<Coordinate> noWalls = testMaze.setRandomSolution(.6);
 
+        System.out.print(noWalls.toString());
+        for (Coordinate move : testMaze.getFirstSolution()) {
+           System.out.print(move.toString());
+        }
 
-        testMaze.edit(allWalls, new Cell(true, true, true, true));
-
-
-        System.out.print(testMaze.ToString());
-        */
         TitleScreen titleScreen = new TitleScreen();
         titleScreen.CreateGUI();
         titleScreen.AddMaze(testMaze);
 
-
-        System.out.print(testMaze.export());
-
-
     }
-//    public static void main(String args[]){
-//        TitleScreen gui = new TitleScreen("Main Screen");
-//    }
 }

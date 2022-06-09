@@ -28,9 +28,9 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     JFrame    background          = new JFrame();
     JMenuBar  menuBar             = new JMenuBar();
     JMenu     fileBar             = new JMenu("File");
-    JMenu     saveBar             = new JMenu("save");
-    JMenu     saveAsBar           = new JMenu("Save as");
-    JMenu     loadBar             = new JMenu("Load");
+    JMenuItem saveBar             = new JMenuItem("save");
+    JMenuItem saveAsBar           = new JMenuItem("Save as");
+    JMenuItem loadBar             = new JMenuItem("Load");
     JPanel    mazeDisplayPane     = new JPanel();
     JPanel    displayPaneLeft     = new JPanel();
     JPanel    displayPaneRight    = new JPanel();
@@ -38,7 +38,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
     JScrollPane mazeScroll = new JScrollPane(mazeDisplayPane);
 
-
+    private Maze currentMaze;
 
 
     private Chunk[] initChunks(int chunkCount) {
@@ -54,8 +54,10 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
         menuBar.add(fileBar);
         fileBar.add(saveBar);
+        saveBar.addActionListener(this);
         fileBar.add(saveAsBar);
         fileBar.add(loadBar);
+        loadBar.addActionListener(this);
         background.setJMenuBar(menuBar);
 
 
@@ -66,6 +68,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
 
         displayPaneLeft.setPreferredSize(displayPanesSize);
+        displayPaneLeft.setMinimumSize(displayPanesSize);
         displayPaneLeftLayoutConstraints.gridx = 0;
         displayPaneLeftLayoutConstraints.gridy = 0;
         displayPaneLeftLayoutConstraints.weightx = 0.0;
@@ -83,10 +86,11 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         mazeDisplayPane.setLayout(mazePaneLayout);
 
 
-        background.add(mazeDisplayPane, mazeLayoutConstraints);
-        mazeScroll.revalidate();
+        background.add(mazeScroll, mazeLayoutConstraints);
+
 
         displayPaneRight.setPreferredSize(displayPanesSize);
+        displayPaneRight.setMinimumSize(displayPanesSize);
         displayPaneRightLayoutConstraints.gridx = 5;
         displayPaneRightLayoutConstraints.gridy = 0;
         displayPaneRightLayoutConstraints.weightx = 0.0;
@@ -99,61 +103,64 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
 
 
-
+        this.repaint();
+        this.validate();
         pack();
         background.setVisible(true);
     }
 
     public void AddMaze(Maze maze){
-
+        currentMaze = maze;
+        mazeDisplayPane.removeAll();
         int [] mazeDim = maze.getDimensions();
         chunkArray = initChunks(mazeDim[0] * mazeDim[1]);
-
+        Dimension ChunkSize = new Dimension(200,200);
         Coordinate thisCoord;
         int i = 0;
-        /*boolean L = true;
-        boolean R = false;
-        boolean T = true;
-        boolean B = false;
-        boolean temp;*/
-        for(int row = 0; row < mazeDim[1] ; row++){
-            for(int column = 0; column < mazeDim[0]; column++){
-                thisCoord = new Coordinate(column,row);
-                //System.out.print(row+"\n");
-                //System.out.print(column+"\n\n");
+        for(int y = 0; y < mazeDim[1] ; y++){
+            for(int x = 0; x < mazeDim[0]; x++){
+                thisCoord = new Coordinate(x,y);
                 Cell thisCell = maze.getCell(thisCoord);
-                //thisCell.edit(T,B,L,R);
-                mazePaneConstraints.gridx = row;
-                mazePaneConstraints.gridy = column;
+                mazePaneConstraints.gridx = x;
+                mazePaneConstraints.gridy = y;
+                mazePaneConstraints.ipady = 1;
+                mazePaneConstraints.ipadx = 1;
+
+                chunkArray[i].setMinimumSize(ChunkSize);
+                chunkArray[i].setPreferredSize(ChunkSize);
+
                 mazeDisplayPane.add(chunkArray[i].packChunk(thisCell),mazePaneConstraints);
                 i++;
-                /*temp = L;
-                L = R;
-                R = temp;*/
             }
-            /*temp = T;
-            T = B;
-            B = temp;*/
             System.out.print(i+",");
         }
         System.out.print("Done!");
 
         pack();
+        background.revalidate();
+        background.repaint();
 
     }
 
 
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
+        if(event.getSource() == loadBar){
+            System.out.print("\nLoad Menu Item Clicked\n");
+            Maze importedMaze = currentMaze.importMaze("someName");
+            //Maze testBlankMaze = Maze.initMaze(3,3,false,(1,0),)
 
+            this.AddMaze(importedMaze);
+        }
+        if(event.getSource() == saveBar){
+            System.out.print("\nSave Menu Item Clicked\n");
+            currentMaze.exportMaze("someName","author","1654643415");
+        }
     }
 
     @Override
     public void run() {
 
     }
-
-
-
 }

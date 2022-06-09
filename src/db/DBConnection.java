@@ -12,7 +12,8 @@ public class DBConnection {
     private static Connection instance = null;
 
     /**
-     * A constructor that initialises the database connection by specifying the appropriate access fields
+     * Constructs the database connection by specifying the appropriate access
+     * fields.
      */
     private DBConnection() {
         Properties props = new Properties();
@@ -35,7 +36,12 @@ public class DBConnection {
         }
     }
 
-    //not sure how to annotate this
+    /**
+     * Retrieves the database connection instance. Creates a new instance
+     * if none is found.
+     *
+     * @return - a database connection instance
+     */
     public static Connection getInstance() {
         if (instance == null) {
             new DBConnection();

@@ -17,10 +17,13 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
                     + "dateCreated INT(11)," //check length=10, shouldn't ever trigger using unix timestamps
                     + "dateEdited INT(11)," //check length=10, shouldn't ever trigger using unix timestamps
                     + "mazeDimensions VARCHAR(8)," //as long as valid maze dims, will work (<=100x100)
+                    + "isSealed TINYINT(1),"
+                    + "startPos VARCHAR(8),"
+                    + "endPos VARCHAR(8),"
                     + "mazeData VARCHAR(8000)," //make sure this works, should go up to 7999
                     + "mazeDataOverflow VARCHAR(2002));"; //make sure this works, should go up to 2001. total 10,000 for both (100x100)
 
-    private static final String INSERT_MAZE = "INSERT INTO mazes (mazeName, author, dateCreated, dateEdited, mazeDimensions, mazeData, mazeDataOverflow) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_MAZE = "INSERT INTO mazes (mazeName, author, dateCreated, dateEdited, mazeDimensions, isSealed, startPos, endPos, mazeData, mazeDataOverflow) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_MAZE_NAMES = "SELECT mazeName FROM mazes";
     private static final String GET_MAZE = "SELECT * FROM mazes WHERE mazeName=?";
     private static final String DELETE_MAZE = "DELETE FROM mazes WHERE mazeName=?";
@@ -34,7 +37,7 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     private PreparedStatement rowCount;
 
     /**
-     * A constructor that initialises a JDBC connection and creates links between the list of maze objects and the database
+     * Constructs a JDBC connection and creates links between the list of maze objects and the database.
      */
     public JDBCMazeListDataSource() {
         connection = DBConnection.getInstance();
@@ -52,9 +55,9 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     }
 
     /**
-     * A method that adds a maze object to the database
+     * Adds a DB-formatted maze object to the database.
      *
-     * @param m - the maze object to be added
+     * @param m - the DB-formatted maze object to be added
      */
     public void addMaze(MazeDBObj m) {
         try {
@@ -63,14 +66,22 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
             addMaze.setString(3, m.getDateTimeCreated());
             addMaze.setString(4, m.getDateTimeEdited());
             addMaze.setString(5, m.getMazeDimensions());
-            addMaze.setString(6, m.getMazeData());
-            addMaze.setString(7, m.getMazeDataOverflow());
+            addMaze.setString(6, m.getIsSealed());
+            addMaze.setString(7, m.getStartPos());
+            addMaze.setString(8, m.getEndPos());
+            addMaze.setString(9, m.getMazeData());
+            addMaze.setString(10, m.getMazeDataOverflow());
             addMaze.execute();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
+    /**
+     * Retrieves a set of maze names from the DB.
+     *
+     * @return - a set of maze names
+     */
     public Set<String> mazeNameSet() {
         Set<String> mazeNames = new TreeSet<>();
         ResultSet rs;
@@ -81,17 +92,18 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
         return mazeNames;
     }
 
     /**
-     * A method that retrieves the maze object associated with a specified maze name
+     * Builds a maze object from the DB with information associated with
+     * a specified maze name.
      *
-     * @param mazeName - the name of the maze to be returned as a string
-     * @return - the maze object that matches the specified maze name
+     * @param mazeName - the name of the maze to be built
+     * @return - the DB-formatted maze object matching the specified maze
+     *           name
      */
-    public MazeDBObj getMazeName(String mazeName) {
+    public MazeDBObj getMazeDBObj(String mazeName) {
         MazeDBObj m = new MazeDBObj();
         ResultSet rs;
 
@@ -104,6 +116,9 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
             m.setDateTimeCreated(rs.getString("dateCreated"));
             m.setDateTimeEdited(rs.getString("dateEdited"));
             m.setMazeDimensions(rs.getString("mazeDimensions"));
+            m.setIsSealed(rs.getString("isSealed"));
+            m.setStartPos(rs.getString("startPos"));
+            m.setEndPos(rs.getString("endPos"));
             m.setMazeData(rs.getString("mazeData"));
             m.setMazeDataOverflow(rs.getString("mazeDataOverflow"));
         } catch (SQLException ex) {
@@ -113,7 +128,7 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     }
 
     /**
-     * A method that analyses the amount of mazes stored in the database
+     * Retrieves the amount of mazes stored in the DB.
      *
      * @return - the amount of mazes stored in the database as an integer
      */
@@ -133,7 +148,7 @@ public class JDBCMazeListDataSource implements MazeListDataSource {
     }
 
     /**
-     * A method that removes a specified maze from the database
+     * Removes a specified maze from the DB.
      *
      * @param mazeName - the name of the maze to be deleted
      */

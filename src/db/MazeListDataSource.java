@@ -6,7 +6,7 @@ import java.util.Set;
 public interface MazeListDataSource {
     void addMaze(MazeDBObj m);
 
-    MazeDBObj getMazeName(String mazeName);
+    MazeDBObj getMazeDBObj(String mazeName);
 
     int getSize();
 
