@@ -20,9 +20,9 @@ public class Main {
         // [i][4] = date/time edited (in unix, will need to convert)
         // lmk if any other info should be returned also. ordered by date edited, probably.
 
-        int len = 6;
+        int len = 6*4;
 
-        Maze testMaze = Maze.initMaze(len, len, false, 1, 0, len-1, len-1, "someName", mazeData);
+        Maze testMaze = Maze.initMaze(len, len, false, 1, 0, 15, len-1, "someName", mazeData);
 
         List<Coordinate> noWalls = testMaze.setRandomSolution(.6);
 
