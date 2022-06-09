@@ -431,7 +431,7 @@ public class Maze {
         helper.addMovesToMaze(sol);
         helper.addRandomPaths();
         helper.fixClumping();
-        helper.addMovesToMaze(sol); //re-add solution to maze incase part of it was removed when clumping was fixed
+        helper.addMovesToMaze(sol); //re-add solution to maze in case part of it was removed when clumping was fixed
 
         return sol;
 
