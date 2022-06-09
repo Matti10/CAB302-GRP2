@@ -22,7 +22,7 @@ public class Main {
 
         int len = 6;
 
-        Maze testMaze = Maze.initMaze(len, len, false, 1, 0, 5, 5, "someName", mazeData);
+        Maze testMaze = Maze.initMaze(len, len, false, 1, 0, len-1, len-1, "someName", mazeData);
 
         List<Coordinate> noWalls = testMaze.setRandomSolution(.6);
 

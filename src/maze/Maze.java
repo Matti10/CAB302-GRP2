@@ -96,11 +96,11 @@ public class Maze {
     public void addImage(String name, String path, Coordinate topLeftLocation,Coordinate bottomRightLocation, int size, boolean isAccessible) {
         images.add(new imageLocation(path, name, topLeftLocation, bottomRightLocation, size, isAccessible));
 
-        setImageAccesibility();
+        setImageAccessibility();
 
     }
 
-    void setImageAccesibility()
+    void setImageAccessibility()
     {
         for (imageLocation image: images)
         {
@@ -117,12 +117,12 @@ public class Maze {
                     {
                         if (imageObject.isAccesible)
                         {
-                            //if image is accesible, set all cells 'under' the image to have all walls turned off
+                            //if image is accessible, set all cells 'under' the image to have all walls turned off
                             edit(newCoord(x,y),accessibleCell);
                         }
                         else
                         {
-                            //if image isn't accesible, set all cells 'under' the image to have all walls turned on
+                            //if image isn't accessible, set all cells 'under' the image to have all walls turned on
                             edit(newCoord(x,y),inaccessibleCell);
                         }
                     }
@@ -144,7 +144,7 @@ public class Maze {
 
             images.remove(i);
         } catch (Exception e) {
-            throw new IllegalArgumentException("No image found at this location - ensure you're referenceing by the images top right coordinate");
+            throw new IllegalArgumentException("No image found at this location - ensure you're referencing by the images top right coordinate");
         }
 
     }
@@ -154,7 +154,7 @@ public class Maze {
             //loop through all positions in list plus 1. If n + 1 is reached, error is thrown as image doesn't exist
             int i = 0;
             for (; i < images.size() + 1; i++) {
-                if (images.get(i).name == name) {
+                if (Objects.equals(images.get(i).name, name)) {
                     break;
                 }
             }
@@ -214,7 +214,7 @@ public class Maze {
                 return 0;
             }
 
-            //return an int between -1 and 1 inclusive, which is representive a direction in the maze
+            //return an int between -1 and 1 inclusive, representing a direction in the maze
             int randomDirection() {
                 return randomInt(-1, 1);
             }
@@ -256,7 +256,7 @@ public class Maze {
                 try
                 {
                     Coordinate newPos = newCoord(move.x + pos.x, move.y + pos.y);
-                    if (isAccesible(newPos))
+                    if (isAccessible(newPos))
                     {
                         return newPos;
                     }
@@ -272,9 +272,9 @@ public class Maze {
 
             }
 
-            boolean isAccesible(Coordinate pos)
+            boolean isAccessible(Coordinate pos)
             {
-                //check the position has an inaccesible image
+                //check the position has an inaccessible image
                 for (imageLocation i : images)
                 {
                     imageLocation image = i.getImage();
@@ -573,7 +573,7 @@ public class Maze {
 
                     //if all nodes are explored and maze isn't solved, bubble back up tree
                     if (!isSolved) {
-                        moves.remove(pos); //remove the current move as it doen't lead to the solution
+                        moves.remove(pos); //remove the current move as it doesn't lead to the solution
                         return moves;
                     }
 
@@ -610,14 +610,7 @@ public class Maze {
 
     public Boolean hasImage()
     {
-        if(images.size() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return images.size() > 0;
     }
 
     public String analyse()
@@ -655,21 +648,17 @@ public class Maze {
      */
     public void exportMaze(String mazeName, String author, String creationTime) {
         //MUST confirm overwrite if mazeName already exists in mData. data will be overwritten if mazeNames match.
-
-
-        String dateTimeCreated;
-        long currentUnixTime = Instant.now().getEpochSecond();
-
-        if (creationTime == null) dateTimeCreated = String.valueOf(currentUnixTime);
-        else dateTimeCreated = creationTime;
-
-        String dateTimeEdited = String.valueOf(currentUnixTime);
-        String mazeDimensions = xCount + "x" + yCount;
+        String dateTimeEdited = String.valueOf(Instant.now().getEpochSecond());
+        String dateTimeCreated = creationTime;
+        if (Objects.equals(dateTimeCreated, "")) dateTimeCreated = dateTimeEdited;
 
         int[] startPosArr = startPosition.toIntArray();
         int[] endPosArr = endPosition.toIntArray();
         String startPos = startPosArr[0] + "," + startPosArr[1];
         String endPos = endPosArr[0] + "," + endPosArr[1];
+
+        String mazeDimensions = xCount + "x" + yCount;
+        String sealedState = String.valueOf(isSealed? 1:0);
 
         String mazeData = "";
         String mazeDataOverflow = "";
@@ -679,7 +668,7 @@ public class Maze {
                 else mazeDataOverflow += (CellToChar(getCell(newCoord(x, y))));
             }
         }
-        //mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, String.valueOf(sealedVal), startPos, endPos, mazeData, mazeDataOverflow));
+        mData.add(new MazeDBObj(mazeName, author, dateTimeCreated, dateTimeEdited, mazeDimensions, sealedState, startPos, endPos, mazeData, mazeDataOverflow));
     }
 
     /**
@@ -699,21 +688,17 @@ public class Maze {
         this.isSealed = Boolean.parseBoolean(m.getIsSealed());
 
         String[] start = m.getStartPos().split(",");
-        this.startPosition = new Coordinate(Integer.parseInt(start[0]),Integer.parseInt(start[1]));
-
         String[] end = m.getEndPos().split(",");
-        this.endPosition = new Coordinate(Integer.parseInt(end[0]),Integer.parseInt(end[1]));
+        this.startPosition = newCoord(Integer.parseInt(start[0]),Integer.parseInt(start[1]));
+        this.endPosition = newCoord(Integer.parseInt(end[0]),Integer.parseInt(end[1]));
 
-        //Maze maze = Maze.initMaze(xCnt, yCnt, seal, xStart, yStart, xEnd, yEnd, m.getMazeName(), mData); //I think this line needs to be delete @Calvey (from my merge fuckup)
-
-        //For below, wanting to edit an individual cell at a specific coordinate. how to implement?
         String mazeData = m.getMazeData() + m.getMazeDataOverflow();
         Coordinate thisCoord;
         Cell thisCell;
         for (int i = 0; i < mazeData.length(); i++) {
             int thisY = i/xCount;
             int thisX = i-(thisY*yCount);
-            thisCoord = new Coordinate(thisX,thisY);
+            thisCoord = newCoord(thisX,thisY);
             thisCell = CharToCell(mazeData.charAt(i));
             this.edit(thisCoord, thisCell);
         }
