@@ -8,17 +8,21 @@ import java.util.*;
 
 public class Maze {
     MazeListData mData;
-    Coordinate startPosition;
-    Coordinate endPosition;
-    int xCount;
-    int yCount;
+    Coordinate startPosition; //start position of the maze
+    Coordinate endPosition; //end position of the maze
+    int xCount; //width
+    int yCount; //height
     Cell[][] mazeArray; //2d array of cell objects
     boolean isSealed;
     String name;
-    ArrayList<imageLocation> images;
+    ArrayList<imageLocation> images; //list of images in maze
 
-    public Maze(MazeListData mData) { //not sure if this breaks everything??? do we need a maze constructor with 0 parameters?
-        //initialise maze properties
+    /**
+     * Constructs the maze object using default values
+     *
+     * @param mData - Maze Data object
+     */
+    public Maze(MazeListData mData) {
         this.xCount = 0;
         this.yCount = 0;
         this.isSealed = true;
@@ -27,8 +31,18 @@ public class Maze {
         this.images = new ArrayList<imageLocation>();
     }
 
-    // maze constructor
-    //length [1 to 100], height [1 to 100], isSealed [true or false] - calvey
+    /**
+     * Constructs the maze object
+     *
+     *
+     * @param xCount - Width of maze
+     * @param yCount - Height of maze
+     * @param isSealed - Boolean, true if maze is sealed, else false
+     * @param name - Name of the maze
+     * @param mData - Maze Data object
+     */
+
+    //data validation
     public Maze(int xCount, int yCount, boolean isSealed, String name, MazeListData mData) {
         if (xCount < 1 || yCount < 1) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
@@ -50,12 +64,21 @@ public class Maze {
 
     }
 
-    //start/end position column [0 to length-1], row [0 to height-1] (assuming indexed from 0, or is it from 1?)  - calvey
-    //setter for the start and end location of the maze
+
+    /**
+     * setter for the start and end location of the maze
+     *
+     * @param startPosition - Start/Entry coord of the maze
+     * @param  endPosition - End/Exit coord of the maze
+     */
     public void setStartEndPos(Coordinate startPosition, Coordinate endPosition) {
 
         class Helper {
-            //if maze is unsealed, this func is used to open the exit/entrance (so the maze isn't sealed)
+            /**
+             * if maze is unsealed, this func is used to open the exit/entrance (so the maze isn't sealed)
+             *
+             * @param  pos - A start/end postion in the maze
+             */
             void setEntranceExitWalls(Coordinate pos) {
                 if (pos.x == 0) {
                     edit(pos, new Cell(true, true, false, true));
@@ -78,12 +101,15 @@ public class Maze {
             helper.setEntranceExitWalls(endPosition);
         }
 
+        //set start/end pos
         this.startPosition = startPosition;
         this.endPosition = endPosition;
 
     }
 
-    //initialises the gameArray
+    /**
+     * initialises the gameArray
+     */
     public void initMazeArray() {
         //initialise each cell in mazeArray
         for (int x = 0; x < xCount; x++) {
@@ -95,13 +121,28 @@ public class Maze {
     }
 
 
-    //add an image to the maze
+    //
+    /**
+     * add's an image to the maze
+     *
+     * @param name - Name of the image
+     * @param path - file path to the image
+     * @param topLeftLocation - Coordinate of the top left corner of the image
+     * @param bottomRightLocation - Coordinate of the bottom right corner of the image
+     * @param size - Size ofthe image
+     * @param isAccessible - Is the image accessible in the maze (true if yes else false)
+     */
     public void addImage(String name, String path, Coordinate topLeftLocation, Coordinate bottomRightLocation, int size, boolean isAccessible) {
         images.add(new imageLocation(path, name, topLeftLocation, bottomRightLocation, size, isAccessible));
 
         setImageAccesibility();
 
     }
+
+    /**
+     * Helper function that sets the accessibilty of the cells under all maze images
+     * it does this by either turning all the walls on or off
+     */
 
     void setImageAccesibility() {
         for (imageLocation image : images) {
@@ -127,7 +168,11 @@ public class Maze {
         }
     }
 
-    //pass value of the top left cell of image
+    /**
+     * Removes an image at a given coord from the maze
+     *
+     * @param location - The location of the top left cell which the image occupies
+     */
     public void removeImage(Coordinate location) {
         try {
             //loop through all positions in list plus 1. If n + 1 is reached, error is thrown as image doesn't exist
@@ -145,6 +190,11 @@ public class Maze {
 
     }
 
+    /**
+     * Removes an image with a given name from the maze
+     *
+     * @param name - The of the image to be removed
+     */
     public void removeImage(String name) {
         try {
             //loop through all positions in list plus 1. If n + 1 is reached, error is thrown as image doesn't exist
@@ -162,16 +212,31 @@ public class Maze {
 
     }
 
+    /**
+     * Sets maze to a random solveable maze
+     * @param complexity - The complexity of the random maze - 0 is easiest, 1 is hardest
+     * @return - The solution to the random maze
+     */
     public List<Coordinate> setRandomSolution(double complexity) {
         class Helper {
-            boolean isSolved;
-            double complexity;
+            boolean isSolved; //flag for if maze is sloved
+            double complexity; //complexity of solution
 
+            /**
+             * Constructor of helper object
+             * @param complexity - complexity of solution
+             */
             public Helper(double complexity) {
                 this.complexity = complexity;
                 this.isSolved = false;
             }
 
+            /**
+             *
+             * @param pos - current position in the maze array
+             * @param dest - the destination to move too
+             * @return a coordinate representative of the best move
+             */
             Coordinate bestMove(Coordinate pos, Coordinate dest) {
                 //find which direction moves towards the exit
                 int xDist = pos.x - dest.x;
@@ -192,7 +257,14 @@ public class Maze {
                 }
             }
 
-            //returns the distance to the edge in the direction of move
+
+
+            /**
+             * Helpter function to find the distance to the edge of the array from a given position
+             * @param pos - current position in the maze array
+             * @param move - a move with some direction
+             * @return returns the distance to the edge in the direction of move
+             */
             int distToEdge(Coordinate pos, Coordinate move) {
                 int edgeBuffer = 2; //buffers the distance to the edge
                 if (move.x > 0) {
@@ -211,15 +283,28 @@ public class Maze {
                 return 0;
             }
 
-            //return an int between -1 and 1 inclusive, which is representive a direction in the maze
+            /**
+             * @return return an int between -1 and 1 inclusive, which is representive a direction in the maze
+             */
             int randomDirection() {
                 return randomInt(-1, 1);
             }
 
+            /**
+             * Generates a random int
+             * @param min - Minimum value of random int
+             * @param max - Max value of random int
+             * @return - a random int between min and max inclusive
+             */
             int randomInt(int min, int max) {
                 return (int) Math.floor(Math.random() * (max - min + 1) + min);
             }
 
+            /**
+             * Inverts a move (i.e. (1,0) -> (-1,0)
+             * @param move - some move
+             * @return a move that's the opposite of move
+             */
             Coordinate invertMove(Coordinate move)//reverse a move
             {
                 int x = move.x;
@@ -235,7 +320,11 @@ public class Maze {
                 return newCoord(x, y);
             }
 
-            ///delete me
+            /**
+             * Retruns a random move in any direction other than the previousMove
+             * @param previousMove - the move previously made
+             * @return a valid random move
+             */
             Coordinate randomMove(Coordinate previousMove) {
 
                 previousMove = invertMove(previousMove); //invert the move so it's equivilant to moving back to the previous cell
@@ -249,6 +338,14 @@ public class Maze {
                 return move;
             }
 
+            /**
+             * Check if a move is valid, if it is, apply it, if it isn't attempt random moves until a valid move is found
+             * @param move - the move to make
+             * @param pos - the current postion in the maze array
+             * @param previousMove - the previous move
+             * @param moves - all moves made so far
+             * @return
+             */
             Coordinate applyMove(Coordinate move, Coordinate pos, Coordinate previousMove, List<Coordinate> moves) {
                 try {
                     Coordinate newPos = newCoord(move.x + pos.x, move.y + pos.y);
@@ -264,6 +361,11 @@ public class Maze {
 
             }
 
+            /**
+             * Check if a cell is accessible (i.e. if there is an inaccessible image in it)
+             * @param pos - the cell to check
+             * @return True if accessible, else false
+             */
             boolean isAccesible(Coordinate pos) {
                 //check the position has an inaccesible image
                 for (imageLocation i : images) {
@@ -282,7 +384,16 @@ public class Maze {
 
             }
 
-
+            /**
+             * Recursively search the game array from a given start position to a given end position
+             * Complexity of the path taken increases with this.complexity
+             * @param pos - the current position
+             * @param moves - all positions traveled through
+             * @param previousMove - the previously made move
+             * @param directionBias - integer that if is >0 will explore in the same direction as the previous move
+             * @param destination - destination positon
+             * @return List of moves(positions/Coords) used to reach destination
+             */
             public List<Coordinate> exploreSolution(Coordinate pos, List<Coordinate> moves, Coordinate previousMove, int directionBias, Coordinate destination) {
                 moves.add(pos);
 
@@ -313,11 +424,7 @@ public class Maze {
 
                         //apply move and explore next node
                         Coordinate nextPos = applyMove(move, pos, previousMove, moves);
-                        //check nextPos is legal if it is, move randomly until legal
-//                        while ((nextPos.x < 0 || nextPos.y < 0 || nextPos.x >= xCount || nextPos.y >= yCount) && !moves.contains(nextPos)) {
-//                            //illegal
-//                            nextPos = applyMove(randomMove(previousMove), pos);
-//                        }
+
                         return exploreSolution(nextPos, moves, move, directionBias, destination);
                     }
 
@@ -325,7 +432,10 @@ public class Maze {
                 }
             }
 
-
+            /**
+             * Adds a list of moves to the maze by setting the walls of the maze to match the list of moves
+             * @param solution - a list of moves to add to maze
+             */
             public void addMovesToMaze(List<Coordinate> solution) {
 
                 for (int i = 0; i < solution.size() - 1; i++) {
@@ -357,6 +467,13 @@ public class Maze {
                 }
             }
 
+            /**
+             * Recursively explores blank cells (cells with no walls) until it find a cell with one or more walls set
+             * @param pos - current position
+             * @param moves - list of all moves
+             * @param previousMove - the previously made move
+             * @return List of Coords taken to reach solution
+             */
             List<Coordinate> exploreBlankCells(Coordinate pos, List<Coordinate> moves, Coordinate previousMove) {
                 moves.add(pos);
 
@@ -371,6 +488,9 @@ public class Maze {
                 }
             }
 
+            /**
+             * adds random (non-solution) paths to the maze
+             */
             void addRandomPaths() {
                 for (int x = 0; x < xCount; x++) {
                     for (int y = yCount - 1; y >= 0; y--) {
@@ -382,7 +502,9 @@ public class Maze {
                 }
             }
 
-
+            /**
+             * Removes clumps of 'loops' (a 1x1 square of paths) in the maze
+             */
             public void fixClumping() {
                 for (int x = 0; x < xCount - 1; x++) {
                     for (int y = 0; y < yCount - 1; y++) {
@@ -428,9 +550,9 @@ public class Maze {
         //explore maze for a solution from start point
         List<Coordinate> sol = helper.exploreSolution(startPosition, new ArrayList<Coordinate>(), newCoord(0, 0), 0, endPosition);
 
-        helper.addMovesToMaze(sol);
-        helper.addRandomPaths();
-        helper.fixClumping();
+        helper.addMovesToMaze(sol); //add solution to the maze
+        helper.addRandomPaths(); //add random paths
+        helper.fixClumping(); //fix loops
         helper.addMovesToMaze(sol); //re-add solution to maze in case part of it was removed when clumping was fixed
 
         return sol;
@@ -440,12 +562,18 @@ public class Maze {
 
 
     //backend helper function to update a cell and then edit the walls of the surrounding cells to match the edited cell
+
+    /**
+     * Updates game array after changing cell walls.
+     * It also changes the walls of surrounding cells to match that of their adjacent cell
+     * @param pos - Coordinate of the cell to change
+     * @param newCell - the cell to set said Coord too
+     */
     public void editGameArray(Coordinate pos, Cell newCell) {
         //set new cell
         mazeArray[pos.x][pos.y] = newCell;
 
-        // todo - tidy this
-
+        //set walls of adjacent cells to match newCell
         try {
             mazeArray[pos.x - 1][pos.y].rightWall = newCell.leftWall;
         } catch (Exception e) {
@@ -470,11 +598,26 @@ public class Maze {
 
     }
 
+    /**
+     *  @return The dimensions of the maze
+     */
     public int[] getDimensions() {
         return new int[]{this.xCount, this.yCount};
     }
 
-    //length [1 to 100], height [1 to 100], isSealed [true or false], start/end posx [0 to length-1], start/end posy [0 to height-1]
+    /**
+     * Initialises the maze object
+     * @param xCount - Width of the maze
+     * @param yCount - height of maze
+     * @param isSealed - Is maze sealed
+     * @param startPositionX - X part of entry of maze
+     * @param startPositionY - Y part entry of maze
+     * @param endPositionX - X part of exit of maze
+     * @param endPositionY - Y part of maze exit
+     * @param name - Maze name
+     * @param data - Maze Data (for use with DB)
+     * @return The newly initiated maze object
+     */
     public static Maze initMaze(int xCount, int yCount, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY, String name, MazeListData data) {
         //create maze object
         Maze maze = new Maze(xCount, yCount, isSealed, name, data);
@@ -488,68 +631,35 @@ public class Maze {
         return maze;
     }
 
-    //fill maze object with random maze
-    // todo - make random maze solvable
-    public void randomMaze() {
-        Random rand = new Random();
-
-        // iterate over all maze cells and assign them with a random wall type
-        for (int xCoord = 0; xCoord < xCount; xCoord++) {
-            for (int yCoord = 0; yCoord < yCount; yCoord++) {
-                Cell currentCell = mazeArray[xCoord][yCoord];
-
-                if (xCoord == 0) {
-                    //if the cell is in the first column, randomly assign the wall
-//                    currentCell.leftWall = rand.nextBoolean();
-                    currentCell.leftWall = true;
-                } else {
-                    // if it's not the first column set left wall to be the leftCells right wall (as they're the same wall)
-                    Cell lefCell = mazeArray[xCoord - 1][yCoord];
-                    currentCell.leftWall = lefCell.rightWall;
-                }
-
-                if (yCoord == 0) {
-                    //if the cell is in the first row, randomly set its top wall
-//                    currentCell.topWall = rand.nextBoolean();
-                    currentCell.topWall = true;
-                } else {
-                    //if it's not the first row set top wall to be the aboveCells bottom wall (as they're the same wall)
-                    Cell aboveCell = mazeArray[xCoord][yCoord - 1];
-                    currentCell.topWall = aboveCell.bottomWall;
-                }
-
-
-                randomWalls(currentCell);
-
-            }
-        }
-    }
-
-    //randomly sets the walls of a given cell
-    static Cell randomWalls(Cell currentCell) {
-        Random rand = new Random();
-
-        //set right & bottom wall to be random
-        currentCell.rightWall = rand.nextBoolean();
-        currentCell.bottomWall = rand.nextBoolean();
-
-        return currentCell;
-    }
-
-    //return cell of given Coordinate
+    /**
+     * @param coord - position of cell to get
+     * @return Cell of given Coordinate
+     */
     public Cell getCell(Coordinate coord) {
         return mazeArray[coord.x][coord.y].getCell();
     }
 
+    /**
+     *
+     * @return The current maze object
+     */
     public Maze getMaze() {
         return this;
     }
 
+    /**
+     * @return The current game array
+     */
     public Cell[][] getMazeArray() {
         return mazeArray;
     }
 
-    //crete a new Coordinate
+    /**
+     * Creates a new Coord
+     * @param x - X part
+     * @param y - Y part
+     * @return - a new Coordinate object
+     */
     Coordinate newCoord(int x, int y) {
         if (x >= xCount || y >= yCount) {
             throw new IllegalArgumentException("Coordinates must be within than game size");
@@ -558,7 +668,11 @@ public class Maze {
         return new Coordinate(x, y);
     }
 
-    //outputs the maze to a string (badly)
+
+    /**
+     *  outputs the maze to a string (badly)
+     * @return The maze in a string format
+     */
     public String ToString() {
         String output = "\n";
         // iterate over all maze cells and assign them with a random wall type
@@ -579,12 +693,23 @@ public class Maze {
         return output;
     }
 
-    //solves the maze for the first solution
+    /**
+     * solves the maze for the first solution
+     * @return A list of coordinates representing the path of the solution
+     */
+
     public List<Coordinate> getFirstSolution() {
         class Helper {
 
-            boolean isSolved = false;
+            boolean isSolved = false; //flag for if the maze is solved
 
+            /**
+             * recusively expore the maze towards the solution
+             * @param pos - Current postion
+             * @param moves - All moves made
+             * @param previousPos - previous position
+             * @return - All positions needed to solve the maze
+             */
             public List<Coordinate> solveMaze(Coordinate pos, List<Coordinate> moves, Character previousPos) {
                 moves.add(pos);
 
@@ -626,26 +751,40 @@ public class Maze {
         return helper.solveMaze(startPosition, new ArrayList<Coordinate>(), 'Z');
     }
 
-    Cell[] getBestSolution() {
-        throw new UnsupportedOperationException("getBestSolution() is Not Implemented");
-    }
 
+    /**
+     * Edit an array of cells
+     * @param cellPositions - Array of cell positions
+     * @param newWalls - The cell to set these positions too
+     */
     public void edit(Coordinate[] cellPositions, Cell newWalls) {
         for (Coordinate pos : cellPositions) {
             editGameArray(pos, new Cell(newWalls.topWall, newWalls.bottomWall, newWalls.leftWall, newWalls.rightWall));
         }
     }
-
+    /**
+     * Edit a cell
+     * @param cellPositions - position of cell
+     * @param newWalls - The cell to set this position too
+     */
     public void edit(Coordinate cellPositions, Cell newWalls) {
         editGameArray(cellPositions, new Cell(newWalls.topWall, newWalls.bottomWall, newWalls.leftWall, newWalls.rightWall));
     }
-
+    /**
+     * Edit a list of cells
+     * @param cellPositions - List of cell positions
+     * @param newWalls - The cell to set these positions too
+     */
     public void edit(List<Coordinate> cellPositions, Cell newWalls) {
         for (Coordinate pos : cellPositions) {
             editGameArray(pos, new Cell(newWalls.topWall, newWalls.bottomWall, newWalls.leftWall, newWalls.rightWall));
         }
     }
 
+    /**
+     * Checks if maze contains alteast one image
+     * @return - True if there is an image, otherwise false
+     */
     public Boolean hasImage() {
         if (images.size() > 0) {
             return true;
@@ -654,6 +793,10 @@ public class Maze {
         }
     }
 
+    /**
+     * Performs an analysis on the maze
+     * @return A string containing the results of the analysis
+     */
     public String analyse() {
         //find number cells in solution
         List<Coordinate> sol = getFirstSolution();
