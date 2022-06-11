@@ -9,8 +9,12 @@ import  java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class TitleScreen extends JFrame implements  ActionListener, Runnable {
+public class TitleScreen extends JFrame implements  ActionListener, Runnable, MouseListener, PropertyChangeListener {
 
     public static final int WIDTH = 3000;
     public static final int HEIGHT = 2000; // set these to have a consistent size between screens
@@ -21,6 +25,9 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     private Chunk[] chunkArray;
     GridBagLayout mazePaneLayout = new GridBagLayout();
     GridBagConstraints mazePaneConstraints = new GridBagConstraints();
+    private boolean [] currentlySelectedCell;
+
+    private boolean test = false;
 
 
 
@@ -41,6 +48,30 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
 
     JScrollPane mazeScroll = new JScrollPane(mazeDisplayPane);
 
+    // Dead Ends
+    Chunk northDeadEnd = new Chunk();
+    Chunk eastDeadEnd  = new Chunk();
+    Chunk southDeadEnd = new Chunk();
+    Chunk westDeadEnd  = new Chunk();
+
+    // T pieces
+    Chunk northTPiece = new Chunk();
+    Chunk eastTPiece  = new Chunk();
+    Chunk southTPiece = new Chunk();
+    Chunk westTPiece  = new Chunk();
+    // L pieces
+    Chunk northLPiece = new Chunk();
+    Chunk eastLPiece  = new Chunk();
+    Chunk westLPiece  = new Chunk();
+    Chunk southLPiece = new Chunk();
+    // Straight pieces
+    Chunk horizontalPiece = new Chunk();
+    Chunk verticlePiece = new Chunk();
+    // Absolute pieces
+    Chunk allWalls = new Chunk();
+    Chunk allPaths = new Chunk();
+
+
     private Maze currentMaze;
 
 
@@ -48,44 +79,49 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         Chunk[] chunks = new Chunk[chunkCount];
         for (int i=0;i<chunkCount;i++) {
             chunks[i] = new Chunk();
+            chunks[i].setScreen(this);
         }
         return chunks;
     }
 
+    public void setCurrentlySelectedCell(boolean [] value){
+        currentlySelectedCell = value;
+    }
+    public boolean [] getCurrentlySelectedCell(){return currentlySelectedCell;}
 
 
     private void createMazePieces(){
-        mazePiecesDisplay.setLayout(mazePiecesDisplayLayout);
+
+
+
         // Dead Ends
-        Chunk northDeadEnd = new Chunk();
-        Chunk eastDeadEnd  = new Chunk();
-        Chunk southDeadEnd = new Chunk();
-        Chunk westDeadEnd  = new Chunk();
+        northDeadEnd.setScreen(this);
+        eastDeadEnd.setScreen(this);
+
+        southDeadEnd.setScreen(this);
+
+        westDeadEnd.setScreen(this);
+
         // T pieces
-        Chunk northTPiece = new Chunk();
-        Chunk eastTPiece  = new Chunk();
-        Chunk southTPiece = new Chunk();
-        Chunk westTPiece  = new Chunk();
+        northTPiece.setScreen(this);
+        eastTPiece.setScreen(this);
+        southTPiece.setScreen(this);
+        westTPiece.setScreen(this);
         // L pieces
-        Chunk northLPiece = new Chunk();
-        Chunk eastLPiece  = new Chunk();
-        Chunk westLPiece  = new Chunk();
-        Chunk southLPiece = new Chunk();
+        northLPiece.setScreen(this);
+        eastLPiece.setScreen(this);
+        westLPiece.setScreen(this);
+        southLPiece.setScreen(this);
         // Straight pieces
-        Chunk horizontalPiece = new Chunk();
-        Chunk verticlePiece = new Chunk();
+        horizontalPiece.setScreen(this);
+        verticlePiece.setScreen(this);
         // Absolute pieces
-        Chunk allWalls = new Chunk();
-        Chunk allPaths = new Chunk();
+        allWalls.setScreen(this);
+        allPaths.setScreen(this);
 
 
 
-
-
-
-
-
-
+        mazePiecesDisplay.setLayout(mazePiecesDisplayLayout);
         // Dead Ends
         mazePiecesDisplay.add(northDeadEnd.customChunk(false,true,true,true));
         mazePiecesDisplay.add(eastDeadEnd.customChunk (true,false,true,true));
@@ -227,10 +263,42 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
             System.out.print("\nSave Menu Item Clicked\n");
             currentMaze.exportMaze("someName","author","1654643415");
         }
+
     }
 
     @Override
     public void run() {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
 
     }
 }
