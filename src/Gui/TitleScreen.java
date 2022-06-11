@@ -36,9 +36,10 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     JFrame    background          = new JFrame();
     JMenuBar  menuBar             = new JMenuBar();
     JMenu     fileBar             = new JMenu("File");
-    JMenuItem saveBar             = new JMenuItem("save");
-    JMenuItem saveAsBar           = new JMenuItem("Save as");
-    JMenuItem loadBar             = new JMenuItem("Load");
+    JMenuItem saveBar             = new JMenuItem("Save Maze");
+    JMenuItem saveAsBar           = new JMenuItem("Save Maze as");
+    JMenuItem loadBar             = new JMenuItem("Load Maze");
+    JMenuItem newBar              = new JMenuItem("New Maze");
     JPanel    mazeDisplayPane     = new JPanel();
     JPanel    displayPaneLeft     = new JPanel();
     JPanel    displayPaneRight    = new JPanel();
@@ -157,6 +158,8 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     public void CreateGUI(){
 
         menuBar.add(fileBar);
+        fileBar.add(newBar);
+        newBar.addActionListener(this);
         fileBar.add(saveBar);
         saveBar.addActionListener(this);
         fileBar.add(saveAsBar);
@@ -166,6 +169,8 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
 
 
         background.setSize(1500,700);
+        Dimension minSize = new Dimension(1500,700);
+        background.setMinimumSize(minSize);
         background.setLocationRelativeTo(null);
         background.setLayout(backgroundLayout);
         background.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -277,6 +282,11 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
         if(event.getSource() == saveBar){
             System.out.print("\nSave Menu Item Clicked\n");
             currentMaze.exportMaze("someName","author","1654643415");
+        }
+        if(event.getSource() == newBar){
+           // NewMazeOptionsScreen optionsScreen = new NewMazeOptionsScreen();
+            // optionsScreen.CreateNewMazeOptionsGUI();
+            background.dispose();
         }
 
     }
