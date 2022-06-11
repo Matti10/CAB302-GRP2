@@ -35,6 +35,9 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
     JPanel    displayPaneLeft     = new JPanel();
     JPanel    displayPaneRight    = new JPanel();
     Dimension displayPanesSize    = new Dimension(300,100);
+    JPanel    mazePiecesDisplay   = new JPanel();
+
+    GridLayout mazePiecesDisplayLayout = new GridLayout(4,4,3,3);
 
     JScrollPane mazeScroll = new JScrollPane(mazeDisplayPane);
 
@@ -47,6 +50,69 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
             chunks[i] = new Chunk();
         }
         return chunks;
+    }
+
+
+
+    private void createMazePieces(){
+        mazePiecesDisplay.setLayout(mazePiecesDisplayLayout);
+        // Dead Ends
+        Chunk northDeadEnd = new Chunk();
+        Chunk eastDeadEnd  = new Chunk();
+        Chunk southDeadEnd = new Chunk();
+        Chunk westDeadEnd  = new Chunk();
+        // T pieces
+        Chunk northTPiece = new Chunk();
+        Chunk eastTPiece  = new Chunk();
+        Chunk southTPiece = new Chunk();
+        Chunk westTPiece  = new Chunk();
+        // L pieces
+        Chunk northLPiece = new Chunk();
+        Chunk eastLPiece  = new Chunk();
+        Chunk westLPiece  = new Chunk();
+        Chunk southLPiece = new Chunk();
+        // Straight pieces
+        Chunk horizontalPiece = new Chunk();
+        Chunk verticlePiece = new Chunk();
+        // Absolute pieces
+        Chunk allWalls = new Chunk();
+        Chunk allPaths = new Chunk();
+
+
+
+
+
+
+
+
+
+        // Dead Ends
+        mazePiecesDisplay.add(northDeadEnd.customChunk(false,true,true,true));
+        mazePiecesDisplay.add(eastDeadEnd.customChunk (true,false,true,true));
+        mazePiecesDisplay.add(southDeadEnd.customChunk(true,true,true,false));
+        mazePiecesDisplay.add(westDeadEnd.customChunk (false,true,true,true));
+        // T pieces
+        mazePiecesDisplay.add(northTPiece.customChunk(true,false,false,false));
+        mazePiecesDisplay.add(eastTPiece.customChunk (false,true,false,false));
+        mazePiecesDisplay.add(southTPiece.customChunk(false,false,false,true));
+        mazePiecesDisplay.add(westTPiece.customChunk (false,false,true,false));
+        // L pieces
+        mazePiecesDisplay.add(northLPiece.customChunk(true,true,false,false));
+        mazePiecesDisplay.add(eastLPiece.customChunk (false,true,false,true));
+        mazePiecesDisplay.add(southLPiece.customChunk(false,false,true,true));
+        mazePiecesDisplay.add(westLPiece.customChunk (true,false,true,false));
+        // Straight pieces
+        mazePiecesDisplay.add(horizontalPiece.customChunk (true,false,false,true));
+        mazePiecesDisplay.add(verticlePiece.customChunk (false,true,true,false));
+
+        // Absolute pieces
+        mazePiecesDisplay.add(allWalls.customChunk (true,true,true,true));
+        mazePiecesDisplay.add(allPaths.customChunk (false,false,false,false));
+
+
+
+
+
     }
 
 
@@ -75,6 +141,10 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable {
         displayPaneLeftLayoutConstraints.weighty = 0.;
         displayPaneLeftLayoutConstraints.fill = GridBagConstraints.VERTICAL;
         background.add(displayPaneLeft, displayPaneLeftLayoutConstraints);
+
+        mazePiecesDisplay.setBackground(Color.gray);  //add gui elements to display editing options
+        createMazePieces();
+        displayPaneLeft.add(mazePiecesDisplay);
 
         mazeLayoutConstraints.gridx = 4;
         mazeLayoutConstraints.gridy = 0;
