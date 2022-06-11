@@ -26,12 +26,13 @@ public class MazeListData {
      * @param m - A DB-formatted maze object
      */
     public void add(MazeDBObj m) {
-        if (listModel.contains(m.getMazeName())) {
+        if (mazeListData.mazeNameSet().contains(m.getMazeName())) {
+            mazeListData.deleteMaze(m.getMazeName());
             listModel.removeElement(m.getMazeName());
-            this.remove(m.getMazeName());
         }
-        listModel.addElement(m.getMazeName());
         mazeListData.addMaze(m);
+        listModel.addElement(m.getMazeName());
+
     }
 
     /**

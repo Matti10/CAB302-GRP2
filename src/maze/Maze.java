@@ -833,6 +833,7 @@ public class Maze {
      * @param author       - the author of the maze
      * @param creationTime - the maze's unix-formatted date/time of creation
      */
+
     public void exportMaze(String mazeName, String author, String creationTime) {
         //MUST confirm overwrite if mazeName already exists in mData. data will be overwritten if mazeNames match.
         String dateTimeEdited = String.valueOf(Instant.now().getEpochSecond());
@@ -871,6 +872,7 @@ public class Maze {
         String[] arrDims = m.getMazeDimensions().split("x");
         this.xCount = Integer.parseInt(arrDims[0]);
         this.yCount = Integer.parseInt(arrDims[1]);
+        this.mazeArray = new Cell[xCount][yCount];
 
         this.isSealed = Boolean.parseBoolean(m.getIsSealed());
 
