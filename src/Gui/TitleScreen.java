@@ -27,6 +27,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     GridBagConstraints mazePaneConstraints = new GridBagConstraints();
     private boolean [] currentlySelectedCell;
     BorderLayout rightPaneLayout = new BorderLayout();
+    private String mazeName;
 
     private boolean test = false;
 
@@ -77,7 +78,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
 
     private Maze currentMaze;
 
-
+    public TitleScreen getTitleScreen(){return this;}
     private Chunk[] initChunks(int chunkCount) {
         Chunk[] chunks = new Chunk[chunkCount];
         for (int i=0;i<chunkCount;i++) {
@@ -268,16 +269,21 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
 
     }
 
-
+    public void setImportedMazeName(String mazeName){this.mazeName = mazeName;}
+    public void loadImportedMaze(){
+        Maze importedMaze = currentMaze.importMaze(this.mazeName);
+        this.AddMaze(importedMaze);
+    }
 
     @Override
     public void actionPerformed(ActionEvent event) {
         if(event.getSource() == loadBar){
             System.out.print("\nLoad Menu Item Clicked\n");
-            Maze importedMaze = currentMaze.importMaze("someName");
-            //Maze testBlankMaze = Maze.initMaze(3,3,false,(1,0),)
 
-            this.AddMaze(importedMaze);
+            LoadScreen loadScreen = new LoadScreen();
+            loadScreen.setScreen(this);
+            loadScreen.createGUI();
+
         }
         if(event.getSource() == saveBar){
             System.out.print("\nSave Menu Item Clicked\n");
