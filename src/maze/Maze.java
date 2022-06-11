@@ -846,7 +846,6 @@ public class Maze {
 
         String mazeDimensions = xCount + "x" + yCount;
         String sealedState = String.valueOf(isSealed ? 1 : 0);
-
         String mazeData = "";
         String mazeDataOverflow = "";
         for (int y = 0; y < yCount; y++) {
@@ -871,6 +870,7 @@ public class Maze {
         String[] arrDims = m.getMazeDimensions().split("x");
         this.xCount = Integer.parseInt(arrDims[0]);
         this.yCount = Integer.parseInt(arrDims[1]);
+        this.mazeArray = new Cell[xCount][yCount];
 
         this.isSealed = Boolean.parseBoolean(m.getIsSealed());
 
