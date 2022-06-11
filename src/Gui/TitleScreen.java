@@ -26,6 +26,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     GridBagLayout mazePaneLayout = new GridBagLayout();
     GridBagConstraints mazePaneConstraints = new GridBagConstraints();
     private boolean [] currentlySelectedCell;
+    BorderLayout rightPaneLayout = new BorderLayout();
 
     private boolean test = false;
 
@@ -43,6 +44,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     JPanel    displayPaneRight    = new JPanel();
     Dimension displayPanesSize    = new Dimension(300,100);
     JPanel    mazePiecesDisplay   = new JPanel();
+
 
     GridLayout mazePiecesDisplayLayout = new GridLayout(4,4,3,3);
 
@@ -194,7 +196,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
 
         background.add(mazeScroll, mazeLayoutConstraints);
 
-
+        displayPaneRight.setLayout(rightPaneLayout);
         displayPaneRight.setPreferredSize(displayPanesSize);
         displayPaneRight.setMinimumSize(displayPanesSize);
         displayPaneRightLayoutConstraints.gridx = 5;
@@ -216,10 +218,19 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     }
 
     public void AddMaze(Maze maze){
+        JProgressBar loadingBar = new JProgressBar();
+        loadingBar.setValue(0);
+        loadingBar.setStringPainted(true);
+        displayPaneRight.add(loadingBar);
         currentMaze = maze;
         mazeDisplayPane.removeAll();
         int [] mazeDim = maze.getDimensions();
         chunkArray = initChunks(mazeDim[0] * mazeDim[1]);
+        //used for loading bar
+        double totalChunks = mazeDim[1] * mazeDim[0];
+        double chunksCompleted = 0;
+        int percentCompleted = 0;
+        //
         Dimension ChunkSize = new Dimension(200,200);
         Coordinate thisCoord;
         int i = 0;
@@ -237,11 +248,15 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
 
                 mazeDisplayPane.add(chunkArray[i].packChunk(thisCell),mazePaneConstraints);
                 i++;
+                //loading bar
+                chunksCompleted++;
+                percentCompleted = (int)((chunksCompleted / totalChunks) * 100 );
+                loadingBar.setValue(percentCompleted);
             }
             System.out.print(i+",");
         }
         System.out.print("Done!");
-
+        displayPaneRight.remove(loadingBar);
         pack();
         background.revalidate();
         background.repaint();
