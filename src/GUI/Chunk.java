@@ -109,7 +109,81 @@ public class Chunk extends JFrame{
 
     }
 
+    public JPanel customChunk(boolean bottomWall, boolean leftWall, boolean rightWall, boolean topWall){ //chunks have to be added from left to right top to bottom
 
+        this.backgroundCell.setLayout(layout);
+        this.backgroundCell.setBackground(Color.gray);
+        Dimension centerCellSize = new Dimension(40,40);
+
+        Dimension  eastWestCellSize = new Dimension(40,10);
+        Dimension  northSouthCellSize = new Dimension(10,40);
+        Dimension  cornerCellSize = new Dimension(10,10);
+
+        centerCell.setPreferredSize(centerCellSize);
+        centerCell.setMinimumSize(centerCellSize);
+
+        rightCell.setMinimumSize(eastWestCellSize);
+        leftCell.setMinimumSize(eastWestCellSize);
+        topCell.setMinimumSize(northSouthCellSize);
+        bottomCell.setMinimumSize(northSouthCellSize);
+        northEastCorner.setMinimumSize(cornerCellSize);
+        northWestCorner.setMinimumSize(cornerCellSize);
+        southWestCorner.setMinimumSize(cornerCellSize);
+        southEastCorner.setMinimumSize(cornerCellSize);
+
+
+
+
+        //row one
+        layoutConstraints.gridy = 0;
+        layoutConstraints.gridx = 0;
+        this.backgroundCell.add(this.northWestCorner,layoutConstraints);
+        layoutConstraints.gridy = 0;
+        layoutConstraints.gridx = 1;
+        layoutConstraints.fill = GridBagConstraints.BOTH;
+        this.backgroundCell.add(this.topCell,layoutConstraints);
+        layoutConstraints.gridy = 0;
+        layoutConstraints.gridx = 2;
+        this.backgroundCell.add(this.northEastCorner,layoutConstraints);
+        //row 2
+        layoutConstraints.gridy = 1;
+        layoutConstraints.gridx = 0;
+        this.backgroundCell.add(this.leftCell,layoutConstraints);
+        layoutConstraints.gridy = 1;
+        layoutConstraints.gridx = 1;
+        layoutConstraints.fill = GridBagConstraints.NONE;
+        this.backgroundCell.add(this.centerCell,layoutConstraints);
+        layoutConstraints.gridy = 1;
+        layoutConstraints.gridx = 2;
+        layoutConstraints.fill = GridBagConstraints.BOTH;
+        this.backgroundCell.add(this.rightCell,layoutConstraints);
+        //row 3
+        layoutConstraints.gridy = 2;
+        layoutConstraints.gridx = 0;
+        this.backgroundCell.add(this.southWestCorner,layoutConstraints);
+        layoutConstraints.gridy = 2;
+        layoutConstraints.gridx = 1;
+        this.backgroundCell.add(this.bottomCell,layoutConstraints);
+        layoutConstraints.gridy = 2;
+        layoutConstraints.gridx = 2;
+        this.backgroundCell.add(this.southEastCorner,layoutConstraints);
+
+
+
+        if(topWall    == false) topCell.setBackground(Color.white);
+        if(bottomWall == false) bottomCell.setBackground(Color.white);
+        if(leftWall   == false) leftCell.setBackground(Color.white);
+        if(rightWall  == false) rightCell.setBackground(Color.white);
+        int wallsOn = 0;
+        if (topWall && bottomWall && leftWall && rightWall){
+            centerCell.setBackground(Color.black);
+        }
+
+        pack();
+
+        return this.backgroundCell;
+
+    }
 
 
 
