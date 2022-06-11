@@ -1,5 +1,6 @@
 package GUI;
 import maze.Cell;
+import maze.Coordinate;
 import org.hamcrest.core.Every;
 
 import javax.swing.*;
@@ -28,8 +29,20 @@ public class Chunk extends JFrame implements MouseListener {
     JPanel backgroundCell = new JPanel();
     JPanel editorBackgroundCell = new JPanel();
     private boolean clicked = false;
-
+    private Cell cellValue;
+    private Coordinate coordinateValue;
     public boolean [] editorChunkValue;
+
+    public void setCellValue(Cell cell){this.cellValue = cell;}
+
+    public Cell getCellValue() {
+        return cellValue;
+    }
+    public void setCoordinateValue(Coordinate coordinate){this.coordinateValue = coordinate;}
+
+    public Coordinate getCoordinateValue() {
+        return coordinateValue;
+    }
 
     public void setScreen(TitleScreen parentScreen){
        this.screen = parentScreen;
@@ -196,12 +209,13 @@ public class Chunk extends JFrame implements MouseListener {
     }
 
     private void editChunk(){
-        boolean [] cellValue = screen.getCurrentlySelectedCell();
+        boolean [] clickedCellValue = screen.getCurrentlySelectedCell();
 
-        boolean bottomWall = cellValue[0];
-        boolean leftWall   = cellValue[1];
-        boolean rightWall  = cellValue[2];
-        boolean topWall    = cellValue[3];
+        boolean bottomWall = clickedCellValue[0];
+        boolean leftWall   = clickedCellValue[1];
+        boolean rightWall  = clickedCellValue[2];
+        boolean topWall    = clickedCellValue[3];
+        this.cellValue.edit(topWall,bottomWall,leftWall,rightWall);
         topCell.setBackground(Color.black);
         bottomCell.setBackground(Color.black);
         leftCell.setBackground(Color.black);
@@ -227,7 +241,8 @@ public class Chunk extends JFrame implements MouseListener {
         }
         if(e.getSource() == backgroundCell){
             editChunk();
-            System.out.print("test passed");
+            System.out.print(this.coordinateValue);
+            //System.out.print(this.cellValue);
         }
 
 
