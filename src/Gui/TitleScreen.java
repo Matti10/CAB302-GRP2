@@ -245,7 +245,8 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
 
                 chunkArray[i].setMinimumSize(ChunkSize);
                 chunkArray[i].setPreferredSize(ChunkSize);
-
+                chunkArray[i].setCellValue(thisCell);
+                chunkArray[i].setCoordinateValue(thisCoord);
                 mazeDisplayPane.add(chunkArray[i].packChunk(thisCell),mazePaneConstraints);
                 i++;
                 //loading bar
