@@ -15,7 +15,7 @@ public class Maze {
     boolean isSealed;
     String name;
     ArrayList<imageLocation> images; //list of images in maze
-    private String Author;
+    private String author;
 
     /**
      * Constructs the maze object using default values
@@ -56,7 +56,7 @@ public class Maze {
         this.name = name;
         this.mazeArray = new Cell[xCount][yCount];
         this.images = new ArrayList<imageLocation>();
-        this.Author = Author;
+        this.author = Author;
 
 
     }
@@ -827,11 +827,9 @@ public class Maze {
      * Exports the maze to the DB.
      *
      * @param mazeName     - the name of the maze
-     * @param author       - the author of the maze
      */
 
-    public void exportMaze(String mazeName, String author) {
-        //MUST confirm overwrite if mazeName already exists in mData. data will be overwritten if mazeNames match.
+    public void exportMaze(String mazeName) {
         MazeListData mData = new MazeListData();
         MazeDBObj m = mData.get(mazeName);
         String dateTimeEdited = String.valueOf(Instant.now().getEpochSecond());
@@ -851,6 +849,7 @@ public class Maze {
         String mazeDataOverflow = "";
         for (int y = 0; y < yCount; y++) {
             for (int x = 0; x < xCount; x++) {
+
                 if (mazeData.length() < 8000) mazeData += (CellToChar(getCell(newCoord(x, y))));
                 else mazeDataOverflow += (CellToChar(getCell(newCoord(x, y))));
             }
@@ -887,9 +886,11 @@ public class Maze {
         for (int i = 0; i < mazeData.length(); i++) {
             int thisY = i / xCount;
             int thisX = i - (thisY * yCount);
-            thisCoord = newCoord(thisX, thisY);
-            thisCell = CharToCell(mazeData.charAt(i));
-            this.edit(thisCoord, thisCell);
+            /*thisCoord = newCoord(thisX, thisY);
+            thisCell = */
+            this.mazeArray[thisX][thisY] = CharToCell(mazeData.charAt(i));
+            //this.edit(thisCoord, thisCell);
+
         }
         return this;
     }

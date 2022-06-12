@@ -43,7 +43,6 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     JMenuBar  menuBar             = new JMenuBar();
     JMenu     fileBar             = new JMenu("File");
     JMenuItem saveBar             = new JMenuItem("save");
-    JMenuItem saveAsBar           = new JMenuItem("Save as");
     JMenuItem loadBar             = new JMenuItem("Load");
     JMenuItem newMazeBar          = new JMenuItem("New Maze");
     JMenuItem exportMazeBar       = new JMenuItem("export");
@@ -168,7 +167,6 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
         menuBar.add(fileBar);
         fileBar.add(saveBar);
         saveBar.addActionListener(this);
-        fileBar.add(saveAsBar);
         fileBar.add(loadBar);
         fileBar.add(newMazeBar);
         fileBar.add(exportMazeBar);
@@ -230,7 +228,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
         background.setVisible(true);
     }
 
-    public void AddMaze(Maze maze){
+    public void AddMaze(Maze maze) {
         JProgressBar loadingBar = new JProgressBar();
         loadingBar.setValue(0);
         loadingBar.setStringPainted(true);
@@ -251,6 +249,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
             for(int x = 0; x < mazeDim[0]; x++){
                 thisCoord = new Coordinate(x,y);
                 Cell thisCell = maze.getCell(thisCoord);
+
                 mazePaneConstraints.gridx = x;
                 mazePaneConstraints.gridy = y;
                 mazePaneConstraints.ipady = 1;
@@ -293,7 +292,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
         }
         if(event.getSource() == saveBar){
             System.out.print("\nSave Menu Item Clicked\n");
-            currentMaze.exportMaze(mazeName,"author");
+            currentMaze.exportMaze(mazeName);
         }
         if ( event.getSource() == newMazeBar){
             NewMazeOptionsScreen optionsScreen = new NewMazeOptionsScreen();
@@ -313,7 +312,6 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
                 e.printStackTrace();
             }
         }
-
     }
 
     @Override
