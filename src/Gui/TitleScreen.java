@@ -31,11 +31,13 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     GridBagConstraints mazePaneConstraints = new GridBagConstraints();
     private boolean [] currentlySelectedCell;
     BorderLayout rightPaneLayout = new BorderLayout();
+    private String importedMazeName;
 
     private boolean test = false;
 
-
-
+    public void setImportedMazeName(String importedMazeName) {
+        this.importedMazeName = importedMazeName;
+    }
 
     JFrame    background          = new JFrame();
     JMenuBar  menuBar             = new JMenuBar();
@@ -275,20 +277,23 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
 
     }
 
-
+    public void loadImportedMaze() {
+        Maze importedMaze = currentMaze.importMaze("someName");
+        this.AddMaze(importedMaze);
+    }
 
     @Override
     public void actionPerformed(ActionEvent event) {
         if(event.getSource() == loadBar){
             System.out.print("\nLoad Menu Item Clicked\n");
-            Maze importedMaze = currentMaze.importMaze("someName");
-            //Maze testBlankMaze = Maze.initMaze(3,3,false,(1,0),)
-
-            this.AddMaze(importedMaze);
+            LoadScreen lScreen = new LoadScreen();
+            background.setVisible(false);
+            lScreen.createGUI();
+            lScreen.setScreen(this);
         }
         if(event.getSource() == saveBar){
             System.out.print("\nSave Menu Item Clicked\n");
-            currentMaze.exportMaze("someName","author","1654643415");
+            currentMaze.exportMaze("someName","author");
         }
         if ( event.getSource() == newMazeBar){
             NewMazeOptionsScreen optionsScreen = new NewMazeOptionsScreen();
@@ -346,4 +351,6 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     public void propertyChange(PropertyChangeEvent evt) {
 
     }
+
+
 }

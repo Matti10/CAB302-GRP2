@@ -7,7 +7,6 @@ import java.time.Instant;
 import java.util.*;
 
 public class Maze {
-    MazeListData mData;
     Coordinate startPosition; //start position of the maze
     Coordinate endPosition; //end position of the maze
     int xCount; //width
@@ -19,15 +18,12 @@ public class Maze {
 
     /**
      * Constructs the maze object using default values
-     *
-     * @param mData - Maze Data object
      */
-    public Maze(MazeListData mData) {
+    public Maze() {
         this.xCount = 0;
         this.yCount = 0;
         this.isSealed = true;
         this.mazeArray = new Cell[xCount][yCount];
-        this.mData = mData;
         this.images = new ArrayList<imageLocation>();
     }
 
@@ -39,11 +35,11 @@ public class Maze {
      * @param yCount - Height of maze
      * @param isSealed - Boolean, true if maze is sealed, else false
      * @param name - Name of the maze
-     * @param mData - Maze Data object
+     * //@param mData - Maze Data object
      */
 
     //data validation
-    public Maze(int xCount, int yCount, boolean isSealed, String name, MazeListData mData) {
+    public Maze(int xCount, int yCount, boolean isSealed, String name) {
         if (xCount < 1 || yCount < 1) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
         } else if (xCount > 100 || yCount > 100) {
@@ -58,7 +54,6 @@ public class Maze {
         this.isSealed = isSealed;
         this.name = name;
         this.mazeArray = new Cell[xCount][yCount];
-        this.mData = mData;
         this.images = new ArrayList<imageLocation>();
 
 
@@ -615,12 +610,12 @@ public class Maze {
      * @param endPositionX - X part of exit of maze
      * @param endPositionY - Y part of maze exit
      * @param name - Maze name
-     * @param data - Maze Data (for use with DB)
+     * //@param data - Maze Data (for use with DB)
      * @return The newly initiated maze object
      */
-    public static Maze initMaze(int xCount, int yCount, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY, String name, MazeListData data) {
+    public static Maze initMaze(int xCount, int yCount, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY, String name) {
         //create maze object
-        Maze maze = new Maze(xCount, yCount, isSealed, name, data);
+        Maze maze = new Maze(xCount, yCount, isSealed, name);
 
         maze.initMazeArray();
 
@@ -831,13 +826,16 @@ public class Maze {
      *
      * @param mazeName     - the name of the maze
      * @param author       - the author of the maze
-     * @param creationTime - the maze's unix-formatted date/time of creation
      */
-    public void exportMaze(String mazeName, String author, String creationTime) {
+
+    public void exportMaze(String mazeName, String author) {
         //MUST confirm overwrite if mazeName already exists in mData. data will be overwritten if mazeNames match.
+        MazeListData mData = new MazeListData();
+        MazeDBObj m = mData.get(mazeName);
         String dateTimeEdited = String.valueOf(Instant.now().getEpochSecond());
-        String dateTimeCreated = creationTime;
-        if (Objects.equals(dateTimeCreated, "")) dateTimeCreated = dateTimeEdited;
+        String dateTimeCreated;
+        if (m != null) dateTimeCreated = m.getDateTimeCreated();
+        else dateTimeCreated = dateTimeEdited;
 
         int[] startPosArr = startPosition.toIntArray();
         int[] endPosArr = endPosition.toIntArray();
@@ -866,11 +864,13 @@ public class Maze {
      * of the imported maze
      */
     public Maze importMaze(String mazeName) {
+        MazeListData mData = new MazeListData();
         MazeDBObj m = mData.get(mazeName);
 
         String[] arrDims = m.getMazeDimensions().split("x");
         this.xCount = Integer.parseInt(arrDims[0]);
         this.yCount = Integer.parseInt(arrDims[1]);
+        this.mazeArray = new Cell[xCount][yCount];
 
         this.isSealed = Boolean.parseBoolean(m.getIsSealed());
 

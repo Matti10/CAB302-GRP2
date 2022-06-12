@@ -117,7 +117,7 @@ public class NewMazeOptionsScreen extends JFrame implements ActionListener {
             }
             String nameOfMaze = mazeNameTextField.getText();
             MazeListData data = new MazeListData();
-            Maze maze = Maze.initMaze(len,height,true,1,0,len - 1, height - 1,nameOfMaze,data);
+            Maze maze = Maze.initMaze(len,height,true,1,0,len - 1, height - 1,nameOfMaze);
             if(randomMazeYes.isSelected() == true){
                 maze.setRandomSolution(randomAmount);
             }
