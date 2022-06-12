@@ -33,10 +33,10 @@ public class Main {
         }
 
         TitleScreen titleScreen = new TitleScreen();
-        //titleScreen.CreateGUI();
-       // titleScreen.AddMaze(testMaze);
-        NewMazeOptionsScreen screen = new NewMazeOptionsScreen();
-        screen.CreateNewMazeOptionsGUI();
+        titleScreen.CreateGUI();
+        titleScreen.AddMaze(testMaze);
+       // NewMazeOptionsScreen screen = new NewMazeOptionsScreen();
+        //screen.CreateNewMazeOptionsGUI();
 
     }
 }
