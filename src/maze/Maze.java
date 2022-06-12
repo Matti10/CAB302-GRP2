@@ -15,6 +15,7 @@ public class Maze {
     boolean isSealed;
     String name;
     ArrayList<imageLocation> images; //list of images in maze
+    private String Author;
 
     /**
      * Constructs the maze object using default values
@@ -39,7 +40,7 @@ public class Maze {
      */
 
     //data validation
-    public Maze(int xCount, int yCount, boolean isSealed, String name) {
+    public Maze(int xCount, int yCount, boolean isSealed, String name,String Author) {
         if (xCount < 1 || yCount < 1) {
             throw new IllegalArgumentException("Length and Height must be greater than zero");
         } else if (xCount > 100 || yCount > 100) {
@@ -55,6 +56,7 @@ public class Maze {
         this.name = name;
         this.mazeArray = new Cell[xCount][yCount];
         this.images = new ArrayList<imageLocation>();
+        this.Author = Author;
 
 
     }
@@ -613,9 +615,9 @@ public class Maze {
      * //@param data - Maze Data (for use with DB)
      * @return The newly initiated maze object
      */
-    public static Maze initMaze(int xCount, int yCount, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY, String name) {
+    public static Maze initMaze(int xCount, int yCount, boolean isSealed, int startPositionX, int startPositionY, int endPositionX, int endPositionY, String name, String Author) {
         //create maze object
-        Maze maze = new Maze(xCount, yCount, isSealed, name);
+        Maze maze = new Maze(xCount, yCount, isSealed, name,Author);
 
         maze.initMazeArray();
 

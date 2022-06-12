@@ -33,6 +33,8 @@ public class NewMazeOptionsScreen extends JFrame implements ActionListener {
     JLabel randomValueExplained = new JLabel("enter a value between 0 and 1");
     GridBagLayout randomMazePaneLayout = new GridBagLayout();
     GridBagConstraints randomMazePaneConstraints = new GridBagConstraints();
+    JLabel authorLabel = new JLabel("Author");
+    JTextField authorInput = new JTextField(9);
 
     public void setScreen(TitleScreen screen){this.screen = screen;}
 
@@ -61,6 +63,8 @@ public class NewMazeOptionsScreen extends JFrame implements ActionListener {
         group.add(randomMazeNo);
         group.add(randomMazeYes);
         mazeNameTextField.setSize(100,20);
+        mazeNamePanel.add(authorLabel);
+        mazeNamePanel.add(authorInput);
         mazeNamePanel.setLayout(mazeNamePanelLayout);
         mazeNamePanel.add(mazeNameLabel);
         mazeNamePanel.add(mazeNameTextField);
@@ -115,9 +119,10 @@ public class NewMazeOptionsScreen extends JFrame implements ActionListener {
             catch(NumberFormatException exception){
                 exception.printStackTrace();
             }
+            String nameOfAuthor = authorInput.getText();
             String nameOfMaze = mazeNameTextField.getText();
             MazeListData data = new MazeListData();
-            Maze maze = Maze.initMaze(len,height,true,1,0,len - 1, height - 1,nameOfMaze);
+            Maze maze = Maze.initMaze(len,height,true,1,0,len - 1, height - 1,nameOfMaze,nameOfAuthor);
             screen.setMazeName(nameOfMaze);
             if(randomMazeYes.isSelected() == true){
                 maze.setRandomSolution(randomAmount);

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         int len = 3;
-        Maze testMaze = Maze.initMaze(len, len, false, 1, 0, len-1, len-1, "someName");
+        Maze testMaze = Maze.initMaze(len, len, false, 1, 0, len-1, len-1, "Default maze","N/A");
 
         List<Coordinate> noWalls = testMaze.setRandomSolution(.6);
 
