@@ -177,6 +177,8 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
 
 
         background.setSize(1500,700);
+        Dimension minSize = new Dimension(1500,700);
+        background.setMinimumSize(minSize);
         background.setLocationRelativeTo(null);
         background.setLayout(backgroundLayout);
         background.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -266,9 +268,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
                 percentCompleted = (int)((chunksCompleted / totalChunks) * 100 );
                 loadingBar.setValue(percentCompleted);
             }
-            System.out.print(i+",");
         }
-        System.out.print("Done!");
         displayPaneRight.remove(loadingBar);
         pack();
         background.revalidate();
@@ -284,14 +284,12 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     @Override
     public void actionPerformed(ActionEvent event) {
         if(event.getSource() == loadBar){
-            System.out.print("\nLoad Menu Item Clicked\n");
             LoadScreen lScreen = new LoadScreen();
             background.setVisible(false);
             lScreen.createGUI();
             lScreen.setScreen(this);
         }
         if(event.getSource() == saveBar){
-            System.out.print("\nSave Menu Item Clicked\n");
             currentMaze.exportMaze(mazeName);
         }
         if ( event.getSource() == newMazeBar){
