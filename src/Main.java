@@ -1,3 +1,4 @@
+import GUI.NewMazeOptionsScreen;
 import GUI.TitleScreen;
 import db.MazeListData;
 import maze.*;
@@ -20,9 +21,9 @@ public class Main {
         // [i][4] = date/time edited (in unix, will need to convert)
         // lmk if any other info should be returned also. ordered by date edited, probably.
 
-        int len = 6*4;
+        int len = 5;
 
-        Maze testMaze = Maze.initMaze(len, len, false, 1, 0, 15, len-1, "someName", mazeData);
+        Maze testMaze = Maze.initMaze(len, len, false, 1, 0, len-1, len-1, "someName", mazeData);
 
         List<Coordinate> noWalls = testMaze.setRandomSolution(.6);
 
@@ -34,6 +35,8 @@ public class Main {
         TitleScreen titleScreen = new TitleScreen();
         titleScreen.CreateGUI();
         titleScreen.AddMaze(testMaze);
+       // NewMazeOptionsScreen screen = new NewMazeOptionsScreen();
+        //screen.CreateNewMazeOptionsGUI();
 
     }
 }
