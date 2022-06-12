@@ -51,7 +51,7 @@ public class LoadScreen extends JFrame implements ActionListener {
         if(e.getSource() == loadButton){
             if (selectedMaze != null) {
                 screen.background.setVisible(true);
-                screen.setImportedMazeName(this.selectedMaze);
+                screen.setMazeName(this.selectedMaze);
                 screen.loadImportedMaze();
             }
         }
