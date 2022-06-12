@@ -1,16 +1,11 @@
 package GUI;
 import maze.Cell;
 import maze.Coordinate;
-import org.hamcrest.core.Every;
 
 import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Arrays;
 
 public class Chunk extends JFrame implements MouseListener {
     GUI_utilities utility = new GUI_utilities();
@@ -242,8 +237,6 @@ public class Chunk extends JFrame implements MouseListener {
         }
         if(e.getSource() == backgroundCell){
             editChunk();
-            System.out.print(this.coordinateValue);
-            //System.out.print(this.cellValue);
         }
 
 

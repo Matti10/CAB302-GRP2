@@ -819,14 +819,7 @@ public class Maze {
     /**
      * Exports the maze to the DB.
      *
-     * @param mazeName - the name of the maze
-     * @param author - the author of the maze
-     * @param creationTime - the maze's unix-formatted date/time of creation
-     */
-    /**
-     * Exports the maze to the DB.
-     *
-     * @param mazeName     - the name of the maze
+     * @param mazeName - the name of the maze to be exported
      */
 
     public void exportMaze(String mazeName) {
@@ -834,7 +827,7 @@ public class Maze {
         MazeDBObj m = mData.get(mazeName);
         String dateTimeEdited = String.valueOf(Instant.now().getEpochSecond());
         String dateTimeCreated;
-        if (m != null) dateTimeCreated = m.getDateTimeCreated();
+        if (Objects.equals(m.getMazeName(), mazeName)) dateTimeCreated = m.getDateTimeCreated();
         else dateTimeCreated = dateTimeEdited;
 
         int[] startPosArr = startPosition.toIntArray();
@@ -881,16 +874,10 @@ public class Maze {
         this.endPosition = newCoord(Integer.parseInt(end[0]), Integer.parseInt(end[1]));
 
         String mazeData = m.getMazeData() + m.getMazeDataOverflow();
-        Coordinate thisCoord;
-        Cell thisCell;
         for (int i = 0; i < mazeData.length(); i++) {
             int thisY = i / xCount;
             int thisX = i - (thisY * yCount);
-            /*thisCoord = newCoord(thisX, thisY);
-            thisCell = */
             this.mazeArray[thisX][thisY] = CharToCell(mazeData.charAt(i));
-            //this.edit(thisCoord, thisCell);
-
         }
         return this;
     }

@@ -3,7 +3,6 @@ package db;
 import javax.swing.DefaultListModel;
 import javax.swing.ListModel;
 
-//do I have to javadoc this?
 public class MazeListData {
     DefaultListModel<String> listModel;
     MazeListDataSource mazeListData;
@@ -45,13 +44,6 @@ public class MazeListData {
             listModel.removeElement(key);
             mazeListData.deleteMaze((String) key);
         }
-    }
-
-    /**
-     * lets the data persist between sessions, can remove maybe???
-     */
-    public void persist() {
-        mazeListData.close();
     }
 
     /**
