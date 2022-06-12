@@ -6,13 +6,17 @@ import maze.Maze;
 import maze.Coordinate;
 
 import  java.awt.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 
 public class TitleScreen extends JFrame implements  ActionListener, Runnable, MouseListener, PropertyChangeListener {
 
@@ -39,12 +43,15 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     JMenuItem saveBar             = new JMenuItem("save");
     JMenuItem saveAsBar           = new JMenuItem("Save as");
     JMenuItem loadBar             = new JMenuItem("Load");
+    JMenuItem newMazeBar          = new JMenuItem("New Maze");
+    JMenuItem exportMazeBar       = new JMenuItem("export");
     JPanel    mazeDisplayPane     = new JPanel();
     JPanel    displayPaneLeft     = new JPanel();
     JPanel    displayPaneRight    = new JPanel();
     Dimension displayPanesSize    = new Dimension(300,100);
     JPanel    mazePiecesDisplay   = new JPanel();
-
+    private Maze currentMaze;
+    public void setCurrentMaze(Maze maze){this.currentMaze = maze;}
 
     GridLayout mazePiecesDisplayLayout = new GridLayout(4,4,3,3);
 
@@ -74,7 +81,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     Chunk allPaths = new Chunk();
 
 
-    private Maze currentMaze;
+
 
 
     private Chunk[] initChunks(int chunkCount) {
@@ -161,6 +168,10 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
         saveBar.addActionListener(this);
         fileBar.add(saveAsBar);
         fileBar.add(loadBar);
+        fileBar.add(newMazeBar);
+        fileBar.add(exportMazeBar);
+        exportMazeBar.addActionListener(this);
+        newMazeBar.addActionListener(this);
         loadBar.addActionListener(this);
         background.setJMenuBar(menuBar);
 
@@ -190,7 +201,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
         mazeLayoutConstraints.weightx = 0.1;
         mazeLayoutConstraints.weighty = 0.1;
         mazeLayoutConstraints.fill = GridBagConstraints.BOTH;
-        mazeDisplayPane.setBackground(Color.yellow);
+        mazeDisplayPane.setBackground(Color.darkGray);
         mazeDisplayPane.setLayout(mazePaneLayout);
 
 
@@ -278,6 +289,24 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
         if(event.getSource() == saveBar){
             System.out.print("\nSave Menu Item Clicked\n");
             currentMaze.exportMaze("someName","author","1654643415");
+        }
+        if ( event.getSource() == newMazeBar){
+            NewMazeOptionsScreen optionsScreen = new NewMazeOptionsScreen();
+            optionsScreen.createNewMazeOptionsGUI();
+            optionsScreen.setScreen(this);
+            background.setVisible(false);
+        }
+        if(event.getSource() == exportMazeBar){
+            Dimension d = mazeDisplayPane.getSize();
+            BufferedImage image = new BufferedImage(d.width,d.height, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2d = image.createGraphics();
+            mazeDisplayPane.print(g2d);
+            g2d.dispose();
+            try {
+                ImageIO.write(image, "PNG", new File("test.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
