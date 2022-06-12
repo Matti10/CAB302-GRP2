@@ -9,21 +9,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoadScreen extends JFrame implements ActionListener {
-    MazeListData mData;
-    String[][] dispData;
-    String[] formattedData;
-
-    public void setmData(MazeListData mData) {
-        this.mData = mData;
-        this.dispData = mData.getDisplayData();
-        this.formattedData = new String[this.mData.getSize()];
+    public String[] getData() {
+        MazeListData mData = new MazeListData();
+        String[][] dispData = mData.getDisplayData();
+        String[] formattedData = new String[mData.getSize()];
         for (int i=0;i<mData.getSize();i++) {
-            this.formattedData[i] = "Maze: "+this.dispData[i][0]+
-                    " - Author: "+this.dispData[i][1]+
-                    " - Dimensions: "+this.dispData[i][2]+
-                    " - Created: "+this.dispData[i][3]+
-                    " - Edited: "+this.dispData[i][4];
+            formattedData[i] = "Maze: "+dispData[i][0]+
+                    " - Author: "+dispData[i][1]+
+                    " - Dimensions: "+dispData[i][2]+
+                    " - Created: "+dispData[i][3]+
+                    " - Edited: "+dispData[i][4];
         }
+        return formattedData;
     }
 
     private JFrame background = new JFrame();
@@ -43,13 +40,11 @@ public class LoadScreen extends JFrame implements ActionListener {
         background.add(loadButton);
         background.add(mazeList);
         loadButton.addActionListener(this);
-        background.setSize(400,200);
+        background.setSize(600,200);
         background.setLocationRelativeTo(null);
     }
 
-    String[] data = new String[] {"Maze: test - Author: author - Dimensions: 3x3 - Created: 20/12/2000 - Edited: 20/12/2000"};
-    private JComboBox mazeList = new JComboBox(formattedData);
-
+    private JComboBox mazeList = new JComboBox(getData());
 
     @Override
     public void actionPerformed(ActionEvent e) {

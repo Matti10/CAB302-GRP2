@@ -1,6 +1,7 @@
 package GUI;
 
 
+import db.MazeListData;
 import maze.Cell;
 import maze.Maze;
 import maze.Coordinate;
@@ -30,9 +31,6 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     private String mazeName;
 
     private boolean test = false;
-
-
-
 
     JFrame    background          = new JFrame();
     JMenuBar  menuBar             = new JMenuBar();
@@ -271,6 +269,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
 
     public void setImportedMazeName(String mazeName){this.mazeName = mazeName;}
     public void loadImportedMaze(){
+        System.out.println(this.mazeName);
         Maze importedMaze = currentMaze.importMaze(this.mazeName);
         this.AddMaze(importedMaze);
     }
@@ -279,7 +278,6 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     public void actionPerformed(ActionEvent event) {
         if(event.getSource() == loadBar){
             System.out.print("\nLoad Menu Item Clicked\n");
-
             LoadScreen loadScreen = new LoadScreen();
             loadScreen.setScreen(this);
             loadScreen.createGUI();
@@ -287,7 +285,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
         }
         if(event.getSource() == saveBar){
             System.out.print("\nSave Menu Item Clicked\n");
-            currentMaze.exportMaze("someName","author","1654643415");
+            currentMaze.exportMaze("newSave","author");
         }
         if(event.getSource() == newBar){
            // NewMazeOptionsScreen optionsScreen = new NewMazeOptionsScreen();

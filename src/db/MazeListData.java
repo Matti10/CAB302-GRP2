@@ -32,7 +32,6 @@ public class MazeListData {
         }
         mazeListData.addMaze(m);
         listModel.addElement(m.getMazeName());
-
     }
 
     /**
