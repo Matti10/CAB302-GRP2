@@ -1,3 +1,4 @@
+import GUI.NewMazeOptionsScreen;
 import GUI.TitleScreen;
 import db.MazeListData;
 import maze.*;
@@ -32,8 +33,10 @@ public class Main {
         }
 
         TitleScreen titleScreen = new TitleScreen();
-        titleScreen.CreateGUI();
-        titleScreen.AddMaze(testMaze);
+        //titleScreen.CreateGUI();
+       // titleScreen.AddMaze(testMaze);
+        NewMazeOptionsScreen screen = new NewMazeOptionsScreen();
+        screen.CreateNewMazeOptionsGUI();
 
     }
 }
