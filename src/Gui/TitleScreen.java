@@ -44,6 +44,7 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
     JPanel    displayPaneRight    = new JPanel();
     Dimension displayPanesSize    = new Dimension(300,100);
     JPanel    mazePiecesDisplay   = new JPanel();
+    JButton   solveMazeButton     = new JButton("Solve");
 
 
     GridLayout mazePiecesDisplayLayout = new GridLayout(4,4,3,3);
@@ -170,7 +171,8 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
         background.setLayout(backgroundLayout);
         background.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-
+        displayPaneLeft.add(solveMazeButton);
+        solveMazeButton.addActionListener(this);
         displayPaneLeft.setPreferredSize(displayPanesSize);
         displayPaneLeft.setMinimumSize(displayPanesSize);
         displayPaneLeftLayoutConstraints.gridx = 0;
@@ -279,8 +281,17 @@ public class TitleScreen extends JFrame implements  ActionListener, Runnable, Mo
             System.out.print("\nSave Menu Item Clicked\n");
             currentMaze.exportMaze("someName","author","1654643415");
         }
+        if(event.getSource() == solveMazeButton){
+            for (Coordinate coor: currentMaze.getFirstSolution()){
+                System.out.print(coor);
+            }
 
+            //System.out.print(currentMaze.getFirstSolution());
+
+        }
     }
+
+
 
     @Override
     public void run() {
